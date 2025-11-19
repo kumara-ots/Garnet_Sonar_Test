@@ -32,12 +32,18 @@ public class EmailUtil {
 	@Value("${ots.finance.mailId}")
 	private String financeMailId;
 	
-	final String username = "support@microproducershub.com";
+	@Value("${emailutil.username}")
+	private static String username;
+	
+	@Value("${emailutil.password}")
+	private static String password;
+	
+//	final String username = "support@microproducershub.com";
 	
 	public static void sendEmailBill(String to,String cc,String sub,String msg,String billFileName,String filePath){   
 		
-		final String username = "support@microproducershub.com";
-	    final String password = "Otssupport@20@!";
+//		final String username = "support@microproducershub.com";
+//	    final String password = "Otssupport@20@!";
 
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", true);
@@ -120,8 +126,8 @@ public class EmailUtil {
 	
 	public static void sendDonationMail(String to,String cc,String sub,String msg){   
 		
-		final String username = "support@microproducershub.com";
-		final String password = "Otssupport@20@!";
+//		final String username = "support@microproducershub.com";
+//		final String password = "Otssupport@20@!";
 	
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", true);
@@ -155,8 +161,8 @@ public class EmailUtil {
 	
 	public static void productNotification(String to,String cc,String sub,String msg){   
 		
-		final String username = "support@microproducershub.com";
-		final String password = "Otssupport@20@!";
+//		final String username = "support@microproducershub.com";
+//		final String password = "Otssupport@20@!";
 	
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", true);
