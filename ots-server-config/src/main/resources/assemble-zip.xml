@@ -1,0 +1,31 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>scripts</id>
+	<baseDirectory>/</baseDirectory>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>${basedir}/src/main</directory>
+			<outputDirectory />
+			<excludes>
+				<exclude>java/**</exclude>
+				<exclude>resources/assemble-zip.xml</exclude>
+				<exclude>resources/**/env-config.properties</exclude>
+				<exclude>resources/**/env-config.properties.span</exclude>
+				<exclude>resources/logback.xml</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}/src/main/resources</directory>
+			<outputDirectory>resources/ots</outputDirectory>
+			<includes>
+				<include>logback.xml</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
+

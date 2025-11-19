@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.fuso.enterprise.ots</groupId>
+  <artifactId>ots-server-system</artifactId>
+  <version>18.25-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <!-- OTS modules definition -->
+  <modules>
+    <module>ots-server</module>
+    </modules>
+
+  <!-- Dependency libraries versions -->
+  <properties>
+    <spring.framework.version>4.2.5.RELEASE</spring.framework.version>
+    <hibernate.framework.version>5.1.0.Final</hibernate.framework.version>
+    <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
+    <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
+    <logback.dependency.version>1.1.2</logback.dependency.version>
+    <junit.framework.version>4.11</junit.framework.version>
+    <mssql.driver.version>6.4.0.jre8</mssql.driver.version>
+    <aspectj.dependency.version>1.8.6</aspectj.dependency.version>
+    <javax.inject.version>1</javax.inject.version>
+    <rest.jackson.version>2.6.5</rest.jackson.version>
+    <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
+    <jackson.datatype.jsr310.version>2.4.0</jackson.datatype.jsr310.version>
+    <cxf.rest.framework.version>3.1.5</cxf.rest.framework.version>
+    <java.melody.version>1.58.0</java.melody.version>
+    <sl4j.logging.framework.version>1.7.19</sl4j.logging.framework.version>
+    <janino.version>3.0.6</janino.version>
+    <java.validation.dependency.version>1.1.0.Final</java.validation.dependency.version>
+  </properties>
+
+  <!-- Library dependencies -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- Javax validation dependencies -->
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${java.validation.dependency.version}</version>
+      </dependency>
+      <!-- Spring dependencies -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${spring.framework.version}</version>
+      </dependency>
+      <!-- Hibernate implementation for JPA -->
+      <dependency>
+        <groupId>org.hibernate.javax.persistence</groupId>
+        <artifactId>hibernate-jpa-2.1-api</artifactId>
+        <version>${hibernate.jpa.version}</version>
+      </dependency>
+      <!-- Hibernate related jars -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${hibernate.framework.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate.validator.version}</version>
+      </dependency>
+      <!-- MS sql server data base driver -->
+      <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>${mssql.driver.version}</version>
+      </dependency>
+      <!-- Junit test version -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.framework.version}</version>
+      </dependency>
+      <!-- Dependency injection -->
+      <dependency>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
+        <version>${javax.inject.version}</version>
+      </dependency>
+      <!-- Aspect dependency injection -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${aspectj.dependency.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${aspectj.dependency.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <!-- Log4j dependency version -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.dependency.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.dependency.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <!-- Rest Jars -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${rest.jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${rest.jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>${javax.ws.rs.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
+        <version>${jackson.datatype.jsr310.version}</version>
+      </dependency>
+      <!-- Swagger jars -->
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>swagger-ui</artifactId>
+        <version>2.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-jersey2-jaxrs</artifactId>
+        <version>1.5.4</version>
+      </dependency>
+      <!-- CXF jars -->
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-service-description</artifactId>
+        <version>${cxf.rest.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-client</artifactId>
+        <version>${cxf.rest.framework.version}</version>
+      </dependency>
+      <!-- Java melody -->
+      <dependency>
+        <groupId>net.bull.javamelody</groupId>
+        <artifactId>javamelody-core</artifactId>
+        <version>${java.melody.version}</version>
+      </dependency>
+      <!-- SL4J for logging and janino for logback -->
+      <dependency>
+        <groupId>org.codehaus.janino</groupId>
+        <artifactId>janino</artifactId>
+        <version>${janino.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${sl4j.logging.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${sl4j.logging.framework.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <!-- Plug-in configuration -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+	  <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

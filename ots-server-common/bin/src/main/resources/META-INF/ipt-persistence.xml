@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+  version="2.0">
+
+  <persistence-unit name="iptModel" transaction-type="RESOURCE_LOCAL">
+    <non-jta-data-source>otsDataSource</non-jta-data-source>
+    <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+    <validation-mode>AUTO</validation-mode>
+
+    <!-- IPT ENTITY CLASSES -->
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartDetail</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartDetailBom</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ChildParts</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartsMaster</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.TmpShikeisho</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.TmpShikeishoPart</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.TmpShikeishoPartEmbedded</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoDetailForUpdate</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoDetail</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoMinDetails</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoDetailEmbedded</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoPartDetail</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoPartDetailBom</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ShikeishoPartDetailEmbedded</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.Users</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.UserRoles</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.UserRoleEmbedded</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.Buyers</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.BuyersGroup</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.Suppliers</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.RfqParts</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.RfqPartsPK</class>
+    
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PlPartsMaster</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PlPartsMasterPK</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.GlPlMaster</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.GlPlMasterPK</class>
+	<class>com.fuso.enterprise.ipt.srv.server.model.entity.PoList</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.KanriMaster</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.CompassApproval</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ThresholdOrderLimit</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.ProcCostBreakdown</class>
+    
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartsDetailsEntity</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartsDetailsEntityPK</class>
+    <class>com.fuso.enterprise.ipt.srv.server.model.entity.PartsDetailsBomEntity</class>
+    
+    <!---IPT ORM FILES -->
+
+    <mapping-file>META-INF/ipt-sample-orm.xml</mapping-file>
+	<mapping-file>META-INF/ipt-shikeisho-orm.xml</mapping-file>
+	<mapping-file>META-INF/ipt-shikeisho-bom-orm.xml</mapping-file>
+  </persistence-unit>
+
+</persistence>

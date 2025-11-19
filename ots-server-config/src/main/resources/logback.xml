@@ -1,0 +1,119 @@
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+	<property resource="ots/logback.properties" />
+	<jmxConfigurator />
+	
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
+	
+  	<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+	
+	<!-- Application Level Logging configuration -->
+	<appender name="LOGFILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logback.logdir}/app.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${logback.logdir}/app.log.${logback.rollingPattern}
+			</fileNamePattern>
+			<!-- keep 30 days worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${logback.fullPattern}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Hibernate Statistics Logging configuration -->
+	<appender name="HIBERNATESTATS"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logback.logdir}/hibernatestats.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${logback.logdir}/hibernatestats.log.${logback.rollingPattern}</fileNamePattern>
+			<!-- keep 30 days worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${logback.fullPattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- Hibernate Queries Logging configuration -->
+	<appender name="HIBERNATEQUERIES" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logback.logdir}/hibernatequeries.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${logback.logdir}/hibernatequeries.log.${logback.rollingPattern}</fileNamePattern>
+			<!-- keep 10 days worth of history -->
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${logback.fullPattern}</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- Rest Payload Logging configuration -->
+	<appender name="JAXRSPAYLOAD"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logback.logdir}/restwspayload.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${logback.logdir}/wspayload.log.${logback.rollingPattern}
+			</fileNamePattern>
+			<!-- keep 30 days worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${logback.fullPattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- Console Level display Logging configuration -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>${logback.fullPattern}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- logs performance figures to INFO level -->
+	<logger name="PERF" level="INFO" additivity="false">
+		<appender-ref ref="PERF" />
+	</logger>
+	
+	<!-- logs the hibernate statistics -->	
+	<logger name="org.hibernate.stat" additivity="false" level="INFO">
+		<appender-ref ref="HIBERNATESTATS"/>
+	</logger>
+	<!-- this one can be quite verbose, so typically run with loglevel warn -->
+	<logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" additivity="false" level="TRACE">
+		<appender-ref ref="HIBERNATESTATS" />
+	</logger>
+	
+	<!-- log the actual executed sql queries into this appender -->
+	<logger name="org.hibernate.SQL" level="TRACE" additivity="false">
+    	<appender-ref ref="HIBERNATEQUERIES" />
+    </logger>
+
+	<!-- req/res rest ws logging -->
+	<logger name="org.apache.cxf.interceptor" additivity="false">
+		<appender-ref ref="JAXRSPAYLOAD" />
+	</logger>
+	
+	 <!-- JAX-RS payload -->
+  <logger name="JAXRSPAYLOAD" additivity="false">
+    <appender-ref ref="JAXRSPAYLOAD" />
+  </logger>
+	
+	<!-- method call traces -->
+	<logger name="org.springframework.aop.interceptor.CustomizableTraceInterceptor" level="INFO" additivity="false">
+		<appender-ref ref="TRACE" />
+	</logger>
+	
+	<root level="INFO">
+		<appender-ref ref="LOGFILE" />
+		<appender-ref ref="STDOUT" />
+ 	</root>
+</configuration>

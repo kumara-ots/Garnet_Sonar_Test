@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+  version="2.0">
+
+  <persistence-unit name="iptModel" transaction-type="RESOURCE_LOCAL">
+    <non-jta-data-source>otsDataSource</non-jta-data-source>
+    <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+    <validation-mode>AUTO</validation-mode>
+
+    <!-- IPT ENTITY CLASSES -->
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsUsers</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsRegistration</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsUserRole</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsUserMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProduct</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductStock</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductStockHistory</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsOrder</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsOrderProduct</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductCategoryMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductLevel</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductWishlist</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsCart</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsRatingReview</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsSellerProductMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductCategoryMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.Useraccounts</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.Accountbannerinfo</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.Accountdetails</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.Accountfooter</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.PaymentDetails</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsCoupon</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsCouponOrder</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsDistributorBanner</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsCustomerChangeAddress</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsDistributorCompanyDetails</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceState</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceDistrict</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductLocationMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsDistributerPaymentDetails</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServicePincode</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsAttributeKey</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsAttributeValue</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductAttributeMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsSubcategoryAttributeMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsPaymentTransactionCancelRecords</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsSubadminValidity</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsRegistrationTransactionCancelRecords</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsService</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceLevel</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceOrder</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceOrderDetails</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceRatingReview</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceLocationMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsDistributorCountryMapping</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceCountry</class>
+	<class>com.fuso.enterprise.ots.srv.server.model.entity.OtsProductManufacturer</class>
+
+	<mapping-file>META-INF/ipt-sample-orm.xml</mapping-file>
+	
+  </persistence-unit>
+
+</persistence>

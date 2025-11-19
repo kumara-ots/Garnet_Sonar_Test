@@ -1,0 +1,1949 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+	<description>OTS ORM mappings</description>
+	<named-query name="OtsUsers.findByUserOtsRoleId">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :otsUserRoleId 
+		AND 
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query> 
+	<named-query name="OtsUsers.getDistributorList">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :RoleId 
+			OR
+			o.otsUserRoleId = :RoleId2 
+		AND 
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query>   	
+	<named-query name="OtsUsers.findByContactNoOrEmailId">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUsersEmailid = :emailid 
+		OR 
+			o.otsUsersContactNo = :contact
+		</query>
+	</named-query> 	
+	<named-query name="OtsUsers.findByUserOtsRoleIdAdmin">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :otsUserRoleId 
+		OR
+			o.otsUserRoleId = :adminRole
+			 
+		</query>
+	</named-query> 
+	<named-query name="OtsUsers.findByCreatedUser">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o, Useraccounts a	
+		WHERE  	
+			a.accountId = :user
+		AND
+		    o.createdUser = a.accountId
+		    
+		AND o.otsUserRoleId=1		 
+		</query>
+	</named-query> 
+	<named-query name="OtsProduct.getProductListbyDistributor">
+	<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsDistributorId = :distributorId
+		AND 
+			p.otsProductLevelId = 3
+		AND
+		    p.otsProductStatus != 'delete'
+		GROUP BY p.otsProductId
+		</query>
+	</named-query>
+
+	<named-query name="OtsUsers.getDistributorByCreatedUser">
+	<query>SELECT o 
+		FROM 
+			OtsUsers o, Useraccounts u	
+		WHERE  
+			o.otsUserRoleId IN(1,2)
+		And
+			u.accountId = :createdUser
+		And
+			o.createdUser = u.accountId 
+		And
+			o.otsUsersStatus IN('active','inactive')
+		</query>
+	</named-query>
+
+	<named-query name="OtsUsers.findByStatusforAdmin">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o, Useraccounts a	
+		WHERE 
+			o.otsUsersStatus = :otsUsersStatus
+		AND
+		     a.accountId = :user
+		AND
+			o.createdUser = a.accountId
+			
+		AND o.otsUserRoleId=2
+		</query>
+	</named-query>
+	
+	<named-query name="OtsProduct.findByPattrenMatching">
+		<query>SELECT o 
+		FROM 
+			OtsProduct o 
+		WHERE 
+			o.otsProductName LIKE :Letter
+		AND
+			o.otsProductLevelId = :otsProductLevelId
+		AND
+			o.otsProductStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.findByPattrenMatchingotsUsersFirstname">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o , OtsUserMapping m, Useraccounts u
+		WHERE
+			 o.otsUsersFirstname LIKE :otsUsersFirstname
+		AND
+			m.otsMappedTo= :otsDistributerId
+		AND
+		    o.otsUsersId=m.otsUsersId	
+		AND 
+			o.otsUsersStatus IN('active','inactive')
+		AND
+			u.accountId = :createdUser
+		AND
+			o.createdUser = u.accountId 
+		</query>
+	</named-query>
+
+	<named-query name="OtsUsers.findByPattrenMatchingotsUsersLastname">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o ,OtsUserMapping m, Useraccounts u
+		WHERE 
+			o.otsUsersLastname LIKE :otsUsersLastname
+		AND
+			m.otsMappedTo= :otsDistributerId
+		AND
+		    o.otsUsersId=m.otsUsersId	
+		AND 
+			o.otsUsersStatus IN('active','inactive')
+		AND
+			u.accountId = :createdUser
+		AND
+			o.createdUser = u.accountId
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.findByOtsUsersIdAndRoleIdAndCreatedUser">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o,	Useraccounts u	
+		WHERE  	
+			o.otsUserRoleId = :otsUserRoleId
+		And
+			u.accountId = :createdUser
+		And
+			o.createdUser = u.accountId 
+		And
+			o.otsUsersStatus IN('active','inactive')
+		</query>
+	</named-query>
+
+	
+	<named-query name="OtsUsers.findByPattrenMatchingotsUsersEmailid">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o ,OtsUserMapping m
+		WHERE 
+			o.otsUsersEmailid 
+		LIKE 
+			:otsUsersEmailid
+		AND
+			m.otsMappedTo= :otsDistributerId
+			
+		AND
+		    o.otsUsersId=m.otsUsersId	
+		AND 
+			o.otsUsersStatus IN('active','inactive')
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.findByUserOtsbyMappedTo">
+		<query>select m.otsUsersId 
+		from
+			OtsUserMapping m 
+		 where 
+		  	m.otsMappedTo = :MappedTo
+		</query>
+	</named-query> 	
+	<named-query name="OtsProductStock.findByOtsProductIdAndUserId">
+		 <query>
+		SELECT
+			 s
+		FROM 
+			OtsProductStock s 
+		WHERE
+			s.otsUsersId = :otsUsersId 	
+		AND
+			s.otsProductId = :otsProductId	
+		</query> 
+	</named-query>	
+	
+	<named-query name="OtsOrder.fetchOtsSoldProducts">
+		<query>SELECT o
+		FROM 
+			OtsOrderProduct o
+		WHERE 
+			o.otsOrderId = :otsOrderId 
+		AND
+			o.otsProductId= :otsProductId
+		</query>
+	</named-query> 
+		
+    <named-query name="OtsOrder.GetOrderListByTime">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o, OtsOrderProduct op
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(op.otsDistributorId = :DistributorsId)
+		AND 
+			 op.otsOrderId = o.otsOrderId
+		Group by o.otsOrderId
+	</query>
+	</named-query> 
+
+	<named-query name="OtsOrder.GetOrderListByTimeAndStatusForDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o, OtsOrderProduct op
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(op.otsDistributorId = :DistributorsId)
+		AND
+			(o.otsOrderStatus =:status)	
+	   	AND 
+			 o.otsOrderId = op.otsOrderId
+		Group by o.otsOrderId
+		</query>
+    </named-query> 
+
+	<named-query name="OtsOrder.GetOrderListByTimeAndStatusForCustomerId">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(o.otsCustomerId = :CustomerId)
+		AND
+			(o.otsOrderStatus =:status)
+		</query>
+	</named-query> 		 	 
+	<named-query name="OtsOrder.getOrderIdByDistrubitorId">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			o.otsOrderStatus =:Status
+		AND 
+		    op.otsOrderId=o.otsOrderId
+		AND     
+		    op.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getOrderByDistributorOrderProductStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			op.otsOrderProductStatus =:otsOrderProductStatus
+		AND    
+		    op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderId=o.otsOrderId
+ 	 	Group By o.otsOrderId 
+ 	 	ORDER BY o.otsOrderId DESC
+		</query>
+	</named-query>
+		<!--  -->
+	<named-query name="OtsOrderProduct.GetOrderByDistrubutorIdAndStatus">
+			<query>SELECT op 
+			FROM 
+				OtsOrderProduct op
+			WHERE 
+				op.otsOrderId = :otsOrderId
+			</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.GetOrderByDistrubutorIdAndStatus1">
+			<query>SELECT op 
+			FROM 
+				OtsOrderProduct op, OtsOrder o
+			WHERE 
+				o.otsOrderId = :otsOrderId
+			AND 
+				op.otsOrderId = o.otsOrderId
+			And 
+	            op.otsDistributorId = :otsDistributorId
+			</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderByDistrubutorIdAndOrderProductStatus">
+			<query>SELECT op 
+			FROM 
+				OtsOrderProduct op, OtsOrder o
+			WHERE 
+				op.otsOrderProductStatus = :otsOrderProductStatus
+			And 
+	            op.otsDistributorId = :otsDistributorId
+	        And 
+	        	op.otsOrderId = :otsOrderId
+	        And
+	        	op.otsOrderId = o.otsOrderId
+			</query>
+	</named-query>
+<!--  -->
+	<named-query name="OtsProductStock.getQuantityById">
+		<query>SELECT o
+		FROM 
+			OtsProductStock o
+		WHERE 
+			o.otsUsersId = :DistributorId 
+		AND
+			o.otsProductId= :ProductId
+		</query>
+	</named-query>
+	<named-query name="OtsProductOrder.fetchDistributorId">
+		<query>SELECT p
+		FROM 
+			OtsOrderProduct p
+		WHERE 
+			p.otsOrderId = :otsOrderId
+		AND
+			p.otsProductId = :otsProductId
+		</query>
+	</named-query>
+	<!-- <named-query name="OtsOrder.getAssginedOrder">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o 
+		WHERE 
+			o.otsAssignedId = :otsAssignedId
+		AND
+			o.otsOrderStatus = :otsOrderStatus
+		</query>
+	</named-query>
+	 -->
+	<named-query name="OtsOrderProduct.findByotsOrderId">
+		<query>SELECT p
+		FROM 
+			OtsOrderProduct p
+		WHERE 
+			p.otsOrderId = :otsOrderId
+			
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.CheckForRegistration">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE 
+			o.otsUsersEmailid = :otsEmailId
+		OR
+			o.otsUsersContactNo = :otsPhonenumber
+		</query>
+	</named-query> 	
+	<named-query name="OtsOrder.getOrderByCustomerIdAndStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+		AND
+			o.otsOrderStatus =:Status
+		ORDER BY o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getAllOrdersByCustomer">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+		AND 
+	     	op.otsOrderProductStatus != 'Pending'
+	    AND
+	    	o.otsOrderId = op.otsOrderId
+	    GROUP By 
+			o.otsOrderId
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	
+	<named-query name="OtsOrder.GetListOfOrderByDateforCustomer">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(o.otsCustomerId = :otsCustomerId)
+		</query>
+	</named-query> 
+	
+	
+    <named-query name="OtsOrder.GetListOfOrderByDateforEmployee">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+		(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(op.otsAssignedId = :otsAssignedId)
+		AND 
+			op.otsOrderId = o.otsOrderId
+		</query>
+    </named-query>	
+	 <named-query name="OtsOrder.GetListOfOrderByDateforDistrbutor">
+			<query>SELECT o 
+			FROM 
+				OtsOrder o,OtsOrderProduct op
+			WHERE 
+				(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+			AND
+				op.otsDistributorId = :otsDistributorId
+			AND
+				op.otsOrderProductStatus != 'Pending'
+			AND 
+				op.otsOrderId = o.otsOrderId
+			ORDER BY 
+				o.otsOrderDt DESC
+			</query>
+	 </named-query>
+	<named-query name="OtsOrder.GetOrderListForDistributorByDateAndStatus">
+	<query>SELECT o
+		FROM    
+			OtsOrder o
+		WHERE
+			(o.otsOrderDt >= :startDate AND  :endDate >= o.otsOrderDt) 
+		AND
+	     	 o.otsOrderStatus = :Status
+    	AND 
+	    	otsDistributorId = :DistributorId
+	</query>
+	</named-query>
+
+
+	<named-query name="OtsOrder.GetOrderListForCustomerByDateAndStatus">
+		<query>SELECT o
+		FROM    
+			OtsOrder o
+		WHERE
+			(o.otsOrderDt >= :startDate AND  :endDate >= o.otsOrderDt) 
+		AND 
+	       o.otsOrderStatus = :Status
+	    AND 
+		   otsCustomerId = :customerId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.GetOrderListForCustomerByDate">
+		<query>SELECT o
+		FROM    
+			OtsOrder o
+		WHERE
+			(o.otsOrderDt >= :startDate AND  :endDate >= o.otsOrderDt) 
+		AND 
+		    	otsCustomerId = :customerId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.GetOrderListForDistributorByDate">
+		<query>SELECT o
+		FROM    
+			OtsOrder o
+		WHERE
+			(o.otsOrderDt >= :startDate AND  :endDate >= o.otsOrderDt) 
+		AND
+		   	otsDistributorId = :DistributorId
+		</query>
+	</named-query>
+
+	<named-query name="OtsUserMapping.getDistributorId">
+		<query>SELECT o 
+		FROM 
+			OtsUserMapping o
+		WHERE 
+			o.otsUsersId =:otsUsersId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.GetListOfOrderByDateforCustomerByStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(o.otsCustomerId = :otsCustomerId)
+		AND
+			o.otsOrderStatus = :otsOrderStatus
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.GetListOfOrderByDateforAllByStatus">
+		<query>SELECT o 
+			FROM 
+				OtsOrder o
+			WHERE 
+				(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+			AND
+				o.otsOrderStatus = :otsOrderStatus
+		</query>
+	</named-query>
+	
+	<named-query name="OtsOrder.GetListOfOrderByDateforDistrbutorByStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o, OtsOrderProduct op
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			op.otsOrderProductStatus = :otsOrderProductStatus
+		AND 
+	    	op.otsDistributorId = :otsDistributorId
+	    AND 
+			op.otsOrderId = o.otsOrderId
+	  	ORDER BY 
+			o.otsOrderDt DESC	
+		</query>
+   </named-query>
+
+   <named-query name="OtsOrder.GetListOfOrderByDateforEmployeeByStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o, OtsOrderProduct op
+		WHERE 
+			(o.otsOrderDt BETWEEN :FromDate AND :ToDate) 
+		AND
+			(op.otsAssignedId = :otsAssignedId)
+		AND
+			op.otsOrderProductStatus = :otsOrderProductStatus
+		AND 
+			  o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>  
+
+	<named-query name="OtsProductStock.DistributorId">
+		<query>SELECT o
+		FROM 
+			OtsProductStock o
+		WHERE 
+			o.otsUsersId = :DistributorId
+				
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.findByProductDetailsStock">
+		<query>SELECT o
+		FROM 
+			OtsProduct o,OtsProductStock s
+		WHERE 
+			s.otsUsersId = :DistributorId
+		
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.findByOtsUsersIdAndRoleId">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :RoleId
+		And
+			o.otsUsersId = :otsUsersId
+		</query>
+	</named-query>
+
+	<named-query name="OtsProduct.otsProductLevelId">
+		<query>SELECT o 
+		FROM 
+			OtsProduct o
+		WHERE
+			o.otsProductLevelId =:otsProductLevelId
+		</query>
+	</named-query>
+	<named-query name="getProductByMappingotsProductCategoryId.otsProductCategoryId">
+		<query>SELECT o 
+		FROM 
+			OtsProductCategoryMapping o,OtsProduct p
+		WHERE
+			p.otsProductStatus='active'
+		AND
+			o.otsProductCategoryId=p.otsProductId
+		AND
+			o.otsProductCategoryId =:otsProductCategoryId	
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.findActiveproductByOtsProductId">
+		<query>
+		SELECT p
+		FROM 
+			OtsProduct p
+		WHERE
+			p.otsProductStatus='active'
+		AND 
+			p.otsProductId=:otsProductId
+	    </query>
+	</named-query>
+	
+	<named-query name="OtsProduct.findAllProduct">
+		<query>SELECT o 
+			FROM 
+				OtsProduct o 
+			WHERE 
+				o.otsProductLevelId = :otsProductLevelId
+			AND 
+				o.otsProductStatus = :status
+		</query>
+	</named-query>
+ 
+	<named-query name="OtsProductWishlist.getWhishListByCustomerId">
+		<query>SELECT o 
+		FROM 
+			OtsProductWishlist o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId	
+		</query>
+	</named-query>  
+	<named-query name="OtsProductWishlist.getWhishListByCustomerIdAndProductId">
+		<query>SELECT o 
+		FROM 
+			OtsProductWishlist o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+		AND
+			o.otsProductId = :otsProductId
+		</query>
+	</named-query>  
+	<named-query name="OtsCart.getCartListByCustomerIdAndProductId">
+		<query>SELECT o 
+		FROM 
+			OtsCart o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+		AND
+			o.otsProductId = :otsProductId
+		</query>
+	</named-query>   
+	<named-query name="OtsCart.getCartListByCustomerId">
+		<query>SELECT o 
+		FROM 
+			OtsCart o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+			
+		</query>
+	</named-query>  
+	 
+	<named-query name="OtsCart.getCartListByCustomerIdProductIdAndQuantity">
+		<query>SELECT o 
+		FROM 
+			OtsCart o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+			AND
+			o.otsProductId = :otsProductId
+			AND
+			o.otsCartQty = :otsCartQty
+		</query>
+	</named-query>  
+	
+	<!-- Shreekant Rathod 1-2-2021 -->
+	<named-query name="OtsRatingReview.getReviewAndRatingByProductIdAndStatus">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  	
+			o.otsProductId = :otsProductId
+		AND
+			o.otsRatingReviewStatus = 'active'
+		ORDER BY o.otsOrderId DESC
+		</query>
+	</named-query>
+	<named-query name="OtsRatingReview.getReviewAndRatingByCustomerIdAndStatus">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+		AND
+			o.otsRatingReviewStatus = 'active'
+		ORDER BY o.otsOrderId DESC
+		</query>
+	</named-query>  
+	<named-query name="OtsRatingReview.getReviewAndRatingByProductId">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  	
+			o.otsProductId = :otsProductId
+		AND
+			o.otsRatingReviewStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsRatingReview.getReviewAndRatingByCustomerId">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  	
+			o.otsCustomerId = :otsCustomerId
+		</query>
+	</named-query>
+	<named-query name="OtsRatingReview.getReviewAndRatingByDistributorId">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o, OtsProduct p	
+		WHERE  	
+			o.otsProductId = p.otsProductId
+		AND
+			p.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>   
+	<named-query name="OtsRatingReview.getReviewAndRatingByOrderId">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  
+			o.otsOrderId = :otsOrderId
+		AND	
+			o.otsProductId = :otsProductId
+		And
+			o.otsCustomerId = :otsCustomerId
+		</query>
+	</named-query>
+	<named-query name="OtsRatingReview.getReviewAndRatingByReviewAndRatingId">
+		<query>SELECT o 
+		FROM 
+			OtsRatingReview o	
+		WHERE  	
+			o.otsRatingReviewId = :otsRatingReviewId
+		</query>
+	</named-query>   
+	<named-query name="OtsUsers.GetDetailsOnLogin">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUsersContactNo = :loginId
+		OR
+			o.otsUsersGoogleId = :loginId
+		OR 
+			o.otsUsersFacebookId =:loginId
+		</query>
+	</named-query>  
+	<named-query name="OtsSellerProductMapping.getByProductId">
+		<query>SELECT o 
+		FROM 
+			OtsSellerProductMapping o	
+		WHERE  	
+			o.otsProductId = :otsProductId
+		</query>
+	</named-query>   
+	<named-query name="OtsOrder.GetOrderListForDistributorAndCustomerByDate">
+	     <query>SELECT o
+		FROM    
+			OtsOrder o, OtsOrderProduct op 
+		WHERE
+			(o.otsOrderDt BETWEEN :startDate AND :endDate) 		
+		 AND 
+		 	o.otsCustomerId = :otsCustomerId
+		 AND
+		   	op.otsDistributorId = :otsDistributorId
+		 AND
+	     	op.otsOrderProductStatus != 'Pending'
+	     AND
+	        op.otsOrderId = o.otsOrderId
+	     GROUP BY 
+	        o.otsOrderId
+		</query>
+	</named-query>
+	
+	<named-query name="OtsOrder.GetOrderListForDistributorAndCustomerByDateAndState">
+		<query>SELECT o
+		FROM    
+			OtsOrder o, OtsOrderProduct op
+		WHERE
+			(o.otsOrderDt BETWEEN :startDate AND :endDate) 	
+		AND
+		   	op.otsDistributorId = :otsDistributorId
+		AND 
+			o.otsCustomerId = :otsCustomerId
+		AND 
+       		op.otsOrderProductStatus = :otsOrderProductStatus
+       	AND
+	        op.otsOrderId = o.otsOrderId
+	     GROUP BY 
+	         o.otsOrderId
+		</query>
+     </named-query>
+     
+     <named-query name="OtsOrder.GetOrderListForCustomerAndProductByDate">
+	     <query>SELECT o
+		FROM    
+			OtsOrder o, OtsOrderProduct op 
+		WHERE
+			(o.otsOrderDt BETWEEN :startDate AND :endDate) 		
+		 AND 
+		 	  o.otsCustomerId = :otsCustomerId
+		 AND
+		   	   op.otsDistributorId = :otsDistributorId
+		 AND 
+		   	   op.otsProductId = :otsProductId
+	     AND
+	           op.otsOrderId = o.otsOrderId
+	     GROUP BY 
+	          o.otsOrderId
+		</query>
+	</named-query>
+	
+	<named-query name="OtsOrder.GetOrderListForCustomerAndProductByDateAndStatus">
+		<query>SELECT o
+		FROM    
+			OtsOrder o, OtsOrderProduct op
+		WHERE
+			(o.otsOrderDt BETWEEN :startDate AND :endDate) 	
+		AND
+		   	op.otsDistributorId = :otsDistributorId
+		AND 
+			o.otsCustomerId = :otsCustomerId
+		AND 
+       		op.otsOrderProductStatus = :otsOrderProductStatus
+       	AND 
+       		op.otsProductId = :otsProductId
+       	AND
+	        op.otsOrderId = o.otsOrderId
+	    GROUP BY 
+	        o.otsOrderId
+		</query>
+     </named-query>
+	
+	<named-query name="OtsOrder.GetOrderListForDistributorAndCustomerByDateAndStatus">
+		<query>SELECT o
+		FROM    
+			OtsOrder o, OtsOrderProduct op
+		WHERE
+			(o.otsOrderDt BETWEEN :startDate AND :endDate) 	
+		AND
+		   	op.otsDistributorId = :otsDistributorId
+		AND 
+			o.otsCustomerId = :otsCustomerId
+		AND 
+       		op.otsOrderProductStatus = :otsOrderProductStatus
+       	AND 
+       		op.otsProductId = :otsProductId
+       	AND
+	        op.otsOrderId = o.otsOrderId
+	    GROUP BY 
+	         o.otsOrderId
+		</query>
+     </named-query>
+     
+	<named-query name="OtsOrder.checkForFirstOrderByCustomer">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+	</query>
+	</named-query> 
+	
+	<named-query name="OtsOrder.getOrderByNewStatus">
+		<query>SELECT o
+		FROM    
+			OtsOrder o
+		WHERE
+       		o.otsOrderStatus = :otsOrderStatus
+		</query>
+     </named-query>
+
+	<named-query name="OtsOrderProduct.GetOrderByOrderId">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op,OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		And 
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getAssginedOrder1">
+		<query>SELECT o
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			op.otsAssignedId = :otsAssignedId
+		AND
+			o.otsOrderStatus = :otsOrderStatus
+		And 
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getproductDetailsByorderIdandProductId">
+		<query>SELECT op
+		FROM
+		 	OtsOrderProduct op
+		WHERE
+		   	op.otsOrderId = :otsOrderId
+    	AND
+       		op.otsProductId = :otsProductId
+     </query>
+	</named-query>
+	<named-query name="OtsOrderProduct.CheckForCloseOrder">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op,OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND 
+			op.otsProductId = :otsProductId
+		AND
+			op.otsOrderProductStatus = 'Close' 
+		And 
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.CheckForAssignedOrder">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op,OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND 
+			op.otsAssignedId = :otsAssignedId
+		AND 
+			op.otsProductId = :otsProductId
+		AND
+			op.otsOrderProductStatus = 'Assigned' 
+		And 
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getEmployeeOrderDetails">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op,OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND 
+			op.otsAssignedId = :otsAssignedId
+		AND 
+			op.otsProductId = :otsProductId
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.getAdminDetails">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :RoleId 
+		AND 
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsCoupon.checkForExistingCoupon">
+		<query>SELECT o 
+		FROM 
+			OtsCoupon o	
+		WHERE  	
+			o.otsCouponCode = :otsCouponCode 
+		AND 
+			o.otsCouponStatus IN ('active','new') 
+		</query>
+	</named-query>
+	<named-query name="OtsCoupon.getCouponsBasedOnStatusAndAdminId">
+		<query>SELECT o 
+		FROM 
+			OtsCoupon o	
+		WHERE  	
+			o.otsAdminId = :otsAdminId 
+		AND 
+			o.otsCouponStatus = :otsCouponStatus
+		AND
+			o.otsCouponBasedOn = :otsCouponBasedOn
+		</query>
+	</named-query>
+	
+	<named-query name="OtsCoupon.getCouponsBasedOnStatus">
+		<query>SELECT o 
+		FROM 
+			OtsCoupon o	
+		WHERE  	
+			o.otsCouponId = :otsCouponId
+		AND
+			o.otsCouponStatus = :otsCouponStatus
+		</query>
+	</named-query>
+	<named-query name="OtsCoupon.getCouponsByStatusAndCategory">
+		<query>SELECT o 
+		FROM 
+			OtsCoupon o	
+		WHERE  	
+			o.otsCouponStatus = :otsCouponStatus
+		AND
+			o.otsCouponBasedOn = :otsCouponBasedOn
+		</query>
+	</named-query>
+	<named-query name="OtsCouponOrder.getCouponOrderList">
+		<query>SELECT o 
+		FROM 
+			OtsCoupon c, OtsCouponOrder o
+		WHERE  	
+			c.otsCouponId = :otsCouponId
+		AND
+			o.otsCouponId = c.otsCouponId
+		</query>
+	</named-query>
+	<named-query name="OtsDistributorBanner.getDistributorBanner">
+		<query>SELECT b 
+		FROM 
+			OtsDistributorBanner b
+		WHERE  	
+			b.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsCustomerChangeAddress.getCustomerChangeAddressByCustomerId">
+		<query>SELECT o
+		FROM 
+			OtsCustomerChangeAddress o
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+		And 
+			o.otsCustomerAccountStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsDistributorCompanyDetails.getDistributorCompanyDetails">
+		<query>SELECT o 
+		FROM 
+			OtsDistributorCompanyDetails o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsDistributorCompanyDetails.getGSTUnRegisteredDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsDistributorCompanyDetails o
+		WHERE  	
+			o.otsTaxAvailability = :otsTaxAvailability
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderForDistributorAndStatus">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = :otsOrderProductStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		ORDER BY o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getDistributorWeeklySettlemetDetails">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Close'
+		AND
+			(op.otsSuborderDeliveredDt BETWEEN :FromDate AND :ToDate)
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getDistributorCurrentWeekSettlemetDetails">
+	    <query>SELECT op
+        FROM 
+            OtsOrderProduct op, OtsOrder o
+        WHERE 
+            op.otsDistributorId = :otsDistributorId
+        AND
+            op.otsOrderProductStatus = 'Close'
+        AND
+            EXTRACT(WEEK FROM op.otsSuborderDeliveredDt) = EXTRACT(WEEK FROM CURRENT_DATE)
+        AND
+            EXTRACT(YEAR FROM op.otsSuborderDeliveredDt) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND
+            o.otsOrderId = op.otsOrderId
+	    </query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getDistributorMonthlySettlemetDetails">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Close'
+		AND
+			EXTRACT(MONTH FROM op.otsSuborderDeliveredDt) = :month
+		AND
+			EXTRACT(YEAR FROM op.otsSuborderDeliveredDt) = :year
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getCancelledOrdersByDistributor">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Cancel'
+		AND
+			op.otsRrcOrderStatus IS null 
+		AND
+			o.otsOrderId = op.otsOrderId
+		ORDER BY op.otsOrderId DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getDistributorsOrderCancelledByCustomer">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Cancel'
+		AND
+			op.otsRrcOrderStatus = 'Cancel'
+		AND
+			o.otsOrderId = op.otsOrderId
+		ORDER BY op.otsOrderId DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getReturnReplacementOrdersForDistributor">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Close'
+		AND
+			o.otsOrderId = op.otsOrderId
+		AND
+			op.otsRrcOrderStatus IN('Return', 'Replacement')
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.findByEmployeeFirstNameUnderDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o
+		WHERE
+			 o.otsUsersFirstname LIKE :otsUsersFirstname
+		AND
+			o.otsDistributorId= :otsDistributorId
+		AND
+			o.otsUserRoleId = '3'
+		AND
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query>
+
+	<named-query name="OtsUsers.findByEmployeeLastNameUnderDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o
+		WHERE
+			o.otsUsersLastname LIKE :otsUsersLastname
+		AND
+			o.otsDistributorId= :otsDistributorId
+		AND
+			o.otsUserRoleId = '3'
+		AND
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getRRCOrdersByDistributor">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Close'
+		AND
+			op.otsRrcOrderStatus = :otsRrcOrderStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getRRClosedOrdersByDistributor">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			op.otsOrderProductStatus = 'Close'
+		AND
+			op.otsRrcOrderStatus IN('ReturnClose','ReplaceClose') 
+		AND
+			o.otsOrderId = op.otsOrderId
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.getEmployeesMappedToDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o
+		WHERE
+			o.otsDistributorId= :otsDistributorId
+		AND
+			o.otsUserRoleId = '3'
+		AND
+			o.otsUsersStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsServiceDistrict.getDistrictByStateId">
+		<query>SELECT o 
+		FROM 
+			OtsServiceDistrict o
+		WHERE  	
+			o.otsStateId = :otsStateId
+		</query>
+	</named-query>
+	<named-query name="OtsProductLocationMapping.getLocationsMappedToProduct">
+		<query>SELECT o 
+		FROM 
+			OtsProductLocationMapping o
+		WHERE  	
+			o.otsProductId = :otsProductId
+		</query>
+	</named-query>
+	<named-query name="OtsProductLocationMapping.getAllLocationsMappedToDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsProductLocationMapping o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsServiceDistrict.getAllDistricts">
+		<query>SELECT o 
+		FROM 
+			OtsServiceDistrict o 
+		ORDER BY o.otsDistrictName
+		</query>
+	</named-query>
+	<named-query name="OtsDistributerPaymentDetails.getDistributorPaymentDetails">
+		<query>SELECT o 
+		FROM 
+			OtsDistributerPaymentDetails o
+		WHERE  	
+			o.distributerId = :distributerId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.checkOrderStatusToInactiveDistributor">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			o.otsOrderId = op.otsOrderId
+		AND
+			op.otsOrderProductStatus IN ('New','Assigned')
+		OR
+			op.otsRrcOrderStatus IN('Return','Replacement') 
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getActiveProductListByDistributor">
+	<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsDistributorId = :otsDistributorId
+		AND
+			p.otsProductStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getProductsByDistributorWithReviewAndRating">
+		<query>SELECT p 
+		FROM 
+			OtsRatingReview o,OtsProduct p
+		WHERE  
+			p.otsDistributorId = :otsDistributorId
+		AND
+			o.otsProductId = p.otsProductId
+		GROUP BY 
+			p.otsProductId
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getAllProductsWithDiscount">
+		<query>SELECT p
+		FROM 
+			OtsProduct p, OtsProductLevel l
+		WHERE
+			p.otsProductStatus = 'active'
+		AND 
+			p.otsProductDiscountPercentage IS NOT NULL
+		AND 
+			p.otsProductDiscountPercentage != '0'
+		AND
+			p.otsProductLevelId = '3'
+		AND 
+			p.otsProductLevelId = l.otsProductLevelId
+		ORDER BY
+			p.otsProductId DESC
+	    </query>
+	</named-query>
+
+	<named-query name="OtsProductStock.getProductStockByProductId">
+		<query>SELECT o
+		FROM 
+			OtsProductStock o
+		WHERE 
+			o.otsProductId= :otsProductId
+		AND
+			o.otsProductStockStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getRRCOrdersByCustomer">
+		<query>SELECT o
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+		AND
+			op.otsRrcOrderStatus = :otsRrcOrderStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		GROUP By 
+			op.otsOrderId
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderProductByOrderIdAndRRCOrderStatus">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND
+			op.otsRrcOrderStatus =:otsRrcOrderStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getCustomerOrderByOrderProductStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			o.otsCustomerId = :otsCustomerId
+		AND
+			op.otsOrderProductStatus =:otsOrderProductStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		GROUP By 
+			o.otsOrderId
+		ORDER BY 
+			o.otsOrderDt DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderProductByOrderIdOrderProductStatus">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND
+			op.otsOrderProductStatus =:otsOrderProductStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getOrderByOrderIdOrderProductStatus">
+		<query>SELECT o 
+		FROM 
+			OtsOrder o,OtsOrderProduct op
+		WHERE 
+			o.otsOrderId = :otsOrderId
+		AND
+			op.otsOrderProductStatus =:otsOrderProductStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		GROUP By 
+			o.otsOrderId
+		ORDER BY 
+			o.otsOrderId DESC
+		</query>
+	</named-query>
+	<named-query name="OtsOrder.getOrderByOrderIdRRCOrderStatus">
+		<query>SELECT o
+		FROM 
+			OtsOrderProduct op, OtsOrder o
+		WHERE 
+			o.otsOrderId = :otsOrderId
+		AND
+			op.otsRrcOrderStatus = :otsRrcOrderStatus
+		AND
+			o.otsOrderId = op.otsOrderId
+		GROUP By 
+			op.otsOrderId
+		ORDER BY 
+			op.otsOrderId DESC
+		</query>
+	</named-query>
+	<named-query name="OtsProductLocationMapping.getLocationsMappedToDistributorOnly">
+		<query>SELECT o 
+		FROM 
+			OtsProductLocationMapping o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		AND
+		   o.otsProductId IS NULL
+		</query>
+	</named-query>
+	<named-query name="OtsProductLocationMapping.getLocationsMappedToDistributorAndProduct">
+		<query>SELECT o 
+		FROM 
+			OtsProductLocationMapping o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		AND
+			o.otsProductId = :otsProductId
+		</query>
+	</named-query>
+	<named-query name="OtsProductLocationMapping.getLocationsMappedToDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsProductLocationMapping o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getProductsForSubCategory">
+		<query>SELECT p 
+		FROM 
+			OtsProductCategoryMapping cm ,OtsProduct p
+		WHERE
+			p.otsProductStatus='active'
+		AND
+			p.otsProductLevelId = 3
+		AND
+			cm.otsProductCategoryId = :otsProductCategoryId
+		AND
+			cm.otsProductId = p.otsProductId
+		ORDER BY
+			p.otsProductId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderProductByOrderIdProductIdOPStatus">
+		<query>SELECT op
+		FROM
+		 	OtsOrderProduct op,OtsOrder o
+		WHERE
+		   	op.otsOrderId = :otsOrderId
+    	AND
+       		op.otsProductId = :otsProductId
+       	AND 
+       		op.otsOrderProductStatus = :otsOrderProductStatus
+    	AND
+    		o.otsOrderId = op.otsOrderId	
+     	</query>
+     </named-query>
+     <named-query name="OtsProduct.getProductBySubCategory">
+		<query>SELECT p
+		FROM 
+			OtsProduct p, OtsProductCategoryMapping pcm
+		WHERE
+			p.otsProductStatus = 'active'
+		AND
+			p.otsProductLevelId = '3'
+		AND 
+			pcm.otsProductCategoryId = :otsProductCategoryId
+		AND
+			pcm.otsProductId = p.otsProductId
+	    </query>
+	</named-query>
+	<named-query name="OtsProduct.getSubCategoryByCategory">
+		<query>SELECT p
+		FROM 
+			OtsProduct p, OtsProductCategoryMapping pcm
+		WHERE
+			p.otsProductStatus = 'active'
+		AND
+			p.otsProductLevelId = '2'
+		AND 
+			pcm.otsProductCategoryId = :otsProductCategoryId
+		AND
+			pcm.otsProductId = p.otsProductId
+		GROUP BY
+			p.otsProductId
+	    </query>
+	</named-query>
+	<named-query name="OtsOrderProduct.getOrderProductByDistributorAndOrderId">
+		<query>SELECT op
+		FROM 
+			OtsOrderProduct op,OtsOrder o
+		WHERE 
+			op.otsOrderId = :otsOrderId
+		AND 
+			op.otsDistributorId = :otsDistributorId
+		AND
+			o.otsOrderId = op.otsOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.getDistributorsWithActiveProductsByCountry">
+		<query>SELECT o
+      	FROM 
+            OtsUsers o , OtsProduct p
+      	WHERE 
+      		p.otsDistributorId = o.otsUsersId
+      	AND 
+      		p.otsProductStatus = 'active'
+      	AND
+      	    p.otsProductLevelId = '3'
+      	AND
+      	    o.otsUsersStatus ='active'
+      	AND
+      		p.otsProductCountryCode = :otsProductCountryCode
+      	GROUP BY 
+      		o.otsUsersId
+		</query>
+	</named-query>
+	<named-query name="OtsAttributeValue.getAttributeValueByValueName">
+		<query>SELECT av
+		FROM 
+			OtsAttributeValue av, OtsAttributeKey ak
+		WHERE 
+			ak.otsAttributeKeyId = av.otsAttributeKeyId
+		AND 
+		   av.otsAttributeValueName = :otsAttributeValueName
+	    AND
+			ak.otsAttributeKeyId = :otsAttributeKeyId
+		</query>
+	</named-query>
+	
+	<named-query name="OtsAttributeValue.getAttributeValueForAttributeKeyId">
+		<query>SELECT av
+		FROM 
+			OtsAttributeValue av, OtsAttributeKey ak
+		WHERE 
+			ak.otsAttributeKeyId = av.otsAttributeKeyId
+		AND 
+			ak.otsAttributeKeyId = :otsAttributeKeyId
+		</query>
+	</named-query>
+	<named-query name="OtsSubcategoryAttributeMapping.getAttributeKeyForSubcategory">
+		<query>SELECT sam
+		FROM 
+			OtsAttributeKey ak, OtsSubcategoryAttributeMapping sam
+		WHERE 
+			ak.otsAttributeKeyId = sam.otsAttributeKeyId
+		AND 
+			sam.otsSubcategoryId = :otsSubcategoryId
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getParentProductListByDistributor">
+		<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsDistributorId = :distributorId
+		AND 
+			p.otsProductLevelId = 3
+		AND 
+			p.variantFlag = true
+		</query>
+	</named-query>
+	<named-query name="OtsAttributeKey.getUnMappedAttributeKeyandValuesForSubcategory">
+		<query>SELECT ak
+		FROM 
+			OtsAttributeKey ak
+		LEFT JOIN 
+			OtsSubcategoryAttributeMapping sam ON ak.otsAttributeKeyId = sam.otsAttributeKeyId 
+		AND 
+			sam.otsSubcategoryId = :otsSubcategoryId
+		WHERE 
+			sam.otsSubcategoryId IS NULL
+		</query>
+	</named-query>
+	<named-query name="Useraccounts.getSubAdminByStatus">
+		<query>SELECT o 
+		FROM 
+			 Useraccounts o
+		WHERE  				
+		    o.accountType = :accountType
+		AND
+			o.userRole = 2 
+		</query>
+	</named-query>
+	<named-query name="OtsSubadminValidity.getSubAdminValidity">
+		<query>SELECT o 
+		FROM 
+			 OtsSubadminValidity o
+		WHERE  				
+		     o.otsAccountId = :otsAccountId
+		</query>
+	</named-query>
+	<named-query name="OtsOrderProduct.checkPendingOrdersOfInactiveDistributor">
+		<query>SELECT op
+        FROM 
+            OtsOrderProduct op, OtsUsers u
+        WHERE 
+            u.otsUsersId = op.otsDistributorId
+        AND 
+            u.otsUsersStatus = 'inactive'
+        AND  
+            op.otsDistributorId = :otsDistributorId
+        AND 
+            (op.otsOrderProductStatus IN ('New', 'Assigned','Pending')
+        OR 
+            op.otsRrcOrderStatus IN ('Return', 'Replacement'))
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getProductAndVarientsByStatus">
+		<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsProductStatus = :status
+		AND
+			p.otsProductLevelId IN (3,4)
+		</query>
+	</named-query>
+	<named-query name="OtsUsers.getUserDetailsByStatus">
+	    <query>SELECT o
+        FROM 
+             OtsUsers o
+        WHERE 
+             o.otsUsersStatus = :status
+        AND
+            o.otsUserRoleId = :otsUserRoleId
+	    </query>
+	</named-query>
+	<named-query name="OtsServiceOrder.getAllServiceMappedToServiceId">
+		<query>SELECT o 
+		FROM 
+			OtsServiceOrder o
+		WHERE  	
+			o.otsServiceOrderId = :otsServiceOrderId
+		</query>
+	</named-query>
+	<named-query name="OtsServiceOrderDetails.getServiceOrderDetailsByOrderId">
+		<query>SELECT s
+		FROM 
+			OtsServiceOrderDetails s, OtsServiceOrder o 
+		WHERE 
+			s.otsServiceOrderId = o.otsServiceOrderId
+		AND 
+		   s.otsServiceOrderId = :otsServiceOrderId 
+		</query>
+	</named-query>
+	<named-query name="OtsService.getAllServices">
+	    <query>SELECT s 
+        FROM 
+           OtsService s 
+        WHERE 
+           s.otsServiceStatus = 'Active'
+        AND 
+           s.otsServiceLevelId = 3
+	    </query>
+	</named-query>
+	<named-query name="OtsService.getAllServicesByProviderId">
+	    <query>SELECT s 
+	        FROM
+	        	OtsService s 
+	        WHERE 
+	        	s.otsServiceProviderId.otsUsersId = :otsProviderId
+	        AND
+	         	s.otsServiceLevelId = 3	
+	    </query>
+	</named-query>
+	
+	<named-query name="OtsService.getAllServicesCategoryAndSubcategory">
+	    <query>SELECT s 
+        FROM
+        	 OtsService s 
+        WHERE 
+        	s.otsServiceLevelId.otsServiceLevelId = :otsServiceLevelId
+	    </query>
+	</named-query>
+	
+	<named-query name="OtsUsers.getProviderByCreatedUser">
+	    <query>SELECT o 
+        FROM
+        	 OtsUsers o, Useraccounts u
+        WHERE 
+            o.otsUserRoleId IN (1, 2)
+        AND 
+          	u.accountId = :createdUser
+        AND
+          	o.createdUser = u.accountId
+        AND
+            o.otsUsersStatus IN ('active', 'inactive')
+        AND 
+          	o.otsServiceProvider = true
+	    </query>
+	</named-query>
+	<named-query
+		name="OtsService.getServicesByProviderAndStatus">
+		<query>SELECT s
+	        FROM
+	        	OtsService s
+	        WHERE 
+	            s.otsServiceProviderId.otsUsersId = :otsProviderId
+	        AND 
+	            s.otsServiceStatus = :otsServiceStatus
+	        AND
+	            s.otsServiceLevelId = 3	
+	    </query>
+	</named-query>
+	<named-query name="OtsService.updateServiceStatus">
+		<query> UPDATE OtsService s
+         SET 
+         	s.otsServiceStatus = :otsServiceStatus
+         WHERE
+            s.otsServiceId = :otsServiceId
+    	</query>
+   </named-query>
+   <named-query name="OtsServiceOrderDetails.getServiceOrderDetailsByProviderAndStatus">
+		<query>SELECT od
+		FROM
+			OtsServiceOrderDetails od
+		WHERE
+			od.otsProviderId = :otsProviderId
+		AND
+			od.otsServiceOrderStatus = :otsServiceOrderStatus	
+		ORDER BY 
+			od.otsServiceOrderedDate DESC
+		</query>
+	</named-query>
+	<named-query name="OtsServiceOrderDetails.getServiceOrderDetailsByCustomerAndStatus">
+		<query>SELECT od 
+		FROM 
+			OtsServiceOrder o,OtsServiceOrderDetails od
+		 WHERE
+            od.otsServiceOrderId = o.otsServiceOrderId
+        AND
+            o.otsServiceCustomerId = :otsServiceCustomerId
+		AND
+		    od.otsServiceOrderStatus = :otsServiceOrderStatus
+		ORDER BY 
+			od.otsServiceOrderedDate DESC
+		</query>
+	</named-query>
+	<named-query name="OtsServiceRatingReview.getServiceReviewAndRatingByOrderId">
+    <query>SELECT o 
+        FROM 
+        	OtsServiceRatingReview o	
+        WHERE  
+           o.otsServiceOrderId = :otsServiceOrderId 
+        AND	
+           o.otsServiceId = :otsServiceId
+        AND
+           o.otsCustomerId = :otsCustomerId
+    	</query>
+	</named-query>
+	<named-query name="OtsServiceRatingReview.getServiceReviewAndRatingByServiceId">
+		<query>SELECT o 
+		FROM 
+			OtsServiceRatingReview o	
+		WHERE  	
+			o.otsServiceId = :otsServiceId
+		AND
+			o.otsRatingReviewStatus = 'active'
+		</query>
+	</named-query>
+	<named-query name="OtsServiceLocationMapping.getAllLocationsMappedToProvider">
+    	<query>SELECT o
+         FROM 
+         	OtsServiceLocationMapping o
+         WHERE 
+         	o.otsProviderId = :otsProviderId
+	    </query>
+	</named-query>
+
+	<named-query name="OtsServiceLocationMapping.getLocationsMappedToProviderOnly">
+	    <query>SELECT o 
+        FROM 
+        	OtsServiceLocationMapping o 
+        WHERE 
+        	o.otsProviderId = :otsProviderId 
+        AND 
+        	(o.otsServiceId IS NULL OR o.otsServiceId = '')
+	    </query>
+	</named-query>
+	<named-query name="OtsServiceLocationMapping.getLocationsMappedToProviderAndService">
+	    <query>SELECT o
+         FROM 
+         	 OtsServiceLocationMapping o 
+        WHERE
+        	 o.otsProviderId = :otsProviderId 
+        AND 
+        	o.otsServiceId = :otsServiceId 
+	    </query>
+	</named-query>
+	<named-query name="OtsServiceLocationMapping.getLocationsMappedToService">
+	    <query>SELECT o 
+        FROM
+        	 OtsServiceLocationMapping o 
+        WHERE 
+        	o.otsServiceId = :otsServiceId
+	    </query>
+	</named-query>
+	<named-query name="OtsUsers.getActiveProviderList">
+		<query>SELECT o
+        FROM 
+        	OtsUsers o 
+        WHERE 
+            o.otsUsersStatus = 'active' 
+        AND 
+            o.otsUserRoleId = 2
+        AND
+            o.otsServiceProvider = true
+    	</query>
+	</named-query>
+	<named-query name="OtsDistributorCountryMapping.getCountriesMappedToDistributor">
+		<query>SELECT o 
+		FROM 
+			OtsDistributorCountryMapping o
+		WHERE  	
+			o.otsDistributorId = :otsDistributorId
+		</query>
+	</named-query>
+	<named-query name="OtsDistributorCountryMapping.deleteDistributorCountryMappingByDistributorId">
+	    <query>DELETE 
+	        FROM 
+	        	OtsDistributorCountryMapping d
+	        WHERE 
+	        	d.otsDistributorId = :otsDistributorId
+	    </query>
+	</named-query>
+	<named-query name="OtsDistributorCompanyDetails.updateDistributorCompanyDetails">
+		<query> UPDATE OtsDistributorCompanyDetails d
+         SET 
+         	d.otsCompanyName = :otsCompanyName,
+         	d.otsCompanyAddress = :otsCompanyAddress,
+         	d.otsCompanyPincode = :otsCompanyPincode,
+         	d.otsCompanyContactNo = :otsCompanyContactNo,
+         	d.otsCompanyEmailid = :otsCompanyEmailid,
+         	d.otsTaxAvailability = :otsTaxAvailability,
+         	d.otsCompanyTaxNumber = :otsCompanyTaxNumber,
+         	d.companyBusinessRegistration = :companyBusinessRegistration,
+         	d.authorizedSignatoryProof = :authorizedSignatoryProof,
+         	d.bankConfirmationOnBankAccount = :bankConfirmationOnBankAccount,
+         	d.taxCard = :taxCard
+         WHERE
+            d.otsDistributorCompanyId = :otsDistributorCompanyId
+    	</query>
+   	</named-query>
+   	<named-query name="OtsUsers.getDistributorDetails">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o
+		WHERE
+			o.otsUsersId = :otsDistributorId
+		AND
+			o.otsUserRoleId = '2'
+		</query>
+	</named-query>	
+	<named-query name="OtsUsers.findByRoleIdAndUserStatus">
+		<query>SELECT o 
+		FROM 
+			OtsUsers o	
+		WHERE  	
+			o.otsUserRoleId = :otsUserRoleId 
+		AND
+			o.otsUsersStatus = :otsUsersStatus
+		</query>
+	</named-query> 
+	<named-query name="OtsProduct.getProductByOemPartNumber">
+		<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsOemPartNumber = :otsOemPartNumber
+		AND
+			p.otsProductStatus = 'active'
+		AND
+			p.otsProductLevelId IN (3,4)
+		</query>
+	</named-query>
+	<named-query name="OtsProduct.getProductByOemManufaturerName">
+		<query>SELECT p 
+		FROM 
+			OtsProduct p
+		WHERE 
+			p.otsManufacturerName = :otsManufacturerName
+		AND
+			p.otsProductStatus = 'active'
+		AND
+			p.otsProductLevelId IN (3,4)
+		</query>
+	</named-query>
+	<named-query name="Useraccounts.getAllActiveAdmin">
+		<query>SELECT o 
+		FROM 
+			 Useraccounts o
+		WHERE  				
+			o.userRole = 1
+		AND
+			o.accountType = 'Active' 
+		</query>
+	</named-query>
+	
+	<!-- Named Native Query should be always at End of all Named Queries -->
+	<named-native-query name="OtsServicePincode.getPincodebyDistrict" result-class="com.fuso.enterprise.ots.srv.server.model.entity.OtsServicePincode">
+	    <query>SELECT DISTINCT ON (ots_pincode) *
+	  	FROM 
+	  		ots_service_pincode
+	  	WHERE 
+	  		ots_district_id = :otsDistrictId
+	  	ORDER BY
+	  		ots_pincode, ots_pincode_id
+	    </query>
+	</named-native-query>
+	<named-native-query name="OtsServicePincode.getPincodeDetails" result-class="com.fuso.enterprise.ots.srv.server.model.entity.OtsServicePincode">
+	    <query>SELECT DISTINCT ON (ots_pincode) *
+	  	FROM 
+	  		ots_service_pincode
+	  	WHERE 
+	  		ots_pincode = :otsPincode
+	    </query>
+	</named-native-query>
+	
+</entity-mappings>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<display-name>IPT services</display-name>
+	<distributable />
+	<env-entry>
+		<description>Logback JNDI logging context for this app</description>
+		<env-entry-name>logback/context-name</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>OTS-SRV</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>A property file containing the profiles to activate</description>
+		<env-entry-name>evry.app.profiles/configuration-resource</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>classpath:ots/env-config.properties</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Logback URL for configuring logback context</description>
+		<env-entry-name>logback/configuration-resource</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>ots/logback.xml</env-entry-value>
+	</env-entry>
+	
+	<filter>
+		<filter-name>LoggerContextFilter</filter-name>
+		<filter-class>ch.qos.logback.classic.selector.servlet.LoggerContextFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>MDCInsertingServletFilter</filter-name>
+		<filter-class>ch.qos.logback.classic.helpers.MDCInsertingServletFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>CorsFilter</filter-name>
+		<filter-class>com.fuso.enterprise.ots.srv.common.CorsFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>LoggerContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>MDCInsertingServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CorsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<listener>
+		<description>Frees the logback logging context, see: http://logback.qos.ch/manual/loggingSeparation.html</description>
+		<listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
+	</listener>
+	
+	<listener>
+		<description>Bootstraps the spring context files</description>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<listener>
+		<description>Register a request listener so that we can have scoped beans</description>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<display-name>CXF Dispatching jaxrs servlet</display-name>
+		<servlet-name>jaxrsCXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<init-param>
+			<param-name>config-location</param-name>
+			<param-value>WEB-INF/jaxrs-cxf-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>jaxrsCXFServlet</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<display-name>mvc servlet</display-name>
+		<servlet-name>mvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>mvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>

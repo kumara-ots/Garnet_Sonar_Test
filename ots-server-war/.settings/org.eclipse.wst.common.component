@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+        
+    <wb-module deploy-name="ots-server-war-18.25-SNAPSHOT">
+                
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+                
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="ots-server-18.25-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ots-server/ots-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ots-server-api-18.25-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ots-server-api/ots-server-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ots-server-common-18.25-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ots-server-common/ots-server-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ots-server-ws-18.25-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ots-server-ws/ots-server-ws">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+                
+        <property name="context-root" value="ots-server-war"/>
+                
+        <property name="java-output-path" value="/ots-server-war/target/classes"/>
+            
+    </wb-module>
+    
+</project-modules>

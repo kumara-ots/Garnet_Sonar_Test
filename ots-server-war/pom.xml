@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.fuso.enterprise.ots</groupId>
+        <artifactId>ots-server-system</artifactId>
+        <version>18.25-SNAPSHOT</version>
+    </parent>
+    <artifactId>ots-server-war</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>war</packaging>
+    <description>OTS war Module</description>
+
+    <properties>
+        <jetty.port>8080</jetty.port>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <builtBy>${user.name}</builtBy> <!-- Add the builtBy property here -->
+    </properties>
+
+    <build>
+	    <pluginManagement>
+	            <plugins>
+	                <plugin>
+	                    <groupId>org.eclipse.jetty</groupId>
+	                    <artifactId>jetty-maven-plugin</artifactId>
+	                    <version>9.2.11.v20150529</version>
+	                    <configuration>
+	                        <useTestScope>true</useTestScope>
+	                        <useProvidedScope>true</useProvidedScope>
+	                        <webAppConfig>
+	                            <contextPath>/otssrv</contextPath>
+	                            <extraClasspath>${basedir}/target/classes/;${project.basedir}/../ots-server-config/src/main/resources</extraClasspath>
+	                        </webAppConfig>
+	                        <scanIntervalSeconds>10</scanIntervalSeconds>
+	                        <httpConnector>
+	                            <port>${jetty.port}</port>
+	                        </httpConnector>
+	                    </configuration>
+	                </plugin>
+	            </plugins>
+	        </pluginManagement>
+        <plugins>
+            <!-- Configure maven-resources-plugin to filter build-info.properties -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/resources</directory>
+                                    <includes>
+                                        <include>build-info.properties</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                         
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Use build-helper-maven-plugin to set IST timezone -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>set-build-timestamp</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>build.timestamp</name>
+                            <pattern>yyyy-MM-dd HH:mm:ss</pattern>
+                            <timeZone>Asia/Kolkata</timeZone>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fuso.enterprise.ots</groupId>
+            <artifactId>ots-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fuso.enterprise.ots</groupId>
+            <artifactId>ots-server-ws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-management</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>3.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>

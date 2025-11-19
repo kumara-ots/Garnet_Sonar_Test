@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<import resource="classpath*:META-INF/spring/validation-context.xml" />
+	
+	<context:property-placeholder
+		properties-ref="appConfig" system-properties-mode="OVERRIDE" />
+
+	<context:component-scan base-package="com.fuso.enterprise.ipt.srv.server.util" />
+	
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+			
+
+	<aop:aspectj-autoproxy />
+
+	<bean id="appConfig" name="appProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="ignoreResourceNotFound" value="false" />
+		<property name="locations">
+			<description>
+				app-config.properties contains commons tunable values.
+				app-env.properties contains environment-specific properties.
+			</description>
+			<list>
+				<value>classpath:ots/app-config.properties</value>
+				<value>classpath:ots/env-config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>META-INF/ipt-sample-messages</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

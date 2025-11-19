@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util" xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+         http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+
+  <description>
+    All CXF services are wired here.
+  </description>
+
+  <import resource="classpath:META-INF/spring/ipt-app-config-context.xml" />
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <context:annotation-config />
+
+  <!-- Jaxbannotation introspector -->
+  <bean class="com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector"
+    id="jaxbAnnotationIntrospector" />
+  <!-- Custom Mapper -->
+  <bean id="iptJsonMapper"
+    class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+    p:annotationIntrospector-ref="jaxbAnnotationIntrospector">
+    <property name="serializationInclusion">
+      <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">
+        NON_NULL
+      </value>
+    </property>
+  </bean>
+
+  <bean id="iptJaxbJsonProvider"
+    class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
+    <constructor-arg ref="iptJsonMapper" />
+    <constructor-arg>
+      <value></value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="iptWadlGenerator" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">
+    <property name="linkJsonToXmlSchema" value="true" />
+    <property name="ignoreMessageWriters" value="false"></property>
+  </bean>
+
+ <!--  <bean id="localDateTimeParamConverterProvider"
+    class="com.fuso.enterprise.ipt.srv.server.util.LocalDateTimeParamConverterProvider" />
+
+  <bean id="localDateParamConverterProvider"
+    class="com.fuso.enterprise.ipt.srv.server.util.LocalDateParamConverterProvider" /> -->
+
+
+
+
+  <jaxrs:server address="${cxf.address:/v18_1}">
+    <jaxrs:features>
+    <ref bean="loggingFeature" />
+      <bean class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
+        <!-- run as filter so it is not denied by our own access filters -->
+        <property name="runAsFilter" value="true" />
+        <property name="basePath" value="/ipt/api/IPT/v18_1" />
+        <property name="title" value="Documentation for IPT services" />
+        <property name="description" value="IPT services Documentation" />
+        <property name="contact" value="admin@ipt.com" />
+        <property name="license" value="IPT License" />
+        <property name="licenseUrl"
+          value="http://ipt.com/licenses/LICENSE-2.0.html" />
+      </bean>
+      <cxf:logging />
+    </jaxrs:features>
+    <jaxrs:serviceBeans>
+      <bean
+        class="com.fuso.enterprise.ipt.srv.rest.ws.service.IPTShikeishyoResourceV18_1WsImpl" />
+	<bean
+        class="com.fuso.enterprise.ipt.srv.rest.ws.service.IPTProcessShikeishyoV18_1WsImpl" />
+     <bean
+        class="com.fuso.enterprise.ipt.srv.rest.ws.service.ITPUsersV18_1WsImpl" />
+		
+    </jaxrs:serviceBeans>
+    <jaxrs:providers>
+      <ref bean="iptJaxbJsonProvider" />
+      <ref bean="iptWadlGenerator" />
+      <ref bean="localDateTimeParamConverterProvider" />
+      <ref bean="localDateParamConverterProvider" />
+      <ref bean="serviceExceptionMapper" />
+    </jaxrs:providers>
+    <jaxrs:properties>
+      <entry key="org.apache.cxf.propagate.exception" value="false" />
+    </jaxrs:properties>
+  </jaxrs:server>
+  <bean id="loggingFeature" class="org.apache.cxf.ext.logging.LoggingFeature">
+    <property name="sender">
+      <bean class="org.apache.cxf.ext.logging.slf4j.Slf4jEventSender">
+        <constructor-arg value="JAXRSPAYLOAD" />
+      </bean>
+    </property>
+    <property name="prettyLogging" value="false" />
+    <property name="limit" value="231352" />
+  </bean>
+
+</beans>
