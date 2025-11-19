@@ -2,6 +2,7 @@
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.sql.Types;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -511,8 +512,10 @@ public class OTSUserServiceImpl implements  OTSUserService{
 		ForgotPasswordResponse forgotPasswordResponse = new ForgotPasswordResponse();
 		UserDetails userDetails = new UserDetails();
 		try {
-			Random rand = new Random(); 
-			int otp = 1000 +rand.nextInt(9000);
+			SecureRandom secureRandom = new SecureRandom();
+//			Random rand = new Random(); 
+//			int otp = 1000 +rand.nextInt(9000);
+			int otp = 1000 +secureRandom.nextInt(9000);
 			userDetails = userServiceDAO.checkForOTP(forgotPasswordRequest.getRequest().getMobileNumber());
 			if(userDetails!=null) {
 				String distMsg = "<p>Hi "+userDetails.getFirstName()+" "+userDetails.getLastName()+"<br><br>" + 
@@ -2758,8 +2761,11 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	public ForgotPasswordResponse sendOTPToAdmin(String emailId) {
 		ForgotPasswordResponse forgotPasswordResponse = new ForgotPasswordResponse();
 		try {
-			Random rand = new Random(); 
-			int otp = 1000 +rand.nextInt(9000);
+			SecureRandom secureRandom = new SecureRandom();
+			int otp = 1000 +secureRandom.nextInt(9000);
+			System.out.println(otp);
+//			Random rand = new Random(); 
+//			int otp = 1000 +rand.nextInt(9000);
 			UserAccounts userAccounts = useraccountsDAO.getUseraccountDetailByEmail(emailId);
 			if(userAccounts!=null) {
 				String adminMsg = "<p>Hi "+userAccounts.getFisrtName()+" "+userAccounts.getLastName()+"<br><br>" + 

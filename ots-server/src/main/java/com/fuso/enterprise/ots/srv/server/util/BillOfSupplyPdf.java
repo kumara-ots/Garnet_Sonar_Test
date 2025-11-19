@@ -3,6 +3,7 @@ package com.fuso.enterprise.ots.srv.server.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,8 +59,9 @@ public class BillOfSupplyPdf {
   	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd"); // Date in YYYYMMDD format
   	    String datePart = LocalDate.now().format(dtf); // Get the current date
 
-  	    Random random = new Random();
-  	    int randomNumber = 1000 + random.nextInt(9000); // Generate a random 4-digit number
+//  	    Random random = new Random();
+  	    SecureRandom secureRandom = new SecureRandom();
+  	    int randomNumber = 1000 + secureRandom.nextInt(9000); // Generate a random 4-digit number
 
   	    return "BOS-" + datePart + "-" + randomNumber; // Combine all parts
   	}

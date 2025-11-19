@@ -1,6 +1,7 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
@@ -283,8 +284,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderProduct.setOtsProductCurrencySymbol(orderedProductDetails.getOtsProductCurrencySymbol());
 			
 			//To generate 10 digit Random number for SubOrder Id
-			Random objGenerator = new Random();          
-	   	 	long randomNumber = 1000000000L  + objGenerator.nextInt(900000000);
+//			Random objGenerator = new Random();  
+			SecureRandom secureRandom = new SecureRandom();
+	   	 	long randomNumber = 1000000000L  + secureRandom.nextInt(900000000);
 	   	 	String SubOrderNumber = subOrderNoFormat+randomNumber;
 			otsOrderProduct.setOtsSuborderId(SubOrderNumber);
 			otsOrderProduct.setOtsSettlementStatus("Pending");

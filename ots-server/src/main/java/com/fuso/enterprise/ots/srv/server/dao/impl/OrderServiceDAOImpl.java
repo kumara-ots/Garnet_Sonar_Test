@@ -1,6 +1,7 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -219,8 +220,9 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			super.getEntityManager().flush();
 			
 			//To generate 10 digit Random number for OrderId
-			Random objGenerator = new Random();          
-       	 	long randomNumber = 1000000000L  + objGenerator.nextInt(900000000);
+//			Random objGenerator = new Random();     
+			SecureRandom secureRandom = new SecureRandom();
+       	 	long randomNumber = 1000000000L  + secureRandom.nextInt(900000000);
             System.out.println("Random No : " + randomNumber); 
             
 			String OrderNumber = orderNoFormat+randomNumber;

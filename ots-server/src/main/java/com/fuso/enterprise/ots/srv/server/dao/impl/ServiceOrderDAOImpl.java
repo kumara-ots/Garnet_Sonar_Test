@@ -1,6 +1,7 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -80,8 +81,9 @@ public class ServiceOrderDAOImpl extends AbstractIptDao <OtsServiceOrder, String
 	        otsServiceOrder.setOtsServiceOrderId(uuid);
 
 	        // ✅ Generate 10-digit random order number
-	        Random objGenerator = new Random();
-	        long randomNumber = 1000000000L + objGenerator.nextInt(900000000);
+//	        Random objGenerator = new Random();
+	        SecureRandom secureRandom = new SecureRandom();
+	        long randomNumber = 1000000000L + secureRandom.nextInt(900000000);
 	        System.out.println("Random No : " + randomNumber);
 
 	        String OrderNumber = orderNoFormat + randomNumber;

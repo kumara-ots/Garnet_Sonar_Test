@@ -1540,9 +1540,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			payment = razorpay.Payments.fetch(paymentId);
 			paymentDetails = new JSONObject(payment);
 		} catch (RazorpayException e1) {
-			EmailUtil.sendDonationMail("manoj.vg@ortusolis.com","","Etaarana Error in donation", 
-					paymentId
-					+ "fetchPaymentDetailsByPaymetId");
 			e1.printStackTrace();
 		}
 		System.out.print(payment);

@@ -1,6 +1,7 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1644,8 +1645,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			OtsProduct oldProduct = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
 			
 			//To generate random
-			Random random = new Random();
-	        int eightDigitNumber = 10000000 + random.nextInt(90000000); // Ensures the number is 8 digits
+//			Random random = new Random();
+			SecureRandom secureRandom = new SecureRandom();
+	        int eightDigitNumber = 10000000 + secureRandom.nextInt(90000000); // Ensures the number is 8 digits
 	        
 	        //To generate random UUID & insert into table   
 			UUID uuid=UUID.randomUUID();
@@ -1769,7 +1771,8 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				
 				//To generate random
 				Random random = new Random();
-				int eightDigitNumber = 10000000 + random.nextInt(90000000); // Ensures the number is 8 digits
+				SecureRandom secureRandom = new SecureRandom();
+				int eightDigitNumber = 10000000 + secureRandom.nextInt(90000000); // Ensures the number is 8 digits
 				
 				UUID uuid = UUID.randomUUID();
 				otsProduct.setOtsProductId(uuid);

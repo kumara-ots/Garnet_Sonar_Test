@@ -84,11 +84,9 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}	
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -116,11 +114,9 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}	
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -152,12 +148,12 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -183,12 +179,12 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -214,12 +210,12 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -246,11 +242,11 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			}	
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -279,12 +275,12 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
+			
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
