@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.NoResultException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -58,11 +56,9 @@ public class OtsProductWishlistDAOImpl extends AbstractIptDao<OtsProductWishlist
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		
@@ -83,11 +79,9 @@ public class OtsProductWishlistDAOImpl extends AbstractIptDao<OtsProductWishlist
 			getwishListResponseList = otsProductWishlist.stream().map(productWishlist -> convertEntityToModel(productWishlist)).collect(Collectors.toList());
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return getwishListResponseList;
@@ -126,7 +120,6 @@ public class OtsProductWishlistDAOImpl extends AbstractIptDao<OtsProductWishlist
 			otsProductWishlist = super.getResultByNamedQuery("OtsProductWishlist.getWhishListByCustomerIdAndProductId", queryParameter);
 			super.getEntityManager().remove(otsProductWishlist);
 		}catch(Exception e) {
-			e.printStackTrace();
 			return "No data found";
 		}
 		return "success";

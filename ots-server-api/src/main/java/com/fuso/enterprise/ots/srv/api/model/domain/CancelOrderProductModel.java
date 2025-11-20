@@ -5,7 +5,7 @@ public class CancelOrderProductModel {
 	private String orderId;
 	private String productId;
 	private String customerId;
-	private String cancelReasonId;
+	private String cancelReason;
 	private String cancelledBy;
 	
 	public String getOrderId() {
@@ -26,11 +26,11 @@ public class CancelOrderProductModel {
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
-	public String getCancelReasonId() {
-		return cancelReasonId;
+	public String getCancelReason() {
+		return cancelReason;
 	}
-	public void setCancelReasonId(String cancelReasonId) {
-		this.cancelReasonId = cancelReasonId;
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
 	}
 	public String getCancelledBy() {
 		return cancelledBy;

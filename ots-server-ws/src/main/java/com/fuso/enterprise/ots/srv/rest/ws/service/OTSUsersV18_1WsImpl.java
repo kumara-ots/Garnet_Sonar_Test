@@ -412,7 +412,6 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 					if ("pending".equalsIgnoreCase(userStatus)) {
 						response = buildResponse(404, "Please Wait Or Ask For Admin Approval");
 					} else if ("rejected".equalsIgnoreCase(userStatus)) {
-						
 						response = buildResponse(404, loginUserResponse.getUserDetails().getUserId(), "Your Approval Process Is Rejected for" + loginUserResponse.getUserDetails().getUsersRejectionReason() + ". Do You Want To Continue The Process?");
 					} else if ("inactive".equalsIgnoreCase(userStatus)) {
 						response = buildResponse(404, "Your Account Is Inactive");
@@ -650,17 +649,32 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 	public Response addToCart(AddToCartRequest addToCartRequest) {
 		Response response = null;
 		try {
-			String addcart = otsUserService.addToCart(addToCartRequest);
-			if (addcart == null) {
-				response = responseWrapper.buildResponse(404, "Product Not Added To Cart"); 
-			} else if (addcart.equalsIgnoreCase("Invalid Product Details")) { 
+			if(addToCartRequest.getRequestData().getCustomerId() == null || addToCartRequest.getRequestData().getCustomerId().equals("")
+					|| addToCartRequest.getRequestData().getProductId() == null || addToCartRequest.getRequestData().getProductId().equals("")
+					|| addToCartRequest.getRequestData().getProductPrice() == null || addToCartRequest.getRequestData().getProductPrice().equals("")
+					|| addToCartRequest.getRequestData().getOtsCartQty() == null) {
+				return response = buildResponse(400,"Please Enter Required Inputs");
+			}
+			
+			//Request Validation : 1.Checks if product exists or Not. 
+			//2.Compares input product price matching actual product price.
+			//3.Checks product from single distributor is present
+			String requestValidation = otsUserService.addToCartRequestValidation(addToCartRequest);
+			
+			//Add product to cart only when response is "Add To Cart"
+			if(requestValidation.equalsIgnoreCase("Add To Cart")) {
+				String addcart = otsUserService.addToCart(addToCartRequest);
+				if (addcart != null) {
+					response = responseWrapper.buildResponse(200, addcart, "Successful");
+				} else {
+					response = responseWrapper.buildResponse(404, "Product Not Added To Cart"); 
+				} 
+			}else if(requestValidation.equalsIgnoreCase("Invalid Product Details")) {
 				response = responseWrapper.buildResponse(409, "Invalid Product Details"); // 409: Conflict
-			} else if (addcart.equalsIgnoreCase("Out Of Stock")) {
-				response = responseWrapper.buildResponse(404, "Out Of Stock");
-			} else if (addcart.equalsIgnoreCase("Product Added To Cart")) {
-				response = responseWrapper.buildResponse(200, addcart, "Successful");
-			} else {
-				response = responseWrapper.buildResponse(404, addcart);
+			}else if(requestValidation.equalsIgnoreCase("Product From Different Seller")) {
+				response = responseWrapper.buildResponse(404, "Product From Different Seller"); 
+			}else {
+				response = responseWrapper.buildResponse(404, requestValidation); 
 			}
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
@@ -1502,7 +1516,7 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 	        }
 
 	        // Predefined user status values
-	        String[] VALID_STATUSES = {"active", "rejected", "delete", "pending"};
+	        String[] VALID_STATUSES = {"active", "rejected", "pending"};
 
 	        // Validate input user status
 	        String userStatus = updateUserStatusRequest.getRequest().getUsersStatus();
@@ -1526,12 +1540,10 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 	        String responseValue = otsUserService.updateUserStatus(updateUserStatusRequest);
 
 	        // Handle response from service
-	        if(responseValue.equalsIgnoreCase("Inactive All The Products & Close All The Orders To Delete Seller")) {
-	            response = responseWrapper.buildResponse(206, "Inactive All The Products & Close All The Orders To Delete Seller");
-	        } else if(responseValue.equalsIgnoreCase("Not Updated")) {
-	            response = responseWrapper.buildResponse(404, "Status Not Updated");
-	        } else {
+	        if(responseValue.equalsIgnoreCase("Updated")) {
 	            response = responseWrapper.buildResponse(200, "Status Updated", "Successful");
+	        } else {
+	        	response = responseWrapper.buildResponse(404, "Status Not Updated");
 	        }
 
 	    } catch(Exception e) {
@@ -2692,6 +2704,58 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
+	}
+	
+	@Override
+	public Response deleteDistributor(String distributorId) {
+		Response response = null;
+		try {
+			String distributorResponse = otsUserService.deleteDistributor(distributorId);
+			if (distributorResponse.equalsIgnoreCase("No User Found")) {
+				response = responseWrapper.buildResponse(404, "No User Found");
+			} else if (distributorResponse.equalsIgnoreCase("Pending Orders Or Products")) {
+				response = responseWrapper.buildResponse(409, "Seller Has Pending Orders Or Active Products");
+			} else if (distributorResponse.equalsIgnoreCase("Unable To Delete")) {
+				response = responseWrapper.buildResponse(409,"Inactive All The Products & Close All The Orders To Delete Seller");
+			} else if (distributorResponse.equalsIgnoreCase("Deleted Successfully")) {
+				response = responseWrapper.buildResponse(200, "Deleted Successfully");
+			} else {
+				response = responseWrapper.buildResponse(500, "Unexpected Response: " + distributorResponse);
+			}
+		} catch (Exception e) {
+			logger.error("Exception while deleting distributor: " + e.getMessage(), e);
+			e.printStackTrace();
+			response = buildResponse(500, "Something Went Wrong");
+		} catch (Throwable e) {
+			logger.error("Unexpected error while deleting distributor: " + e.getMessage(), e);
+			e.printStackTrace();
+			response = buildResponse(500, "Something Went Wrong");
+		}
+		return response;
+	}
+	
+	@Override
+	public Response sendIncompleteSellerRegistrationReminders() {
+	    Response response = null;
+	    try {
+	        // To Fetch  incompletely registered users list
+	    	List<UserDetails> incompleteUsers = otsUserService.sendIncompleteSellerRegistrationReminders();
+	        
+	        if (incompleteUsers == null || incompleteUsers.isEmpty()) {
+	            response = responseWrapper.buildResponse(404, "No Incomplete Seller Registrations Found");
+	        } else {
+	            response = responseWrapper.buildResponse(200, incompleteUsers, "Incomplete Seller Registrations Fetched Successfully");
+	        }
+	    } catch (Exception e) {
+	        logger.error("Exception while fetching incomplete seller registrations: " + e.getMessage(), e);
+	        e.printStackTrace();
+	        response = buildResponse(500, "Something Went Wrong");
+	    } catch (Throwable t) {
+	        logger.error("Unexpected error while fetching incomplete seller registrations: " + t.getMessage(), t);
+	        t.printStackTrace();
+	        response = buildResponse(500, "Something Went Wrong");
+	    }
+	    return response;
 	}
 
 }

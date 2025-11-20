@@ -57,8 +57,6 @@ public class OrderProductAndOrderDetails {
     
     private String distributorEmailId;
     
-    private String billOfSupply;
-    
     private Boolean otsProductCancellationAvailability;
     
     private Boolean otsProductReplacementAvailability;
@@ -76,6 +74,10 @@ public class OrderProductAndOrderDetails {
     private String employeeEmailId;
     
     private String orderCancelledBy;
+    
+    private String orderCancelReason;
+    
+    private String subOrderCancelledDate;
     
     private String rrcOrderStatus;
     
@@ -357,14 +359,6 @@ public class OrderProductAndOrderDetails {
 		this.distributorEmailId = distributorEmailId;
 	}
 
-	public String getBillOfSupply() {
-		return billOfSupply;
-	}
-
-	public void setBillOfSupply(String billOfSupply) {
-		this.billOfSupply = billOfSupply;
-	}
-
 	public Boolean getOtsProductCancellationAvailability() {
 		return otsProductCancellationAvailability;
 	}
@@ -435,6 +429,22 @@ public class OrderProductAndOrderDetails {
 
 	public void setOrderCancelledBy(String orderCancelledBy) {
 		this.orderCancelledBy = orderCancelledBy;
+	}
+
+	public String getOrderCancelReason() {
+		return orderCancelReason;
+	}
+
+	public void setOrderCancelReason(String orderCancelReason) {
+		this.orderCancelReason = orderCancelReason;
+	}
+
+	public String getSubOrderCancelledDate() {
+		return subOrderCancelledDate;
+	}
+
+	public void setSubOrderCancelledDate(String subOrderCancelledDate) {
+		this.subOrderCancelledDate = subOrderCancelledDate;
 	}
 
 	public String getRrcOrderStatus() {

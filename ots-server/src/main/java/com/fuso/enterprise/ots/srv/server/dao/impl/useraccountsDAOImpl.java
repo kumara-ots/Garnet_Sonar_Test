@@ -50,11 +50,9 @@ public class useraccountsDAOImpl extends AbstractIptDao<Useraccounts, String> im
 			userAccounts=convertUserDetailsFromEntityToDomain(useraccounts);
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return userAccounts;
@@ -93,11 +91,9 @@ public class useraccountsDAOImpl extends AbstractIptDao<Useraccounts, String> im
 			userAccountDeatails =  otsUserAccounts.stream().map(Useraccounts -> convertUserDetailsFromEntityToDomain(Useraccounts)).collect(Collectors.toList());  
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userAccountDeatails;
@@ -120,11 +116,9 @@ public class useraccountsDAOImpl extends AbstractIptDao<Useraccounts, String> im
 			userAccounts=convertUserDetailsFromEntityToDomain(useraccounts);
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return userAccounts;
@@ -139,11 +133,9 @@ public class useraccountsDAOImpl extends AbstractIptDao<Useraccounts, String> im
 			userAccountDeatails =  otsUserAccounts.stream().map(Useraccounts -> convertUserDetailsFromEntityToDomain(Useraccounts)).collect(Collectors.toList());  
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userAccountDeatails;

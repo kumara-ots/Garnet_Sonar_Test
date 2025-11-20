@@ -49,11 +49,9 @@ public class ProductCategoryMappingDAOImpl extends AbstractIptDao<OtsProductCate
 			save(otsProductCategoryMapping);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";

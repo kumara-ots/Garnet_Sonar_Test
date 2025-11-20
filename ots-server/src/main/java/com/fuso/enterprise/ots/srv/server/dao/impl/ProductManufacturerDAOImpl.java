@@ -62,11 +62,9 @@ public class ProductManufacturerDAOImpl extends AbstractIptDao<OtsProductManufac
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -86,11 +84,9 @@ public class ProductManufacturerDAOImpl extends AbstractIptDao<OtsProductManufac
 			super.getEntityManager().remove(manufacturer);
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Deleted";
@@ -106,11 +102,9 @@ public class ProductManufacturerDAOImpl extends AbstractIptDao<OtsProductManufac
 			return manufacturerList;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

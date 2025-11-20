@@ -26,7 +26,7 @@ public interface OrderServiceDAO {
 	List<OrderDetails> getOrderReportByDistributorAndCustomer(GetOrderBORequest getOrderBORequest);
 	List<OrderDetails> checkForFirstOrderByCustomer(String CustomerId);
 	String UpdateOrderStatus(String orderId, String orderStatus);
-	List<OrderDetails> addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest);
+	OrderDetails addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest);
 	String addCustomerOrderInvoiceToDB(String orderId, String invoice);
 	List<OrderDetails> getOrdersByStatus(String orderStatus);
 	List<OrderDetails> getOrderByDistributorOrderProductStatus(String distributorId, String orderProductStatus);

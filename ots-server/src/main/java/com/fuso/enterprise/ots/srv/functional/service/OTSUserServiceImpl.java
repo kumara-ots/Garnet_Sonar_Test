@@ -10,7 +10,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -513,8 +512,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 		UserDetails userDetails = new UserDetails();
 		try {
 			SecureRandom secureRandom = new SecureRandom();
-//			Random rand = new Random(); 
-//			int otp = 1000 +rand.nextInt(9000);
 			int otp = 1000 +secureRandom.nextInt(9000);
 			userDetails = userServiceDAO.checkForOTP(forgotPasswordRequest.getRequest().getMobileNumber());
 			if(userDetails!=null) {
@@ -621,39 +618,8 @@ public class OTSUserServiceImpl implements  OTSUserService{
     @Override
     public String addToCart(AddToCartRequest addToCartRequest) {
         try {
-            // Fetching Product Details
-            ProductDetails productDetails = productServiceDAO.getProductDetails(addToCartRequest.getRequestData().getProductId().toString());
-            
-            // To validate if product price is null or getting invalid request productPrice from request
-            if (productDetails == null || (!productDetails.getProductPrice().equalsIgnoreCase(addToCartRequest.getRequestData().getProductPrice()))) {
-                return "Invalid Product Details";
-            } else {
-            	// Fetching actual Product stock 
-                List<GetProductBOStockResponse> productStock = productStockDao.getProductStockByProductId(addToCartRequest.getRequestData().getProductId());
-                
-                // Fetching cart details Based on customer and product
-                GetcartListResponse getCartList = cartDAO.getCartByCustomerProduct(addToCartRequest.getRequestData().getCustomerId(),addToCartRequest.getRequestData().getProductId());
-
-                int getStock = (getCartList != null) ? getCartList.getOtsCartQty() : 0;
-
-                int requestQty = addToCartRequest.getRequestData().getOtsCartQty();
-                int totalQty = getStock + requestQty;
-                
-                //If Product is Out of Stock
-                if (productStock.isEmpty()) {
-                    return "Out Of Stock";
-                } else {
-                    int availableStocks = Integer.parseInt(productStock.get(0).getStockQuantity());
-                    
-                    //Adding Quantity to Cart only when Total quantity is within Avilable Stock 
-                    if (totalQty > availableStocks) {
-                        return "Insufficient Stock. Only " + availableStocks + " Stock Available.";
-                    } else {
-                    	//Adding to Cart
-                        return cartDAO.addToCart(addToCartRequest);
-                    }
-                }
-            }
+        	//Adding to Cart
+            return cartDAO.addToCart(addToCartRequest);
         }  catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
 			e.printStackTrace();
@@ -1365,10 +1331,7 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			System.out.println("response = "+response);
 			
 			//comparing response of procedure & handling response
-			if(response.equalsIgnoreCase("[Unable To Delete]")) {
-				updateUserResponse = "Inactive All The Products & Close All The Orders To Delete Seller";
-			}
-			else if(response.equalsIgnoreCase("[Updated]")) {
+			if(response.equalsIgnoreCase("[Updated]")) {
 				updateUserResponse = "Updated";
 			}
 			else {
@@ -2763,9 +2726,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 		try {
 			SecureRandom secureRandom = new SecureRandom();
 			int otp = 1000 +secureRandom.nextInt(9000);
-			System.out.println(otp);
-//			Random rand = new Random(); 
-//			int otp = 1000 +rand.nextInt(9000);
 			UserAccounts userAccounts = useraccountsDAO.getUseraccountDetailByEmail(emailId);
 			if(userAccounts!=null) {
 				String adminMsg = "<p>Hi "+userAccounts.getFisrtName()+" "+userAccounts.getLastName()+"<br><br>" + 
@@ -2793,5 +2753,124 @@ public class OTSUserServiceImpl implements  OTSUserService{
     		throw new BusinessException(e.getMessage(), e);
     	}
 	}
+	
+	//Api functionality : 1.Checks if product exists or Not. 
+	//2.Compares input product price matching actual product price.
+	//3.Checks product from single distributor is present
+	@Override
+	public String addToCartRequestValidation(AddToCartRequest addToCartRequest) {
+	    try {
+	        Map<String, Object> queryParameters = new HashMap<>();
+	        queryParameters.put("customer_id", UUID.fromString(addToCartRequest.getRequestData().getCustomerId()));
+	        queryParameters.put("product_id", UUID.fromString(addToCartRequest.getRequestData().getProductId()));
+	        queryParameters.put("input_product_price", addToCartRequest.getRequestData().getProductPrice());
+
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("add_to_cart_request_validation")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("customer_id", Types.OTHER));
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_id", Types.OTHER));
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("input_product_price", Types.VARCHAR));
+
+	        Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
+			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
+			//converting output of procedure to String
+			String response = outputResult.get(0).values().toString();	
+			
+			//comparing response of procedure & handling response
+			if(response.equalsIgnoreCase("[Add To Cart]")) {
+				return "Add To Cart";
+			}
+			else if(response.equalsIgnoreCase("[Invalid Product Details]")) {
+				return "Invalid Product Details";
+			}
+			else if(response.equalsIgnoreCase("[Product From Different Seller]")) {
+				return "Product From Different Seller";
+			}
+			else {
+				return "Unexpected Response";
+			}
+	    }catch (BusinessException e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public String deleteDistributor(String distributorId) {
+		try {
+			String deleteDistributor = userServiceDAO.deleteDistributor(distributorId);
+			return deleteDistributor;
+		} catch (Exception e) {
+			logger.error("Exception while fetching data from DB:" + e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB:" + e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public List<UserDetails> sendIncompleteSellerRegistrationReminders() {
+		List<UserDetails> userDetails = new ArrayList<>();
+	    try {
+	        // To Fetch  incompletely registered users list
+	    	userDetails = userServiceDAO.getIncompleteSellerRegistrations();
+
+	        // If no sellers found, return empty list
+	        if (userDetails.size() == 0) {
+	            return userDetails;
+	        }
+
+	        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+	        for (UserDetails seller : userDetails) {
+	            String email = (String) seller.getEmailId();
+	            String firstName = (String) seller.getFirstName();
+	            String lastName = (String) seller.getLastName();
+
+	            String sellerName = ((firstName != null) ? firstName : "") + " " +
+	                                ((lastName != null) ? lastName : "");
+
+	            String subject = "Complete Your Seller Registration";
+	            String message =
+	                "<p>Hi " + sellerName + ",<br><br>" +
+	                "We noticed your registration is still incomplete.<br>" +
+	                "Please complete your registration to start selling on our platform.<br><br>" +
+	                "If you have any questions, feel free to reach out to our support team.<br><br>" +
+	                "Thanks and Regards,<br>" +
+	                companyName + " Support Team</p>";
+
+	            executor.submit(() -> {
+	                try {
+	                    emailUtil.sendDistributermail(email, "", subject, message);
+	                    logger.info("Reminder email sent to: " + email);
+	                } catch (Exception e) {
+	                    logger.error("Failed to send reminder to " + email + ": " + e.getMessage(), e);
+	                }
+	            });
+	        }
+	        executor.shutdown();
+	    } catch(Exception e) {
+    		logger.error("Exception while fetching data from DB:"+e.getMessage());
+    		e.printStackTrace();
+    		throw new BusinessException(e.getMessage(), e);
+    	}catch (Throwable e) {
+    		logger.error("Exception while fetching data from DB:"+e.getMessage());
+    		e.printStackTrace();
+    		throw new BusinessException(e.getMessage(), e);
+    	}
+	    return userDetails;
+	}
+
 
 }

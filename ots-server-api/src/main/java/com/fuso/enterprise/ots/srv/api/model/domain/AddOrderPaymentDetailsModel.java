@@ -1,21 +1,30 @@
 package com.fuso.enterprise.ots.srv.api.model.domain;
 
+import java.sql.Date;
+
 public class AddOrderPaymentDetailsModel {
 
-	private String PaymentId;
-	private String OrderTransactionId;
+	private String orderTransactionId;
+	private String paymentId;
+	private Date paymentDate;
 	
 	public String getOrderTransactionId() {
-		return OrderTransactionId;
+		return orderTransactionId;
 	}
 	public void setOrderTransactionId(String orderTransactionId) {
-		OrderTransactionId = orderTransactionId;
+		this.orderTransactionId = orderTransactionId;
 	}
 	public String getPaymentId() {
-		return PaymentId;
+		return paymentId;
 	}
 	public void setPaymentId(String paymentId) {
-		PaymentId = paymentId;
+		this.paymentId = paymentId;
 	}
-	
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
 }

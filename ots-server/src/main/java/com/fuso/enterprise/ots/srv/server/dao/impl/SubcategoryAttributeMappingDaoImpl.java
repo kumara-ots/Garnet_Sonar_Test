@@ -1,6 +1,5 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,11 +69,9 @@ public class SubcategoryAttributeMappingDaoImpl extends AbstractIptDao<OtsSubcat
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeKeyIdSubCatgory;
@@ -93,11 +90,9 @@ public class SubcategoryAttributeMappingDaoImpl extends AbstractIptDao<OtsSubcat
 			subcategoryAttributeMapping = otssubcategoryAttributeMapping.stream().map(subcategoryMapping -> convertSubcategoryAttributeMappingFromEntityToDomain(subcategoryMapping)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return subcategoryAttributeMapping;

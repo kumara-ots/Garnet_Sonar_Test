@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
@@ -88,7 +89,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDetails =  convertUserDetailsFromEntityToDomain(otsUsers);
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -104,7 +104,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomainForResponse(otsUsers)).collect(Collectors.toList());
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -134,11 +133,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDataBOResponse.setUserDetails(userDetails);
     	}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
     	return  userDataBOResponse;
@@ -235,11 +232,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDataBOResponse.setUserDetails(userDetails);
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return  userDataBOResponse;
@@ -338,11 +333,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
    			}
        	}catch (BusinessException e){
    			logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }catch (Throwable e) {
    	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }
        	return loginUserResponse;
@@ -362,7 +355,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomain(otsUsers)).collect(Collectors.toList());
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -385,11 +377,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return userDetails;
 		}catch (BusinessException e){
    			logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }catch (Throwable e) {
    	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }
 	}
@@ -411,11 +401,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return userDetails;
 		}catch (BusinessException e){
    			logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }catch (Throwable e) {
    	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }
 	}
@@ -446,11 +434,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			}
 		}catch (BusinessException e){
    			logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }catch (Throwable e) {
    	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }
 		return "updated";
@@ -478,11 +464,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return userDetails;
 		}catch (BusinessException e){
    			logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }catch (Throwable e) {
    	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-           	e.printStackTrace();
            	throw new BusinessException(e.getMessage(), e);
    	    }
 	}
@@ -504,11 +488,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 	}
@@ -529,7 +511,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomainForResponse(otsUsers)).collect(Collectors.toList());
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -557,11 +538,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			DistributerResponse.setDistributerList(list);
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return DistributerResponse;
@@ -590,11 +569,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			super.getEntityManager().merge(userData);
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Invoice Added";
@@ -614,11 +591,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDetails.add(convertUserDetailsFromEntityToDomain(userEntity));
     	}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
     	return userDetails;
@@ -645,11 +620,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDetails.add(convertUserDetailsFromEntityToDomain(userEntity));
     	}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
     	return "Inserted";
@@ -666,11 +639,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomainForResponse(otsUsers)).collect(Collectors.toList());
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -687,11 +658,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomainForResponse(otsUsers)).collect(Collectors.toList());
 	   	}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	   	return userDetails;
@@ -719,11 +688,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return "Holidays Inserted";
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -738,7 +705,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			try {
 				otsUsers = super.getResultByNamedQuery("OtsUsers.findByOtsUsersId", queryParameter);
 			} catch (NoResultException e) {
-				e.printStackTrace();
 				return null;
 			}
 			
@@ -757,11 +723,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return getHolidayListResponse;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -777,11 +741,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomain(otsUsers)).collect(Collectors.toList());
     	} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
     	return userDetails;
@@ -796,11 +758,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			return userDetails;
     	} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -850,11 +810,9 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 	        }
 	   	}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	   	return countryDistributorMap;
@@ -868,6 +826,7 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 		userDetails.setLastName(outputResult.get("ots_users_lastname")==null?"":outputResult.get("ots_users_lastname").toString());
 		userDetails.setContactNo(outputResult.get("ots_users_contact_no")==null?"":outputResult.get("ots_users_contact_no").toString());
 		userDetails.setUserImage(outputResult.get("ots_users_image")==null?"":outputResult.get("ots_users_image").toString());
+		userDetails.setEmailId(outputResult.get("ots_users_emailid")==null?"":outputResult.get("ots_users_emailid").toString());
 	    
 	    return userDetails;
 	}
@@ -943,7 +902,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             return userDetails;
     	}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }  
 	}
@@ -984,7 +942,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
             return userDetails;
     	}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }  
 	}
@@ -994,19 +951,12 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 		List<UserDetails> userDetails = new ArrayList<UserDetails>();
 		try {
 			List<OtsUsers> userList = null;
-			try {
-				Map<String, Object> queryParameter = new HashMap<>();
-				queryParameter.put("MappedTo", Integer.parseInt(MappedTo));
-				userList = super.getResultListByNamedQuery("OtsUsers.findByUserOtsbyMappedTo", queryParameter);
-			} catch (NoResultException e) {
-				logger.error("Exception while fetching data from DB :" + e.getMessage());
-				e.printStackTrace();
-				throw new BusinessException(e.getMessage(), e);
-			}
+			Map<String, Object> queryParameter = new HashMap<>();
+			queryParameter.put("MappedTo", Integer.parseInt(MappedTo));
+			userList = super.getResultListByNamedQuery("OtsUsers.findByUserOtsbyMappedTo", queryParameter);
 			userDetails = userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomain(otsUsers)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDetails;
@@ -1028,7 +978,6 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 			userDetails =  convertUserDetailsFromEntityToDomainForResponse(otsUsers);
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
     	return userDetails;
@@ -1050,13 +999,75 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDetails;
 	}
+	
+	@Override
+	public String deleteDistributor(String distributorId) {
+		String SellerResponse = null;
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("ots_distributor_id",UUID.fromString(distributorId));
+			
+			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("delete_distributor")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("ots_distributor_id", Types.OTHER));
+			
+			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
+			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
+			//converting output of procedure to String
+			String response = outputResult.get(0).values().toString();
+			
+			//comparing response of procedure & handling response
+			if(response.equalsIgnoreCase("[No User Found]")) {
+				SellerResponse = "No User Found";
+			}
+			else if(response.equalsIgnoreCase("[Pending Orders Or Products]")){
+				SellerResponse = "Pending Orders Or Products";
+			}
+			else if(response.equalsIgnoreCase("[Unable To Delete]")){
+				SellerResponse = "Unable To Delete";
+			}
+			else {
+				response.equalsIgnoreCase("[Deleted Successfully]");
+				SellerResponse  ="Deleted Successfully";
+			}
+		}catch(Exception e){
+			logger.error("Exception while Inserting data into DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while Inserting data into DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+		return SellerResponse;
+	}
+	
+	@Override
+	public List<UserDetails> getIncompleteSellerRegistrations() {
+	    String sql = "SELECT * FROM public.get_incomplete_seller_registrations()";
+	    try {
+	        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+	        List<UserDetails> userDetailsList = new ArrayList<>();
+	        for (Map<String, Object> row : rows) {
+	            userDetailsList.add(convertUserDetailsFromProcedureToDomain(row));
+	        }
+
+	        return userDetailsList;
+	    }catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+
 }

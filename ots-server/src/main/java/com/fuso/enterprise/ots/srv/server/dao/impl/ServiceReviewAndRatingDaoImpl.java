@@ -62,11 +62,9 @@ public class ServiceReviewAndRatingDaoImpl extends AbstractIptDao<OtsServiceRati
 			save(ratingReview);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -91,11 +89,9 @@ public class ServiceReviewAndRatingDaoImpl extends AbstractIptDao<OtsServiceRati
 			return getReviewAndRatingResponses;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -132,11 +128,9 @@ public class ServiceReviewAndRatingDaoImpl extends AbstractIptDao<OtsServiceRati
 			reviewAndRatingResponses = serviceRatingReviews.stream().map(ratingReview -> convertEntityToModel(ratingReview)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return reviewAndRatingResponses;

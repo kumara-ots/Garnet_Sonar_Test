@@ -14,7 +14,6 @@ import com.fuso.enterprise.ots.srv.api.service.request.GetSellerForProductReques
 import com.fuso.enterprise.ots.srv.server.dao.SellerProductMappingDAO;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsProduct;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsSellerProductMapping;
-import com.fuso.enterprise.ots.srv.server.model.entity.OtsUserRole;
 import com.fuso.enterprise.ots.srv.server.util.AbstractIptDao;
 
 @Repository

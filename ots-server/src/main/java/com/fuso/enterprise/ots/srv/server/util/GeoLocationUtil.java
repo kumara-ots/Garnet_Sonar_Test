@@ -1,6 +1,8 @@
 package com.fuso.enterprise.ots.srv.server.util;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class GeoLocationUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GeoLocationUtil.class);
 
     // Cache expiration time: 6 hours (in milliseconds)
     private static final long CACHE_TTL_MILLIS = 6 * 60 * 60 * 1000;
@@ -85,7 +89,7 @@ public class GeoLocationUtil {
             return countryCode;
 
         } catch (Exception e) {
-            e.printStackTrace(); // Log error
+        	logger.error("Exception from GeoLocationUtil class :" + e.getMessage());
             return "IN"; // Safe fallback if API fails
         }
     }

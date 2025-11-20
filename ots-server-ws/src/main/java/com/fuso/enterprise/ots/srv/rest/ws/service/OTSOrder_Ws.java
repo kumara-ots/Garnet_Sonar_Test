@@ -18,6 +18,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddOrUpdateOrderTrackingR
 import com.fuso.enterprise.ots.srv.api.service.request.AddOrderPaymentDetailsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddTransactionCancelRecordsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AssignOrderToEmployeeRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.CancelOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.CloseEmployeeOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GenerateOrderProductInvoiceRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCustomerOrderByStatusBOrequest;
@@ -140,7 +141,7 @@ public interface OTSOrder_Ws {
     @Path("/cancelMainAndSubOrder")
 	@ApiOperation(value = "cancelMainAndSubOrder", notes = "To cancel main order or Sub order", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
-	Response cancelMainAndSubOrder(@ApiParam(value = "request", required = true) @NotNull  @Valid AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
+	Response cancelMainAndSubOrder(@ApiParam(value = "request", required = true) @NotNull  @Valid CancelOrderRequest cancelOrderRequest);
 
 	@GET
     @Path("/autoCancelOrderByDistributor")
@@ -279,13 +280,7 @@ public interface OTSOrder_Ws {
 	@ApiOperation(value = "generateOrderProductInvoicePdf", notes = "To generate Order Product Invoice", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response generateOrderProductInvoicePdf(@ApiParam(value = "request", required = true) @NotNull  @Valid GenerateOrderProductInvoiceRequest generateOrderProductInvoiceRequest);
-	
-	@POST
-    @Path("/generateBillOfSupplyPdf")
-	@ApiOperation(value = "generateBillOfSupplyPdf", notes = "To generate & Save Bill Of Supply For Order", response = Response.class)
-	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
-	Response generateBillOfSupplyPdf(@ApiParam(value = "request", required = true) @NotNull  @Valid AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
-	
+
 	@POST
     @Path("/checkPendingOrdersOfInactiveDistributor")
 	@ApiOperation(value = "checkPendingOrdersOfInactiveDistributor", notes = "To Check Pending Orders of Inactive Distributor", response = Response.class)
@@ -297,4 +292,10 @@ public interface OTSOrder_Ws {
 	@ApiOperation(value = "updateOrderProductStatus", notes = "To update sub-order status", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response updateOrderProductStatus(@ApiParam(value = "request", required = true) @NotNull  @Valid UpdateOrderProductStatusRequest updateOrderProductStatusRequest);
+	
+	@GET
+    @Path("/autoCancelOrderByCustomer")
+	@ApiOperation(value = "autoCancelOrderByCustomer", notes = "To Auto Cancel Order when Order Payment Details not updated by Customer, within 3 days of order date", response = Response.class)
+	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
+	Response autoCancelOrderByCustomer();
 }

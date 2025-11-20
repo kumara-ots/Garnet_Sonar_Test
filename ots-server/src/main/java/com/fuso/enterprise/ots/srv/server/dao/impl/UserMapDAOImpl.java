@@ -15,12 +15,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.fuso.enterprise.ots.srv.api.service.request.MapUsersDataBORequest;
-import com.fuso.enterprise.ots.srv.api.service.response.MapUsersDataBOResponse;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.dao.UserMapDAO;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsUserMapping;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsUsers;
 import com.fuso.enterprise.ots.srv.server.util.AbstractIptDao;
+
 @Repository
 public class UserMapDAOImpl extends AbstractIptDao<OtsUserMapping, String> implements UserMapDAO {
 private Logger logger = LoggerFactory.getLogger(getClass());
@@ -49,7 +49,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 					super.getEntityManager().merge(userMappEntity);
 				}catch (NoResultException e) {
 					logger.error("Exception while Inserting data to DB :"+e.getMessage());
-		    		e.printStackTrace();
 		        	throw new BusinessException(e.getMessage(), e);
 				}
 			}catch(Exception e){
@@ -58,7 +57,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 					super.getEntityManager().merge(userMappEntity);
 				}catch (NoResultException e1) {
 					logger.error("Exception while Inserting data to DB :"+e.getMessage());
-		    		e.printStackTrace();
 		        	throw new BusinessException(e.getMessage(), e);
 				}
 			}
@@ -66,7 +64,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.info("Inside Event=1005,Class:UserMapDAOImpl,Method:mappUser");
 		}catch (NoResultException e) {
         	logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }
 		return  responseData;
@@ -86,7 +83,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.info("Inside Event=1005,Class:UserMapDAOImpl,Method:mappUser");
 		}catch (NoResultException e) {
         	logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }
 		return  responseData;
@@ -94,11 +90,8 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public List<OtsUserMapping> getUserForDistributor(String userId) {
-		String responseData;
 		List<OtsUserMapping> userList = new ArrayList<OtsUserMapping>();
 		try{
-			OtsUserMapping userMappEntity=new OtsUserMapping();
-			
 			OtsUsers otsUsers = new OtsUsers();
 			otsUsers.setOtsUsersId(UUID.fromString(userId));
 			Map<String, Object> queryParameter = new HashMap<>();
@@ -107,7 +100,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.info("Inside Event=1005,Class:UserMapDAOImpl,Method:mappUser");
 		}catch (NoResultException e) {
         	logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }
 		return  userList;

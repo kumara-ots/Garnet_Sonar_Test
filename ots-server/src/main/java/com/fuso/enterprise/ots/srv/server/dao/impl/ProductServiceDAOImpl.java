@@ -153,7 +153,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
             return productDetailsBOResponse;
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -284,11 +283,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails = convertProductDetailsFromEntityToDomain(otsProduct);	
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return productDetails;
@@ -325,7 +322,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return productDetails;
 		}catch(Exception e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -345,11 +341,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetailsBOResponse.setProductDetails(productDetails);
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetailsBOResponse;
@@ -436,11 +430,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        productDetailsBOResponse.setProductDetails(productList);
 	    }catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	    return productDetailsBOResponse;
@@ -462,11 +454,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			System.out.println(productDetails);
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -485,8 +475,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 					
 		}catch(Exception e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-		    	e.printStackTrace();
-		      throw new BusinessException(e.getMessage(), e);
+		    throw new BusinessException(e.getMessage(), e);
 		}
 		return deliveryCharge;
 	}
@@ -507,7 +496,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		    productDetailsBOResponse.setProductDetails(productDetails);
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 		return productDetailsBOResponse;
@@ -538,11 +526,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return categoryDetails;
@@ -571,11 +557,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return subcategoryDetails;
@@ -596,7 +580,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 		return productDetails;
@@ -612,11 +595,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails = otsProductList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return productDetails;
@@ -637,7 +618,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 		return productDetails;
@@ -660,7 +640,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		    productDetailsBOResponse.setProductDetails(productDetails);
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 		return productDetailsBOResponse;
@@ -747,11 +726,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        productDetailsBOResponse.setProductDetails(productList);
 	    }catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	    return productDetailsBOResponse;
@@ -771,11 +748,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -794,11 +769,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -839,11 +812,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -958,11 +929,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails.setSubCategoryName(subcategory == null?"":subcategory.getSubcategoryName().toString());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -1004,11 +973,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1050,11 +1017,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1087,11 +1052,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1118,11 +1081,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeDetails;
@@ -1140,11 +1101,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			attributeDetails.setOtsProductName(out.get("ots_product_name")==null?"":out.get("ots_product_name").toString());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeDetails;
@@ -1169,7 +1128,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching data from DB: " + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    }
 	    return productDetails;
@@ -1191,7 +1149,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		    productDetailsBOResponse.setProductDetails(productDetails);
 		}catch (NoResultException e) {
 	    	logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 	    	throw new BusinessException(e.getMessage(), e);
 	    }
 		return productDetailsBOResponse;
@@ -1226,11 +1183,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1246,11 +1201,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails = productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -1294,11 +1247,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return productDetails;
@@ -1346,11 +1297,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return productDetails;
@@ -1393,11 +1342,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return productDetails;
@@ -1432,11 +1379,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1467,11 +1412,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1505,11 +1448,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -1627,11 +1568,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return countryProductMap;
@@ -1645,7 +1584,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			OtsProduct oldProduct = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
 			
 			//To generate random
-//			Random random = new Random();
 			SecureRandom secureRandom = new SecureRandom();
 	        int eightDigitNumber = 10000000 + secureRandom.nextInt(90000000); // Ensures the number is 8 digits
 	        
@@ -1738,11 +1676,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return productDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        return null;
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	    	return null;
 		}	
 	}
@@ -1770,7 +1706,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsProductLevelId(productLevel);
 				
 				//To generate random
-				Random random = new Random();
 				SecureRandom secureRandom = new SecureRandom();
 				int eightDigitNumber = 10000000 + secureRandom.nextInt(90000000); // Ensures the number is 8 digits
 				
@@ -1850,11 +1785,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		} catch (Exception e) {
 			logger.error("Exception while Inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1895,11 +1828,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return otsProduct.getOtsProductId().toString();
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1943,11 +1874,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return otsProduct.getOtsProductId().toString();
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
 	}
@@ -1997,11 +1926,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return otsProduct.getOtsProductId().toString();
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2170,11 +2097,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 
 	    }catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	    return response;
@@ -2207,11 +2132,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -2251,11 +2174,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return productList;
@@ -2293,11 +2214,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			return productDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}

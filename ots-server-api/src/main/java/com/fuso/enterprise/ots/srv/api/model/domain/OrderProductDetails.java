@@ -46,6 +46,8 @@ public class OrderProductDetails {
     private String subOrderOfdDate;
     
     private String subOrderAssignedDate;
+    
+    private String subOrderExpectedDeliveryDate;
 
     private String otsOrderDate;
 
@@ -54,8 +56,6 @@ public class OrderProductDetails {
     private String distributorLastName;
     
     private String distributorEmailId;
-    
-    private String billOfSupply;
     
     private Boolean otsProductCancellationAvailability;
     
@@ -74,6 +74,10 @@ public class OrderProductDetails {
     private String employeeEmailId;
     
     private String orderCancelledBy;
+    
+    private String orderCancelReason;
+    
+    private String subOrderCancelledDate;
     
     private String rrcOrderStatus;
     
@@ -313,6 +317,14 @@ public class OrderProductDetails {
 		this.subOrderAssignedDate = subOrderAssignedDate;
 	}
 
+	public String getSubOrderExpectedDeliveryDate() {
+		return subOrderExpectedDeliveryDate;
+	}
+
+	public void setSubOrderExpectedDeliveryDate(String subOrderExpectedDeliveryDate) {
+		this.subOrderExpectedDeliveryDate = subOrderExpectedDeliveryDate;
+	}
+
 	public String getOtsOrderDate() {
 		return otsOrderDate;
 	}
@@ -343,14 +355,6 @@ public class OrderProductDetails {
 
 	public void setDistributorEmailId(String distributorEmailId) {
 		this.distributorEmailId = distributorEmailId;
-	}
-
-	public String getBillOfSupply() {
-		return billOfSupply;
-	}
-
-	public void setBillOfSupply(String billOfSupply) {
-		this.billOfSupply = billOfSupply;
 	}
 
 	public Boolean getOtsProductCancellationAvailability() {
@@ -423,6 +427,22 @@ public class OrderProductDetails {
 
 	public void setOrderCancelledBy(String orderCancelledBy) {
 		this.orderCancelledBy = orderCancelledBy;
+	}
+
+	public String getOrderCancelReason() {
+		return orderCancelReason;
+	}
+
+	public void setOrderCancelReason(String orderCancelReason) {
+		this.orderCancelReason = orderCancelReason;
+	}
+
+	public String getSubOrderCancelledDate() {
+		return subOrderCancelledDate;
+	}
+
+	public void setSubOrderCancelledDate(String subOrderCancelledDate) {
+		this.subOrderCancelledDate = subOrderCancelledDate;
 	}
 
 	public String getRrcOrderStatus() {

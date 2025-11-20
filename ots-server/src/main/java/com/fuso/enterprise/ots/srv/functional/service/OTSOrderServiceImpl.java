@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,17 +28,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuso.enterprise.ots.srv.api.model.domain.AddProductStock;
-import com.fuso.enterprise.ots.srv.api.model.domain.AssignOrderToEmployeeModel;
 import com.fuso.enterprise.ots.srv.api.model.domain.CompleteOrderDetails;
 import com.fuso.enterprise.ots.srv.api.model.domain.Coupon;
 import com.fuso.enterprise.ots.srv.api.model.domain.CustomerChangeAddress;
@@ -66,6 +61,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddOrderPaymentDetailsReq
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddTransactionCancelRecordsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AssignOrderToEmployeeRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.CancelOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.CloseEmployeeOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCustomerOrderByStatusBOrequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetDetailsForExcelRequest;
@@ -106,7 +102,6 @@ import com.fuso.enterprise.ots.srv.server.dao.UserMapDAO;
 import com.fuso.enterprise.ots.srv.server.dao.UserServiceDAO;
 import com.fuso.enterprise.ots.srv.server.dao.useraccountsDAO;
 import com.fuso.enterprise.ots.srv.server.dao.impl.UserServiceDAOImpl;
-import com.fuso.enterprise.ots.srv.server.util.BillOfSupplyPdf;
 import com.fuso.enterprise.ots.srv.server.util.DeliveryNote;
 import com.fuso.enterprise.ots.srv.server.util.EmailUtil;
 import com.fuso.enterprise.ots.srv.server.util.ExcelGenerator;
@@ -122,7 +117,6 @@ import com.razorpay.RazorpayException;
 @Transactional
 public class OTSOrderServiceImpl implements OTSOrderService {
 	
-	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
@@ -133,7 +127,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	private static final java.sql.Date Date = null;
 	private OrderServiceDAO orderServiceDAO;
 	private OrderProductDAO orderProductDao;
-	private ProductStockHistoryDao productStockHistoryDao;
 	private ProductStockDao productStockDao;
 	private UserServiceDAO userServiceDAO;
 	private FcmPushNotification fcmPushNotification;
@@ -154,7 +147,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	{
 		this.orderServiceDAO = orderServiceDAO ;
 		this.orderProductDao = orderProductDao;
-		this.productStockHistoryDao=productStockHistoryDao;
 		this.productStockDao=productStockDao;
 		this.userServiceDAO = userServiceDAO;
 		this.productServiceDAO = productServiceDAO;
@@ -237,16 +229,16 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(OrderDetails.size() == 0) {
 				return null;
 			}else {
-				List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+				List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 				//getting order product details
 				for (int i = 0; i <OrderDetails.size() ; i++)
 				{
 					System.out.println("order id"+OrderDetails.get(i).getOrderId());
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(OrderDetails.get(i).getOrderId(),getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
-					System.out.println("orderProduct size = "+OrderProductDetailsList.size());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetails.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(OrderDetails.get(i).getOrderId(),getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
+					System.out.println("orderProduct size = "+orderProductDetailsList.size());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetails.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 				return orderProductBOResponse;
 			}
 		} catch(Exception e){
@@ -265,19 +257,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		try {
 			OrderProductAndOrderResponse orderProductAndOrderResponse = new OrderProductAndOrderResponse();
 			// getting order product details by passing the distributor id
-			List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderForDistributorAndStatus(getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
-			if(OrderProductDetailsList.size() == 0) {
+			List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderForDistributorAndStatus(getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
+			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
 				//getting order details for the order product
 				
-				for (int i = 0; i <OrderProductDetailsList.size() ; i++)
+				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(OrderProductDetailsList.get(i).getOtsOrderId());
-					GetOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,OrderProductDetailsList.get(i)));
+					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,orderProductDetailsList.get(i)));
 				}
-				orderProductAndOrderResponse.setOrderProductList(GetOrderDetailsAndProductDetails);
+				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
@@ -309,6 +301,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setCustomerDetails(userServiceDAO.getUserDetails(orderDetails.getCustomerId())); 
 		orderDetailsAndProductDetails.setCustomerName(orderDetails.getCustomerName());
 		orderDetailsAndProductDetails.setCustomerContactNo(orderDetails.getCustomerContactNo());
+		orderDetailsAndProductDetails.setCustomerEmailId(orderDetails.getCustomerEmailId());
 		orderDetailsAndProductDetails.setDeliveryAddress(orderDetails.getDeliveryAddress());
 		orderDetailsAndProductDetails.setPaymentId(orderDetails.getPaymentId());
 		orderDetailsAndProductDetails.setPayementStatus(orderDetails.getPaymentStatus());
@@ -335,6 +328,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setCustomerOrderInvoice(orderDetails.getCustomerOrderInvoice());
 		orderDetailsAndProductDetails.setCustomerName(orderDetails.getCustomerName());
 		orderDetailsAndProductDetails.setCustomerContactNo(orderDetails.getCustomerContactNo());
+		orderDetailsAndProductDetails.setCustomerEmailId(orderDetails.getCustomerEmailId());
 		orderDetailsAndProductDetails.setDeliveryAddress(orderDetails.getDeliveryAddress());
 		orderDetailsAndProductDetails.setPaymentId(orderDetails.getPaymentId());
 		orderDetailsAndProductDetails.setPayementStatus(orderDetails.getPaymentStatus());
@@ -859,7 +853,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		} catch (Throwable e) {
 			throw new BusinessException(e, ErrorEnumeration.INPUT_PARAMETER_INCORRECT);
 		}
-
 	}
 	
 	@Override
@@ -867,12 +860,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	    String response = null;
 	    ExecutorService executor = Executors.newCachedThreadPool();
 	    try {
-	        // Check whether the distributor has registered Company Details or not
-	        List<DistributorCompanyDetails> distCompanyDetails = distributorCompanyDetailsDAO.getDistributorCompanyDetails(assignOrderToEmployeeRequest.getRequest().getDistributorId());
-	        if (distCompanyDetails.isEmpty()) {
-	            return "Distributor Not Added Company Details";
-	        }
-	        
 	        // Fetch customer details in parallel
 	        Future<UserDetails> customerFuture = executor.submit(() -> userServiceDAO.getUserDetails(assignOrderToEmployeeRequest.getRequest().getCustomerId()));
 	        UserDetails customer = customerFuture.get();
@@ -885,7 +872,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        if(response.equalsIgnoreCase("Updated")) {
 	        	response = "Order Has Been Assigned Successfully";
 	        }else {
-	        	return null;
+	        	return response;
 	        }
 	        
 	        //Getting order product details
@@ -912,15 +899,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 						companyName+" Support Team</p>";
 	            emailUtil.sendCustomermail(customer.getEmailId(), "", "Regarding Order Update", custMsg);
 	        });
-
-	        // Generate PDF tasks in parallel
-	        //To send Bill of Supply only for Tax unregistered distributor
-	        if (!distCompanyDetails.get(0).getTaxAvailability()) {
-	        	//To generate Bill Of Supply for LLP From Distributor to save in OrderProduct Table, when SubOrder is Assigned to Employee under Unregistered Distributor
-	            executor.submit(() -> generateBillOfSupplyPdf(assignOrderToEmployeeRequest));
-	        }
-	        //To generate Order Product Invoice for Customer and gets saved in DB
-	        executor.submit(() -> generateOrderProductInvoicePdf(assignOrderToEmployeeRequest.getRequest().getOrderId(), orderProduct.getOtsProductId()));
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        logger.error("Error in inserting order in order table" + e.getMessage());
@@ -939,20 +917,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getCustomerOrderStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
 			//get customer order details
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getCustomerOrderStatus(getCustomerOrderByStatusBOrequest);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getCustomerOrderStatus(getCustomerOrderByStatusBOrequest);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					//get product details for customer's order 
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(OrderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);	
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);	
 			}
 			return orderProductBOResponse;
 		}catch(Exception e){
@@ -970,19 +948,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderDetailsByDate(GetOrderBORequest getOrderBORequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrderBydate(getOrderBORequest);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderBydate(getOrderBORequest);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}
 			else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(OrderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
 			return orderProductBOResponse;
 		}catch(Exception e){
@@ -1049,24 +1027,24 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();	
 		try {	
 			//To get order details based on distributor, customer & product (if required)
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrderReportByDistributorAndCustomer(getOrderBORequest);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderReportByDistributorAndCustomer(getOrderBORequest);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}
 			else {
 				//To get order product details based on orderId, distributorId & orderProductStatus (if required)
 				if(getOrderBORequest.getRequest().getProductId() == null || getOrderBORequest.getRequest().getProductId().equals("") ) {
-					for (int i = 0; i <OrderDetailsList.size(); i++)
+					for (int i = 0; i <orderDetailsList.size(); i++)
 					{
-						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(OrderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getDistributorsId(),getOrderBORequest.getRequest().getStatus());
-						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(OrderDetailsList.get(i),orderProductDetailsList));     
+						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(orderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getDistributorsId(),getOrderBORequest.getRequest().getStatus());
+						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
 				    }
 				}else {
 					//To get order product details based on orderId, productId & orderProductStatus (if required)
-					for (int i = 0; i <OrderDetailsList.size(); i++)
+					for (int i = 0; i <orderDetailsList.size(); i++)
 					{
-						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdProductIdOPStatus(OrderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getProductId(),getOrderBORequest.getRequest().getStatus());
-						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(OrderDetailsList.get(i),orderProductDetailsList));     
+						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdProductIdOPStatus(orderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getProductId(),getOrderBORequest.getRequest().getStatus());
+						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
 				    }
 				}
 				
@@ -1219,104 +1197,161 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		}
 	}
 	
-	@Override //update order status to Assigned or Cancel
-	public String cancelMainAndSubOrder(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
-		String response = null;
-		boolean subOrder;
-		boolean assignOrder;
-		try {
-			if(assignOrderToEmployeeRequest.getRequest().getOrderStatus().equalsIgnoreCase("Cancel") 
-					&& assignOrderToEmployeeRequest.getRequest().getProductId()==null ) 
-			{
-				//To update order status to Cancel for main Order in ots_order table
-				orderServiceDAO.UpdateOrderStatus(assignOrderToEmployeeRequest.getRequest().getOrderId(),assignOrderToEmployeeRequest.getRequest().getOrderStatus());
-				response = "Main Order Has Been Cancelled Successfully!";
-				
-				//To check if the Order has multiple Products in it, if it has then need to add product stock when order gets cancelled 
-				List<OrderProductDetails> orderProductDetails = orderProductDao.getProductListByOrderId(assignOrderToEmployeeRequest.getRequest().getOrderId());
-				if(orderProductDetails.size() > 0) {
-					for(int i=0; i<orderProductDetails.size();  i++) {
-						//To add product stock when order gets cancelled 
-						AddProductStockBORequest addProductStockBORequest = new AddProductStockBORequest();
-						AddProductStock addProductStock = new AddProductStock();
-						//setting request for add product stock
-						addProductStock.setProductId(orderProductDetails.get(i).getOtsProductId());
-						addProductStock.setUsersId(orderProductDetails.get(i).getDistributorId());
-						addProductStock.setProductStockQty(orderProductDetails.get(i).getOtsOrderedQty());
-						addProductStockBORequest.setRequestData(addProductStock);
-						//To add product stock quantity with old quantity
-						productStockDao.addProductStock(addProductStockBORequest); 
-					}
-				}
-				
-				//To send Email to customer for Order Cancel
-				UserDetails customer;
-				customer = userServiceDAO.getUserDetails(assignOrderToEmployeeRequest.getRequest().getCustomerId());
-				String custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-						"We're writing to let you know that your Order No: "+orderNoFormat+assignOrderToEmployeeRequest.getRequest().getOrderId()+" has been Cancelled by Seller. <br>"+
-						"Continue shopping with "+companyName+".<br><br>"+
-						"Thanks And Regards,<br>" + 
-						companyName+" Support Team </p>";
-				emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Cancellation",custNotification);	
-				try {
-					fcmPushNotification.sendPushNotification(customer.getDeviceId(),"etaarana app" , "Your Order has been Cancelled");
-				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
-				}
-			}else
-			{
-				//To update order status to Cancel in ots_order_product table
-				orderProductDao.updateSubOrder(assignOrderToEmployeeRequest);
-				response = "Order Has Been Cancelled Successfully!";
+	@Override
+	public String cancelMainOrder(String orderId,String orderCancelReason,String orderCancelledBy) {
+	    try {
+	        Map<String, Object> queryParameter = new HashMap<>();
+	        queryParameter.put("order_id", UUID.fromString(orderId));
+	        
+	        //Setting orderCancelReason as NULL if orderCancelledBy is Buyer else set the same orderCancelReason for Seller
+	        if(orderCancelledBy.equalsIgnoreCase("Buyer")) {
+	        	queryParameter.put("order_cancel_reason", null);
+	        }else {
+	        	queryParameter.put("order_cancel_reason", orderCancelReason);
+	        } 
+	        queryParameter.put("order_cancelled_by", orderCancelledBy);
+			
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("cancel_main_order")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+	        
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_id", Types.OTHER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_cancel_reason", Types.VARCHAR));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_cancelled_by", Types.VARCHAR));
 
-				//To check whether any one of the order is Assigned or Not, if its Assigned then main order status will be set to Assigned
-				subOrder = checkForOrderCancel(assignOrderToEmployeeRequest.getRequest().getOrderId());
-				if(subOrder == true) {
-					orderServiceDAO.UpdateOrderStatus(assignOrderToEmployeeRequest.getRequest().getOrderId(),"Cancel");
-				}
-				else {
-					assignOrder = checkForOrderAssigned(assignOrderToEmployeeRequest.getRequest().getOrderId());
-					if(assignOrder == true) {
-						orderServiceDAO.UpdateOrderStatus(assignOrderToEmployeeRequest.getRequest().getOrderId(),"Assigned");
-					}
-				}
-				
-				//To fetch order product details
-				OrderProductDetails orderDetails = orderProductDao.getOrderProductByOrderIdProductId(assignOrderToEmployeeRequest.getRequest().getOrderId(),assignOrderToEmployeeRequest.getRequest().getProductId());
-				//To add product stock when order gets cancelled 
-				AddProductStockBORequest addProductStockBORequest = new AddProductStockBORequest();
-				AddProductStock addProductStock = new AddProductStock();
-				//setting request for add product stock
-				addProductStock.setProductId(orderDetails.getOtsProductId());
-				addProductStock.setUsersId(orderDetails.getDistributorId());
-				addProductStock.setProductStockQty(orderDetails.getOtsOrderedQty());
-				addProductStockBORequest.setRequestData(addProductStock);
-				//To add product stock quantity with old quantity
-				productStockDao.addProductStock(addProductStockBORequest); 
-				
-				//To send Email to Customer for Order Cancel
-				UserDetails customer;
-				customer = userServiceDAO.getUserDetails(assignOrderToEmployeeRequest.getRequest().getCustomerId());
-				String custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-						"We're writing to let you know that your Order Number: "+orderNoFormat+assignOrderToEmployeeRequest.getRequest().getOrderId()+" for Product "+orderDetails.getProductName()+" has been Cancelled by Seller. <br>"+
-						"Continue shopping with "+companyName+".<br><br>"+
-						"Thanks And Regards,<br>" + 
-						companyName+" Support Team </p>";
-				emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Cancellation",custNotification);	
-				try {
-						fcmPushNotification.sendPushNotification(customer.getDeviceId(),"etaarana app" , "Your Sub Order has been Cancelled");
-				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
-				}
+	        Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameter);
+			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
+			
+			//converting output of procedure to String
+			String response = outputResult.get(0).values().toString();	
+			System.out.println("response = "+response);
+			
+			//comparing response of procedure & handling response
+			if(response.equalsIgnoreCase("[Updated]")) {
+				return "Updated";
+			}else if(response.equalsIgnoreCase("[Not Updated]")) {
+				return "Not Updated";
+			}else {
+				return "Unexpected Response";
 			}
-			return response;
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("Error in inserting order in order table"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-		} catch (Throwable e) {
-			e.printStackTrace();
-			logger.error("Error in inserting order in order table"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-		}
+	    }catch (BusinessException e){
+			logger.error("Exception while fetching data from DB:"+e.getMessage());
+        	e.printStackTrace();
+        	throw new BusinessException(e.getMessage(), e);
+	    }catch (Throwable e) {
+	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
+        	e.printStackTrace();
+        	throw new BusinessException(e.getMessage(), e);
+	    }
+	}
+	
+	@Override
+	public String cancelSubOrder(String orderId,String productId,String orderCancelReason,String orderCancelledBy) {
+	    try {
+	        Map<String, Object> queryParameters = new HashMap<>();
+	        queryParameters.put("order_id", UUID.fromString(orderId));
+	        queryParameters.put("product_id", UUID.fromString(productId));
+	        queryParameters.put("order_cancel_reason", orderCancelReason);
+	        queryParameters.put("order_cancelled_by", orderCancelledBy);
+
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("cancel_sub_order")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_id", Types.OTHER));
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_id", Types.OTHER));
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_cancel_reason", Types.VARCHAR));
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_cancelled_by", Types.VARCHAR));
+
+	        Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
+			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
+			
+			//converting output of procedure to String
+			String response = outputResult.get(0).values().toString();	
+			System.out.println("response = "+response);
+			
+			//comparing response of procedure & handling response
+			if(response.equalsIgnoreCase("[Updated]")) {
+				return "Updated";
+			}else if(response.equalsIgnoreCase("[Not Updated]")) {
+				return "Not Updated";
+			}else {
+				return "Unexpected Response";
+			}
+	    }catch (BusinessException e){
+			logger.error("Exception while fetching data from DB:"+e.getMessage());
+        	e.printStackTrace();
+        	throw new BusinessException(e.getMessage(), e);
+	    }catch (Throwable e) {
+	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
+        	e.printStackTrace();
+        	throw new BusinessException(e.getMessage(), e);
+	    }
+	}
+	
+	@Override // Update order status to Assigned or Cancel
+	public String cancelMainAndSubOrder(CancelOrderRequest cancelOrderRequest) {
+	    String response = "Order Has Been Cancelled Successfully";
+	    ExecutorService executor = Executors.newCachedThreadPool();
+	    try {
+	        if (cancelOrderRequest.getRequest().getProductId() == null) {
+	            // Update order status to Cancel for main Order in ots_order table
+	            String cancelMainOrder = cancelMainOrder(cancelOrderRequest.getRequest().getOrderId(),cancelOrderRequest.getRequest().getCancelReason(),cancelOrderRequest.getRequest().getCancelledBy());
+	            if(cancelMainOrder == "Not Updated") {
+	            	return null;
+	            }
+	            
+	            OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(cancelOrderRequest.getRequest().getOrderId());
+	            // Fetch customer details and send email notification asynchronously
+	            executor.submit(() -> {
+	                String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
+							"We're writing to let you know that your Order No: "+orderDetails.getOrderNumber()+" has been Cancelled by "+cancelOrderRequest.getRequest().getCancelledBy()+" <br>"+
+							"Continue shopping with "+companyName+".<br><br>"+
+							"Thanks And Regards,<br>" + 
+							companyName+" Support Team </p>";
+	                emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Order Cancellation", custNotification);
+	            });
+	            
+	            return response;
+	        } else {
+	            // Update order status to Cancel in ots_order_product table
+	        	// Check and update main order status
+	            // To check whether any one of the order is Assigned or Not, if its Assigned then main order status will be set to Assigned
+	        	String cancelSubOrder = cancelSubOrder(cancelOrderRequest.getRequest().getOrderId(),cancelOrderRequest.getRequest().getProductId(),cancelOrderRequest.getRequest().getCancelReason(),cancelOrderRequest.getRequest().getCancelledBy());
+	        	if(cancelSubOrder == "Not Updated") {
+	            	return null;
+	            }
+	        	
+	            // Send email notification to customer asynchronously
+	            executor.submit(() -> {
+	            	OrderProductDetails orderProductDetails = orderProductDao.getOrderProductByOrderIdProductId(cancelOrderRequest.getRequest().getOrderId(), cancelOrderRequest.getRequest().getProductId());
+	            	
+	            	if(cancelOrderRequest.getRequest().getCancelledBy().equalsIgnoreCase("Distributor")) {
+		                String custNotification ="<p>Hi "+orderProductDetails.getCustomerName()+", <br><br>" + 
+		                		"We're writing to let you know that your Order Number: "+orderProductDetails.getOtsOrderNumber()+" for Product "+orderProductDetails.getProductName()+" has been Cancelled by "+cancelOrderRequest.getRequest().getCancelledBy()+" <br>"+
+								"Continue shopping with "+companyName+".<br><br>"+
+								"Thanks And Regards,<br>" + 
+								companyName+" Support Team </p>";
+		                emailUtil.sendCustomermail(orderProductDetails.getCustomerEmailId(), "", "Order Cancellation", custNotification);
+		                System.out.println("mail sent to cust");
+	            	}            
+	            });
+
+	            return response;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        logger.error("Error in inserting order in order table" + e.getMessage());
+	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
+	    } catch (Throwable e) {
+	        e.printStackTrace();
+	        logger.error("Error in inserting order in order table" + e.getMessage());
+	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
+	    } finally {
+	        executor.shutdown();
+	    }
 	}
 
 	public String orderLedgureReportPDF(List<OrderDetailsAndProductDetails> orderDetailsList) {
@@ -1551,15 +1586,15 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
 		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrderDetailsForOrderId(OrderId);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderDetailsForOrderId(OrderId);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}
 			else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(OrderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),OrderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
 			}
@@ -1619,55 +1654,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
-	}
-	
-	@Override
-	public List<List<String>> getOrderDetailsForBillOfSupply(String orderId,String distributorId) {
-		try {
-			Map<String, Object> queryParameter = new HashMap<String, Object>();
-			queryParameter.put("order_id",UUID.fromString(orderId));
-			queryParameter.put("distributor_id",UUID.fromString(distributorId));
-			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	        		.withFunctionName("get_order_details_for_bill_of_supply")
-	        		.withSchemaName("public")
-	                .withoutProcedureColumnMetaDataAccess();
-			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_id", Types.OTHER));
-			simpleJdbcCall.addDeclaredParameter(new SqlParameter("distributor_id", Types.OTHER));
-			
-			Map<String, Object> result = simpleJdbcCall.execute(queryParameter);
-			List<Map<String, String>> orderDetails = (List<Map<String, String>>) result.get("#result-set-1");
-	
-			//To Add Sl.no at beginning of the map as Key Value pair to existing map & adding numbers incrementing from 1
-			int sl = 1;
-			for(Map<String,String> map : orderDetails) {
-			    Map<String,String> mapcopy = new LinkedHashMap<String,String>(map);
-			    map.clear();
-			    map.put("Sl.no",String.valueOf(sl++));
-			    map.putAll(mapcopy);
-			}
-		
-			//Converting List<Map<String, String>> into List<List<String>> List of values
-			List<String> valueList = null;
-			List<List<String>> order = new ArrayList<>();
-			for(int index = 0 ; index < orderDetails.size() ; index++){
-				Map<String, String> listItem = orderDetails.get(index);
-				for(int j=0; j<listItem.size();j++) {
-				    valueList = new ArrayList<String>(listItem.values());
-				}
-				System.out.println("valueList = "+valueList);
-				order.add(valueList);
-			} 
-
-			return order;
-		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		}
 	}
 	
 	@Override
@@ -1740,7 +1726,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					//Creating message content
 					String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
 							"Order Delivered Successfuly.<br>"+
-							"All the Products from your order list Order Number: "+orderNoFormat+orderDetails.getOrderNumber()+" has been delivered. <br>"+
+							"All the Products from your order list Order Number: "+orderDetails.getOrderNumber()+" has been delivered. <br>"+
 							"Thank you for shopping with "+companyName+".<br><br>"+
 							"Thanks And Regards,<br>" + 
 							companyName+" Support Team </p>";
@@ -1799,14 +1785,11 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 
 				//To send email notification to Customer for Close order
 				executor.submit(() -> {
-					//To get Order details by orderId
-					OrderDetails otsOrderDetails = orderServiceDAO.getOrderDetailsByOrderId(closeEmployeeOrderRequest.getRequest().getOrderId());
-					
 					String custNotification ="<p>Hi,\r\n\r\n" + 
 							"Your product "+ productDetails.getProductName()+" has been delivered on "+productDetails.getSubOrderDeliveredDate()+"<br><br>"+
 							"Thanks And Regards,<br>" + 
 							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(otsOrderDetails.getCustomerEmailId(), "", "Regarding Order Update",custNotification);		
+					emailUtil.sendCustomermail(productDetails.getCustomerEmailId(), "", "Regarding Order Update",custNotification);		
 				});
 			}catch(Exception e) {
 				return Response;
@@ -1822,21 +1805,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	}
 	
 	@Override
-	public List<String> getSubOrderIdsWithNewStatusLessThanCurrentDate() {
+	public List<String> getNewSubordersBeforeCurrentDate() {
 	    try {
-	    	//Procedure to get the subOrderId that are in New status & Addition of 24 hours with orderDate is Less than Current Date Time
-	        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	            .withFunctionName("get_order_by_new_status_less_than_current_date")
-	            .withSchemaName("public")
-	            .withoutProcedureColumnMetaDataAccess()
-	            .declareParameters(new SqlOutParameter("return", Types.VARCHAR)); // JSON is treated as VARCHAR
+	        String sql = "SELECT ots_suborder_id FROM public.get_new_suborders_before_current_date()";
 
-	        Map<String, Object> result = jdbcCall.execute(new HashMap<>());
-	        String json = (String) result.get("return");
-
-	        // Convert JSON array to List<String>
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        return objectMapper.readValue(json, new TypeReference<List<String>>() {});
+	        return jdbcTemplate.query(
+	                sql,
+	                (rs, rowNum) -> rs.getString("ots_suborder_id")
+	        );
 	    }catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			e.printStackTrace();
@@ -1853,40 +1829,44 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			//Procedure to get the subOrderId that are in New Status till current date with 24 hrs Buffer time
-			List<String> subOrderId = getSubOrderIdsWithNewStatusLessThanCurrentDate();
+			List<String> subOrderId = getNewSubordersBeforeCurrentDate();
 			
 			//To notify Customer & Distributor about Order Cancellation for all the Cancelled Orders
 			if(subOrderId.size() == 0) {
 				return "No Orders Found";
-			}else {
-				executor.submit(() -> {
-					for(int i=0; i<subOrderId.size(); i++) {
-						//To get order Details by subOrderId
-						OrderProductDetails orderDetails = orderProductDao.getOrderProductBySubOrderId(subOrderId.get(i));
-						
-						//Creating message content
-						String distMsg ="<p>Hi,<br><br>" + 
-								orderDetails.getProductName()+"from Order Number: "+orderNoFormat+orderDetails.getOtsOrderId()+" has been Cancelled due to delayed response. <br><br>"+
-								"Thanks And Regards,<br>" + 
-								companyName+" Support Team </p>";
-						//To send Email to distributor for Order Cancel
-						emailUtil.sendDistributermail(orderDetails.getDistributorEmailId(), "", "Regarding Order Cancellation", distMsg);
-						
-						//Creating message content
-						String custMsg ="<p>Hi,<br><br>" + 
-								orderDetails.getProductName()+"from your Order Number: "+orderNoFormat+orderDetails.getOtsOrderId()+" has been Cancelled due to delayed response from distributor. <br><br>"+
-								"Thanks And Regards,<br>" + 
-								companyName+" Support Team </p>";
-						//To send Email to customer for Order Cancel
-						UserDetails customer = userServiceDAO.getUserDetails(orderDetails.getCustomerId());
-						emailUtil.sendCustomermail(customer.getEmailId(), "", "Regarding Order Cancellation", custMsg);
-					}
-				});
 			}
+			
+			//To send Notification mail for Distributor & Customer about Order Cancellation from Distributor side due to No Action within 24 hours.
+			executor.submit(() -> {
+				for(int i=0; i<subOrderId.size(); i++) {
+					//To get order Details by subOrderId
+					OrderProductDetails orderDetails = orderProductDao.getOrderProductBySubOrderId(subOrderId.get(i));
+					
+					//Creating message content
+					String distMsg ="<p>Hi,<br><br>" + 
+							orderDetails.getProductName()+"from Order Number: "+orderDetails.getOtsOrderNumber()+" has been Cancelled due to delayed response. <br><br>"+
+							"Thanks And Regards,<br>" + 
+							companyName+" Support Team </p>";
+					//To send Email to distributor for Order Cancel
+					emailUtil.sendDistributermail(orderDetails.getDistributorEmailId(), "", "Regarding Order Cancellation", distMsg);
+					
+					//Creating message content
+					String custMsg ="<p>Hi,<br><br>" + 
+							orderDetails.getProductName()+"from your Order Number: "+orderDetails.getOtsOrderNumber()+" has been Cancelled due to delayed response from distributor. <br><br>"+
+							"Thanks And Regards,<br>" + 
+							companyName+" Support Team </p>";
+					//To send Email to customer for Order Cancel
+					emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Regarding Order Cancellation", custMsg);
+					
+					System.out.println("subOrderId = "+subOrderId.get(i));
+				}
+			});
 			
 			//Procedure to Fetch Orders that are in New Status till current date & Cancel those Order, Update Stocks for Product, Update Main Order Status to Cancel if needed.
 			String sql = "SELECT public.auto_cancel_order_by_distributor()";
 			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
+			
+			System.out.println("response = "+response);
 			
 			return response;
 		}catch(Exception e){
@@ -1902,18 +1882,16 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	
 	@Override
 	public OrderDetails addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest) {
-		OrderDetails orderDetails = new OrderDetails();
 		String adminId = null;
 		
 		// Executor for concurrent tasks
         ExecutorService executor = Executors.newFixedThreadPool(10);
 		try {
-			List<OrderDetails> otsOrderDetails = orderServiceDAO.addPaymentDetailsForOrder(addOrderPaymentDetailsRequest);
-			if(otsOrderDetails.size() == 0) {
+			OrderDetails otsOrderDetails = orderServiceDAO.addPaymentDetailsForOrder(addOrderPaymentDetailsRequest);
+			if(otsOrderDetails == null) {
 				return null;
 			}else {
-				List<OrderProductDetails> orderProductDetails = orderProductDao.updateSubOrderStatus(otsOrderDetails.get(0).getOrderId(),"New");
-				orderDetails = otsOrderDetails.get(0);
+				List<OrderProductDetails> orderProductDetails = orderProductDao.updateSubOrderStatus(otsOrderDetails.getOrderId(),"New");
 				
 				if(orderProductDetails.size() == 0){
 					return null;
@@ -1965,8 +1943,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 								//To send notification mail to Distributor when order gets inserted
 								//Creating message content
 								String distMsg="<p>Hi,<br><br>" + 
-										"You have received a New Order placed by " + otsOrderDetails.get(0).getCustomerName()+"<br>"+
-										"Please Approve Order No: "+otsOrderDetails.get(0).getOrderNumber()+" with SubOrder No: "+orderProductDetails.get(index).getOtsSubOrderId()+"<br><br>" +
+										"You have received a New Order placed by " + otsOrderDetails.getCustomerName()+"<br>"+
+										"Please Approve Order No: "+otsOrderDetails.getOrderNumber()+" with SubOrder No: "+orderProductDetails.get(index).getOtsSubOrderId()+"<br><br>" +
 										"Please Login to know the Order details.<br>"+
 										"Thanks And Regards,<br>" + 
 										companyName+" Support Team </p>";
@@ -1992,20 +1970,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 						String custPageLink = "<a href= '"+customerPageLoginLink+"'>Login</a> </p>";
 						
 						//Creating message content
-						String custMsg="<p>Hi "+otsOrderDetails.get(0).getCustomerName()+", <br><br>" + 
+						String custMsg="<p>Hi "+otsOrderDetails.getCustomerName()+", <br><br>" + 
 								"Order Successfully Placed.<br>"+
-								"We are pleased to confirm your Order No: "+otsOrderDetails.get(0).getOrderNumber()+"<br>" +
-								"Please Login to know the Order details. Click here to "+custPageLink+"</br>"+
-								"Thank you for shopping with "+companyName+".</br></br>"+
+								"We are pleased to confirm your Order No: "+otsOrderDetails.getOrderNumber()+"<br>" +
+								"Please Login to know the Order details. Click here to "+custPageLink+"<br>"+
+								"Thank you for shopping with "+companyName+".<br><br>"+
 								"Thanks And Regards,<br>" + 
 								companyName+" Support Team</p>";
 						//sending mail for Customer for inserting order
-						executor.submit(() -> emailUtil.sendCustomermail(otsOrderDetails.get(0).getCustomerEmailId(), "", "Order Confirmation", custMsg));
+						executor.submit(() -> emailUtil.sendCustomermail(otsOrderDetails.getCustomerEmailId(), "", "Order Confirmation", custMsg));
 					    
 					    //Creating message content
 						String adminMsg="<p>Hi,<br>" + 
-								"Order Id: "+otsOrderDetails.get(0).getOrderId()+" placed by Customer Id: "+otsOrderDetails.get(0).getCustomerId()+" , "+otsOrderDetails.get(0).getCustomerName()+
-								" with order Amount Rs."+otsOrderDetails.get(0).getOrderCost()+"<br>"+
+								"Order Id: "+otsOrderDetails.getOrderId()+" placed by Customer Id: "+otsOrderDetails.getCustomerId()+" , "+otsOrderDetails.getCustomerName()+
+								" with order Amount Rs."+otsOrderDetails.getOrderCost()+"<br>"+
 								"Order Details are mentioned below. <br>"+table+"<br><br>"+
 								"Thanks And Regards,<br>" + 
 								companyName+" Support Team </p>";
@@ -2016,9 +1994,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 
 					}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 					}
-					
 				}
-				
+				return otsOrderDetails;
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2029,7 +2006,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
 		}
-		return orderDetails;
 	}
 	
 	@Override
@@ -2037,17 +2013,17 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		try {
 			OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
 			// getting order details by passing the distributor id
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrdersByStatus(orderStatus);
-			if(OrderDetailsList.size() ==0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrdersByStatus(orderStatus);
+			if(orderDetailsList.size() ==0) {
 				return null;
 			}else {
 				List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 				//getting order product details
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
-					System.out.println("order id"+OrderDetailsList.get(i).getOrderId());
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(OrderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					System.out.println("order id"+orderDetailsList.get(i).getOrderId());
+					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),OrderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
 				return orderProductBOResponse;
@@ -2093,56 +2069,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		}
 	}
 	
-	@Override
-	public String generateBillOfSupplyPdf(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		try {
-			List<DistributorCompanyDetails> distcompanyDetailsList = distributorCompanyDetailsDAO.getDistributorCompanyDetails(assignOrderToEmployeeRequest.getRequest().getDistributorId());
-			List<List<String>> orderDetails = getOrderDetailsForBillOfSupply(assignOrderToEmployeeRequest.getRequest().getOrderId(),assignOrderToEmployeeRequest.getRequest().getDistributorId());
-			List<OrderProductDetails> orderProductList = orderProductDao.getProductListByOrderId(assignOrderToEmployeeRequest.getRequest().getOrderId());
-			
-			//To generate Bill OF Supply pdf
-			byte[] pdfPath = BillOfSupplyPdf.generateBillOfSupply(distcompanyDetailsList, orderDetails,orderProductList.get(0).getOtsOrderNumber());
-			
-			String encodedString = Base64.getEncoder().encodeToString(pdfPath);
-			System.out.println(encodedString);
-			assignOrderToEmployeeRequest.getRequest().setBillOfSupply(encodedString);
-			
-			//To add encoded Bill Of Supply path into orderProduct table(DB)
-			String addBOS = orderProductDao.addBillOfSupplyToDB(assignOrderToEmployeeRequest);
-			
-            executor.submit(() -> {
-				  //To send BOS pdf to ortusolis finance email as attachment
-				  try {
-				      //To Add PDF Attachment file to mail
-				      String pdfName = "BOS_"+orderProductList.get(0).getOtsSubOrderId()+".pdf";	//Recreating pdf with same name
-				
-				      //Creating message content
-				      String financeMsg="Hi,\r\n\r\n" + 
-				              "Distributor "+distcompanyDetailsList.get(0).getDistributorFirstName()+" "+distcompanyDetailsList.get(0).getDistributorLastName()+" has accepted sub order "+orderProductList.get(0).getOtsSubOrderId()+" and Bill Of Supply for this order is sent to you.\r\n" + 
-				              "Please Download the Attached Bill OF Supply Pdf.\r\n\r\n" +
-				              "Thanks And Regards,\r\n" + 
-				              "ORTUSOLIS TECHNOLOGIES PVT LTD";
-				
-				      //To send Email to OTS Finance team for Successful Registration with attached Invoice
-				      emailUtil.sendFinanceMailWithAttachment("", "Order Accepted by Distributor", financeMsg,pdfPath,pdfName);
-				  }
-				  catch (Throwable t) {		//added try catch block to pass the exception & continue processing
-				  }
-            });
-				
-			return addBOS;
-		}catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		}
-	}
-	
 	@Override	//To get order product details in Assigned status for Gst unavailable distributors
 	public List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String SubOrderStatus) {
 		try {
@@ -2175,144 +2101,102 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override 
 	public String updateRRCOrderStatus(UpdateRRCStatusRequest updateRRCStatusRequest) {
 		String Response;
-		boolean subOrder;
-		boolean assignOrder;
+		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
-			Response = orderProductDao.updateRRCOrderStatus(updateRRCStatusRequest);
-			
-			//To send Email to Customer for Return, Replace, Cancel
 			//To get Order Details 
-			OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(updateRRCStatusRequest.getRequest().getOrderId());
-			//To get Customer Details
-			UserDetails customer = userServiceDAO.getUserDetails(orderDetails.getCustomerId());
+			Future<OrderDetails> order = executor.submit(() -> orderServiceDAO.getOrderDetailsByOrderId(updateRRCStatusRequest.getRequest().getOrderId()));
 			//To get Order Product Details 
-			OrderProductDetails orderproduct = orderProductDao.getOrderProductByOrderIdProductId(updateRRCStatusRequest.getRequest().getOrderId(),updateRRCStatusRequest.getRequest().getProductId());
-			//To get Distributor Details
-			UserDetails distributor = userServiceDAO.getUserDetails(orderproduct.getDistributorId());
-			String custNotification = null;
-			String distNotification = null;
-			try {
-				//Message content for Return 
-				if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Return")) {
-					custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-							"We're writing to let you know that your Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" for Product "+orderproduct.getProductName()+" has been placed for Return. <br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Initiated For Return",custNotification);
-					
-					distNotification ="<p>Hi,<br><br>" + 
-							"SubOrder ID: "+orderproduct.getOtsSubOrderId()+" for Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Intitiated for Return by Customer.<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendDistributermail(distributor.getEmailId(), "", "Order Initiated For Return",distNotification);
-					return Response;
-				}
-				
-				//Message content for Replacement
-				if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Replacement")) {
-					custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-							"We're writing to let you know that your Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" for Product "+orderproduct.getProductName()+" has been placed for Replacement. <br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Initiated For Replacement",custNotification);
-					
-					distNotification ="<p>Hi,<br><br>" + 
-							"SubOrder ID: "+orderproduct.getOtsSubOrderId()+" for Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Intitiated for Replacement by Customer.<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendDistributermail(distributor.getEmailId(), "", "Order Initiated For Replacement",distNotification);
-					return Response;
-				}
-				
-				//Message content for Return Close
-				if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("ReturnClose")) {
-					custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-							orderproduct.getProductName()+" from Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Returned and the order amount is refunded. <br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(customer.getEmailId(), "", "Return Order Closed",custNotification);
-					
-					distNotification ="<p>Hi,<br><br>" + 
-							"SubOrder ID: "+orderproduct.getOtsSubOrderId()+" for Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Intitiated for Return by Customer.<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendDistributermail(distributor.getEmailId(), "", "Return Order Closed",distNotification);
-					return Response;
-				}
-				
-				//Message content for Replace Close
-				if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("ReplaceClose")) {
-					custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-							orderproduct.getProductName()+" from Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Replaced as requested. <br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(customer.getEmailId(), "", "Replacement Order Closed",custNotification);
-					
-					distNotification ="<p>Hi,\r\n\r\n" + 
-							"SubOrder ID: "+orderproduct.getOtsSubOrderId()+" for Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Closed for Replacement request.<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendDistributermail(distributor.getEmailId(), "", "Replacement Order Closed",distNotification);
-					return Response;
-				}
-			}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
-			}
+			Future<OrderProductDetails> orderProductDetails = executor.submit(() -> orderProductDao.getOrderProductByOrderIdProductId(updateRRCStatusRequest.getRequest().getOrderId(),updateRRCStatusRequest.getRequest().getProductId()));
 		
-			//When customer cancels order need to update rrcOrderStatus to Cancel, orderProductStatus to Cancel &  main orderStatus to Cancel only when all the subOrder are Cancelled
-			if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Cancel")) {
-				AssignOrderToEmployeeRequest assignOrderToEmployeeRequest = new AssignOrderToEmployeeRequest();
-				AssignOrderToEmployeeModel assignOrderToEmployeeModel = new AssignOrderToEmployeeModel();
-				
-				//Setting request for cancelMainAndSubOrder 
-				assignOrderToEmployeeModel.setOrderId(orderproduct.getOtsOrderId());
-				assignOrderToEmployeeModel.setDistributorId(orderproduct.getDistributorId());
-				assignOrderToEmployeeModel.setProductId(orderproduct.getOtsProductId());
-				assignOrderToEmployeeModel.setCustomerId(orderDetails.getCustomerId());
-				assignOrderToEmployeeModel.setOrderStatus("Cancel");
-				assignOrderToEmployeeRequest.setRequest(assignOrderToEmployeeModel);
-				
-				//To update order status to Cancel in ots_order_product table
-				orderProductDao.updateSubOrder(assignOrderToEmployeeRequest);
-				
-				//To add product stock when order gets cancelled 
-				AddProductStockBORequest addProductStockBORequest = new AddProductStockBORequest();
-				AddProductStock addProductStock = new AddProductStock();
-				//setting request for add product stock
-				addProductStock.setProductId(orderproduct.getOtsProductId());
-				addProductStock.setUsersId(orderproduct.getDistributorId());
-				addProductStock.setProductStockQty(orderproduct.getOtsOrderedQty());
-				addProductStockBORequest.setRequestData(addProductStock);
-				//To add product stock quantity with old quantity
-				productStockDao.addProductStock(addProductStockBORequest);
-				
-				//To check whether any one of the order is Assigned or Not, if its Assigned then main order status will be set to Assigned
-				subOrder = checkForOrderCancel(updateRRCStatusRequest.getRequest().getOrderId());
-				if(subOrder == true) {
-					orderServiceDAO.UpdateOrderStatus(updateRRCStatusRequest.getRequest().getOrderId(),"Cancel");
-				}
-				else {
-					assignOrder = checkForOrderAssigned(updateRRCStatusRequest.getRequest().getOrderId());
-					if(assignOrder == true) {
-						orderServiceDAO.UpdateOrderStatus(updateRRCStatusRequest.getRequest().getOrderId(),"Assigned");
-					}
-				}
-				
+			//to update RRCOrderStatus
+			Response = orderProductDao.updateRRCOrderStatus(updateRRCStatusRequest);
+			if(Response == "Not Updated") {
+				return Response;
+			}
+			
+			//To fetch data from executer
+			OrderDetails orderDetails = order.get();
+			OrderProductDetails orderProductList = orderProductDetails.get();
+
+			executor.submit(() -> {
+				//To send Email to Customer for Return, Replacement, ReplaceClose, ReturnClose
 				try {
-					custNotification ="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
-							"We're writing to let you know that your Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" for Product "+orderproduct.getProductName()+" has been Cancelled. <br>"+
-							"Continue shopping with "+companyName+".<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Cancellation",custNotification);
 					
-					distNotification ="<p>Hi,<br><br>" + 
-							"SubOrder ID: "+orderproduct.getOtsSubOrderId()+" for Order Number: "+orderNoFormat+updateRRCStatusRequest.getRequest().getOrderId()+" has been Cancelled by Customer.<br><br>"+
-							"Thanks And Regards,<br>" + 
-							companyName+" Support Team </p>";
-					emailUtil.sendDistributermail(distributor.getEmailId(), "", "Order Cancelled",distNotification);
+					//Message content for Return 
+					if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Return")) {
+						executor.submit(() -> {
+							String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
+									"We're writing to let you know that your Order Number: "+orderDetails.getOrderNumber()+" for Product "+orderProductList.getProductName()+" has been placed for Return. <br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Order Initiated For Return",custNotification);
+							
+							String distNotification ="<p>Hi,<br><br>" + 
+									"SubOrder ID: "+orderProductList.getOtsSubOrderId()+" for Order Number: "+orderDetails.getOrderNumber()+" has been Intitiated for Return by Customer.<br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Order Initiated For Return",distNotification);
+						});
+						return Response;
+					}
+					
+					//Message content for Replacement
+					if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Replacement")) {
+						executor.submit(() -> {
+							String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
+									"We're writing to let you know that your Order No: "+orderDetails.getOrderNumber()+" for Product "+orderProductList.getProductName()+" has been placed for Replacement. <br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Order Initiated For Replacement",custNotification);
+							
+							String distNotification ="<p>Hi,<br><br>" + 
+									"SubOrder ID: "+orderProductList.getOtsSubOrderId()+" for Order No: "+orderDetails.getOrderNumber()+" has been Intitiated for Replacement by Customer.<br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Order Initiated For Replacement",distNotification);
+						});
+						return Response;
+					}
+					
+					//Message content for Replace Close
+					if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("ReplaceClose")) {
+						executor.submit(() -> {
+							String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
+									orderProductList.getProductName()+" from Order No: "+orderDetails.getOrderNumber()+" has been Replaced as requested. <br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Replacement Order Closed",custNotification);
+							
+							String distNotification ="<p> Hi,<br><br>" + 
+									"SubOrder ID: "+orderProductList.getOtsSubOrderId()+" for Order No: "+orderDetails.getOrderNumber()+" has been Closed for Replacement request.<br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Replacement Order Closed",distNotification);
+						});
+						return Response;
+					}
+					
+					//Message content for Return Close
+					if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("ReturnClose")) {
+						executor.submit(() -> {
+							String custNotification ="<p>Hi "+orderDetails.getCustomerName()+", <br><br>" + 
+									orderProductList.getProductName()+" from Order Number: "+orderDetails.getOrderNumber()+" has been Returned and the order amount is refunded. <br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Return Order Closed",custNotification);
+							
+							String distNotification ="<p>Hi,<br><br>" + 
+									"SubOrder ID: "+orderProductList.getOtsSubOrderId()+" for Order Number: "+orderDetails.getOrderNumber()+" has been Intitiated for Return by Customer.<br><br>"+
+									"Thanks And Regards,<br>" + 
+									companyName+" Support Team </p>";
+							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Return Order Closed",distNotification);
+						});
+						return Response;
+					}
 				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 				}
-			}
+				return Response;
+			});
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			e.printStackTrace();
@@ -2770,57 +2654,64 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		}
 	}
 	
-	private OrderProductAndOrderDetails AddOrderProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,OrderProductDetails OrderProductDetails)
+	private OrderProductAndOrderDetails AddOrderProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,OrderProductDetails orderProductDetails)
 	{
 		OrderProductAndOrderDetails orderProductAndOrderDetails = new OrderProductAndOrderDetails();
-		orderProductAndOrderDetails.setOtsOrderId(OrderProductDetails.getOtsOrderId());
-		orderProductAndOrderDetails.setOtsOrderNumber(OrderProductDetails.getOtsOrderNumber());
-		orderProductAndOrderDetails.setOtsDeliveredQty(OrderProductDetails.getOtsDeliveredQty());
-		orderProductAndOrderDetails.setProductName(OrderProductDetails.getProductName());
-		orderProductAndOrderDetails.setOtsOrderProductCost(OrderProductDetails.getOtsOrderProductCost());
-		orderProductAndOrderDetails.setOtsOrderedQty(OrderProductDetails.getOtsOrderedQty()); 
-		orderProductAndOrderDetails.setOtsOrderProductStatus(OrderProductDetails.getOtsOrderProductStatus());
-		orderProductAndOrderDetails.setOtsOrderProductId(OrderProductDetails.getOtsOrderProductId());
-		orderProductAndOrderDetails.setOtsProductId(OrderProductDetails.getOtsProductId());
-		orderProductAndOrderDetails.setOtsSubOrderId(OrderProductDetails.getOtsSubOrderId());
-		orderProductAndOrderDetails.setProductImage(OrderProductDetails.getProductImage());
-		orderProductAndOrderDetails.setDistributorId(OrderProductDetails.getDistributorId());
-		orderProductAndOrderDetails.setAssignedId(OrderProductDetails.getAssignedId());	
-		orderProductAndOrderDetails.setSubOrderDeliveredDate(OrderProductDetails.getSubOrderDeliveredDate());
-		orderProductAndOrderDetails.setSubOrderOfdDate(OrderProductDetails.getSubOrderOfdDate());
-		orderProductAndOrderDetails.setSubOrderPickupDate(OrderProductDetails.getSubOrderPickupDate());
-		orderProductAndOrderDetails.setSubOrderAssignedDate(OrderProductDetails.getSubOrderAssignedDate());
-		orderProductAndOrderDetails.setOtsOrderDate(OrderProductDetails.getOtsOrderDate());
-		orderProductAndOrderDetails.setDistributorFirstName(OrderProductDetails.getDistributorFirstName());
-		orderProductAndOrderDetails.setDistributorLastName(OrderProductDetails.getDistributorLastName());
-		orderProductAndOrderDetails.setDistributorEmailId(OrderProductDetails.getDistributorEmailId());
-		orderProductAndOrderDetails.setBillOfSupply(OrderProductDetails.getBillOfSupply());
-		orderProductAndOrderDetails.setProductBasePrice(OrderProductDetails.getProductBasePrice());
-		orderProductAndOrderDetails.setOtsProductCancellationAvailability(OrderProductDetails.getOtsProductCancellationAvailability());
-		orderProductAndOrderDetails.setOtsProductReplacementAvailability(OrderProductDetails.getOtsProductReplacementAvailability());
-		orderProductAndOrderDetails.setOtsProductReplacementDays(OrderProductDetails.getOtsProductReplacementDays());
-		orderProductAndOrderDetails.setOtsProductReturnAvailability(OrderProductDetails.getOtsProductReturnAvailability());
-		orderProductAndOrderDetails.setOtsProductReturnDays(OrderProductDetails.getOtsProductReturnDays());
-		orderProductAndOrderDetails.setEmployeeFirstName(OrderProductDetails.getEmployeeFirstName());
-		orderProductAndOrderDetails.setEmployeeSecondName(OrderProductDetails.getEmployeeSecondName());
-		orderProductAndOrderDetails.setRrcOrderStatus(OrderProductDetails.getRrcOrderStatus());
-		orderProductAndOrderDetails.setRrcCustomerInitiatedDate(OrderProductDetails.getRrcCustomerInitiatedDate());
-		orderProductAndOrderDetails.setRrcDistributorInitiatedDate(OrderProductDetails.getRrcDistributorInitiatedDate());
-		orderProductAndOrderDetails.setProductSellerPrice(OrderProductDetails.getProductSellerPrice());
-		orderProductAndOrderDetails.setProductPriceWithoutGst(OrderProductDetails.getProductPriceWithoutGst());
-		orderProductAndOrderDetails.setCustomerId(OrderProductDetails.getCustomerId());
-		orderProductAndOrderDetails.setCustomerName(OrderProductDetails.getCustomerName());	
-		orderProductAndOrderDetails.setDeliveryAddress(OrderProductDetails.getDeliveryAddress());
-		orderProductAndOrderDetails.setCustomerContactNo(OrderProductDetails.getCustomerContactNo());
-		orderProductAndOrderDetails.setOrderProductCustomerInvoice(OrderProductDetails.getOrderProductCustomerInvoice());
-		orderProductAndOrderDetails.setOtsTrackingId(OrderProductDetails.getOtsTrackingId());
-		orderProductAndOrderDetails.setOtsTrackingUrl(OrderProductDetails.getOtsTrackingUrl());
-		orderProductAndOrderDetails.setOtsTrackingLogistics(OrderProductDetails.getOtsTrackingLogistics());
-		orderProductAndOrderDetails.setOtsProductGst(OrderProductDetails.getOtsProductGst());
-		orderProductAndOrderDetails.setOtsProductGstPrice(OrderProductDetails.getOtsProductGstPrice());
-		orderProductAndOrderDetails.setOtsProductPercentage(OrderProductDetails.getOtsProductPercentage());
-		orderProductAndOrderDetails.setOtsProductDiscountPrice(OrderProductDetails.getOtsProductDiscountPrice());
-		orderProductAndOrderDetails.setOtsProductDeliveryCharge(OrderProductDetails.getOtsProductDeliveryCharge());
+		orderProductAndOrderDetails.setOtsOrderId(orderProductDetails.getOtsOrderId());
+		orderProductAndOrderDetails.setOtsOrderNumber(orderProductDetails.getOtsOrderNumber());
+		orderProductAndOrderDetails.setOtsDeliveredQty(orderProductDetails.getOtsDeliveredQty());
+		orderProductAndOrderDetails.setProductName(orderProductDetails.getProductName());
+		orderProductAndOrderDetails.setOtsOrderProductCost(orderProductDetails.getOtsOrderProductCost());
+		orderProductAndOrderDetails.setOtsOrderedQty(orderProductDetails.getOtsOrderedQty()); 
+		orderProductAndOrderDetails.setOtsOrderProductStatus(orderProductDetails.getOtsOrderProductStatus());
+		orderProductAndOrderDetails.setOtsOrderProductId(orderProductDetails.getOtsOrderProductId());
+		orderProductAndOrderDetails.setOtsProductId(orderProductDetails.getOtsProductId());
+		orderProductAndOrderDetails.setOtsSubOrderId(orderProductDetails.getOtsSubOrderId());
+		orderProductAndOrderDetails.setProductImage(orderProductDetails.getProductImage());
+		orderProductAndOrderDetails.setDistributorId(orderProductDetails.getDistributorId());
+		orderProductAndOrderDetails.setAssignedId(orderProductDetails.getAssignedId());	
+		orderProductAndOrderDetails.setSubOrderDeliveredDate(orderProductDetails.getSubOrderDeliveredDate());
+		orderProductAndOrderDetails.setSubOrderOfdDate(orderProductDetails.getSubOrderOfdDate());
+		orderProductAndOrderDetails.setSubOrderPickupDate(orderProductDetails.getSubOrderPickupDate());
+		orderProductAndOrderDetails.setSubOrderAssignedDate(orderProductDetails.getSubOrderAssignedDate());
+		orderProductAndOrderDetails.setSubOrderExpectedDeliveryDate(orderProductDetails.getSubOrderExpectedDeliveryDate());
+		orderProductAndOrderDetails.setOtsOrderDate(orderProductDetails.getOtsOrderDate());
+		orderProductAndOrderDetails.setDistributorFirstName(orderProductDetails.getDistributorFirstName());
+		orderProductAndOrderDetails.setDistributorLastName(orderProductDetails.getDistributorLastName());
+		orderProductAndOrderDetails.setDistributorEmailId(orderProductDetails.getDistributorEmailId());
+		orderProductAndOrderDetails.setProductBasePrice(orderProductDetails.getProductBasePrice());
+		orderProductAndOrderDetails.setOtsProductCancellationAvailability(orderProductDetails.getOtsProductCancellationAvailability());
+		orderProductAndOrderDetails.setOtsProductReplacementAvailability(orderProductDetails.getOtsProductReplacementAvailability());
+		orderProductAndOrderDetails.setOtsProductReplacementDays(orderProductDetails.getOtsProductReplacementDays());
+		orderProductAndOrderDetails.setOtsProductReturnAvailability(orderProductDetails.getOtsProductReturnAvailability());
+		orderProductAndOrderDetails.setOtsProductReturnDays(orderProductDetails.getOtsProductReturnDays());
+		orderProductAndOrderDetails.setEmployeeFirstName(orderProductDetails.getEmployeeFirstName());
+		orderProductAndOrderDetails.setEmployeeSecondName(orderProductDetails.getEmployeeSecondName());
+		orderProductAndOrderDetails.setRrcOrderStatus(orderProductDetails.getRrcOrderStatus());
+		orderProductAndOrderDetails.setRrcCustomerInitiatedDate(orderProductDetails.getRrcCustomerInitiatedDate());
+		orderProductAndOrderDetails.setRrcDistributorInitiatedDate(orderProductDetails.getRrcDistributorInitiatedDate());
+		orderProductAndOrderDetails.setProductSellerPrice(orderProductDetails.getProductSellerPrice());
+		orderProductAndOrderDetails.setProductPriceWithoutGst(orderProductDetails.getProductPriceWithoutGst());
+		orderProductAndOrderDetails.setCustomerId(orderProductDetails.getCustomerId());
+		orderProductAndOrderDetails.setCustomerName(orderProductDetails.getCustomerName());	
+		orderProductAndOrderDetails.setDeliveryAddress(orderProductDetails.getDeliveryAddress());
+		orderProductAndOrderDetails.setCustomerContactNo(orderProductDetails.getCustomerContactNo());
+		orderProductAndOrderDetails.setOrderProductCustomerInvoice(orderProductDetails.getOrderProductCustomerInvoice());
+		orderProductAndOrderDetails.setOtsTrackingId(orderProductDetails.getOtsTrackingId());
+		orderProductAndOrderDetails.setOtsTrackingUrl(orderProductDetails.getOtsTrackingUrl());
+		orderProductAndOrderDetails.setOtsTrackingLogistics(orderProductDetails.getOtsTrackingLogistics());
+		orderProductAndOrderDetails.setOtsProductGst(orderProductDetails.getOtsProductGst());
+		orderProductAndOrderDetails.setOtsProductGstPrice(orderProductDetails.getOtsProductGstPrice());
+		orderProductAndOrderDetails.setOtsProductPercentage(orderProductDetails.getOtsProductPercentage());
+		orderProductAndOrderDetails.setOtsProductDiscountPrice(orderProductDetails.getOtsProductDiscountPrice());
+		orderProductAndOrderDetails.setOtsProductDeliveryCharge(orderProductDetails.getOtsProductDeliveryCharge());
+		orderProductAndOrderDetails.setOtsProductCountry(orderProductDetails.getOtsProductCountry());
+		orderProductAndOrderDetails.setOtsProductCountryCode(orderProductDetails.getOtsProductCountryCode());
+		orderProductAndOrderDetails.setOtsProductCurrency(orderProductDetails.getOtsProductCurrency());
+		orderProductAndOrderDetails.setOtsProductCurrencySymbol(orderProductDetails.getOtsProductCurrencySymbol());
+		orderProductAndOrderDetails.setOrderCancelledBy(orderProductDetails.getOrderCancelledBy());
+		orderProductAndOrderDetails.setOrderCancelReason(orderProductDetails.getOrderCancelReason());
+		orderProductAndOrderDetails.setSubOrderCancelledDate(orderProductDetails.getSubOrderCancelledDate());
 
 		orderProductAndOrderDetails.setOrderDetails(orderDetails);
 		
@@ -2845,31 +2736,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	public OrderProductAndOrderResponse getCancelledOrdersByDistributor(String distributorId) {
 		try {
 			OrderProductAndOrderResponse orderProductAndOrderResponse = new OrderProductAndOrderResponse();
-			List<OrderProductDetails> OrderProductDetailsList = new ArrayList<OrderProductDetails>();
 			//getting orders Cancelled by Distributor
 			List<OrderProductDetails> distCancelledOrders = orderProductDao.getCancelledOrdersByDistributor(distributorId);
-			//adding data into a List
-			OrderProductDetailsList.addAll(distCancelledOrders);
-			//getting orders Cancelled by Customer
-			List<OrderProductDetails> custCancelledOrders = orderProductDao.getDistributorsOrderCancelledByCustomer(distributorId);
-			//adding data into a previous List
-			OrderProductDetailsList.addAll(custCancelledOrders);
-			
-			//sorting the list in descending order based on OrderID
-			Collections.sort(OrderProductDetailsList, (s1, s2) ->
-			    Integer.compare(Integer.parseInt(s2.getOtsOrderProductId()), Integer.parseInt(s1.getOtsOrderProductId())));
-			
-			if(OrderProductDetailsList.size() == 0) {
+			if(distCancelledOrders.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
 				//getting order details for the order product
-				for (int i = 0; i <OrderProductDetailsList.size() ; i++)
+				for (int i = 0; i <distCancelledOrders.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(OrderProductDetailsList.get(i).getOtsOrderId());
-					GetOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,OrderProductDetailsList.get(i)));
+					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(distCancelledOrders.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,distCancelledOrders.get(i)));
 				}
-				orderProductAndOrderResponse.setOrderProductList(GetOrderDetailsAndProductDetails);
+				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
@@ -2888,19 +2767,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		try {
 			OrderProductAndOrderResponse orderProductAndOrderResponse = new OrderProductAndOrderResponse();
 			// getting order product details by passing the distributor id
-			List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getReturnReplacementOrdersForDistributor(distributorId);
-			if(OrderProductDetailsList.size() == 0) {
+			List<OrderProductDetails> orderProductDetailsList = orderProductDao.getReturnReplacementOrdersForDistributor(distributorId);
+			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
 				//getting order details for the order product
 				
-				for (int i = 0; i <OrderProductDetailsList.size() ; i++)
+				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(OrderProductDetailsList.get(i).getOtsOrderId());
-					GetOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,OrderProductDetailsList.get(i)));
+					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
-				orderProductAndOrderResponse.setOrderProductList(GetOrderDetailsAndProductDetails);
+				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
@@ -2919,19 +2798,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		try {
 			OrderProductAndOrderResponse orderProductAndOrderResponse = new OrderProductAndOrderResponse();
 			// getting order product details by passing the distributor id
-			List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getRRCOrdersByDistributor(getRRCOrdersByStatusRequest.getRequest().getDistributorId(),getRRCOrdersByStatusRequest.getRequest().getRrcOrderStatus());
-			if(OrderProductDetailsList.size() == 0) {
+			List<OrderProductDetails> orderProductDetailsList = orderProductDao.getRRCOrdersByDistributor(getRRCOrdersByStatusRequest.getRequest().getDistributorId(),getRRCOrdersByStatusRequest.getRequest().getRrcOrderStatus());
+			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
 				//getting order details for the order product
 				
-				for (int i = 0; i <OrderProductDetailsList.size() ; i++)
+				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(OrderProductDetailsList.get(i).getOtsOrderId());
-					GetOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,OrderProductDetailsList.get(i)));
+					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
-				orderProductAndOrderResponse.setOrderProductList(GetOrderDetailsAndProductDetails);
+				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
@@ -2950,19 +2829,19 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		try {
 			OrderProductAndOrderResponse orderProductAndOrderResponse = new OrderProductAndOrderResponse();
 			// getting order product details by passing the distributor id
-			List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getRRClosedOrdersByDistributor(distributorId);
-			if(OrderProductDetailsList.size() == 0) {
+			List<OrderProductDetails> orderProductDetailsList = orderProductDao.getRRClosedOrdersByDistributor(distributorId);
+			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
 				//getting order details for the order product
 				
-				for (int i = 0; i <OrderProductDetailsList.size() ; i++)
+				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(OrderProductDetailsList.get(i).getOtsOrderId());
-					GetOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,OrderProductDetailsList.get(i)));
+					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
-				orderProductAndOrderResponse.setOrderProductList(GetOrderDetailsAndProductDetails);
+				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
@@ -3044,20 +2923,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getRRCOrdersByCustomer(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
 			//get customer order details based on customerId & orderProductStatus
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getRRCOrdersByCustomer(getCustomerOrderByStatusBOrequest);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getRRCOrdersByCustomer(getCustomerOrderByStatusBOrequest);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					//get order product details by orderId & orderProductStatus
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(OrderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(orderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -3075,20 +2954,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getCustomerOrderByOrderProductStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
 			//get customer order details based on customerId & orderProductStatus
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getCustomerOrderByOrderProductStatus(getCustomerOrderByStatusBOrequest);
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getCustomerOrderByOrderProductStatus(getCustomerOrderByStatusBOrequest);
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					//get order product details by orderId & orderProductStatus
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(OrderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(orderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -3106,20 +2985,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderByOrderIdOrderProductStatus(GetOrderByOrderIdAndStatusRequest getOrderByOrderIdAndStatusRequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
 			//get order details based on orderId & orderProductStatus
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrderByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					//get order product details by orderId & orderProductStatus
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -3137,20 +3016,20 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderByOrderIdRRCOrderStatus(GetOrderByOrderIdAndStatusRequest getOrderByOrderIdAndStatusRequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
 		try {
 			//get order details based on orderId & orderProductStatus
-			List<OrderDetails> OrderDetailsList = orderServiceDAO.getOrderByOrderIdRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-			if(OrderDetailsList.size() == 0) {
+			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderByOrderIdRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
+			if(orderDetailsList.size() == 0) {
 				return null;
 			}else {
-				for (int i = 0; i <OrderDetailsList.size() ; i++)
+				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					//get order product details by orderId & orderProductStatus
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
+					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -3379,6 +3258,82 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
+	}
+	
+	@Override
+	public List<String> getPaymentPendingOrdersBeforeCurrentDate() {
+	    try {
+	        String sql = "SELECT ots_order_id FROM public.get_payment_pending_orders_before_current_date()";
+
+	        return jdbcTemplate.query(
+	                sql,
+	                (rs, rowNum) -> rs.getString("ots_order_id")
+	        );
+	    }catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public String autoCancelOrderByCustomer() {
+		ExecutorService executor = Executors.newCachedThreadPool();
+		try {
+			//Procedure to get Payment Pending & Order Status Pending, OrderId's till current date with 3 Days Buffer time
+			List<String> orderId = getPaymentPendingOrdersBeforeCurrentDate();
+			
+			//To notify Customer & Distributor about Order Cancellation for all the Cancelled Orders
+			if(orderId.size() == 0) {
+				return "No Orders Found";
+			}
+			
+			//To send Notification mail for Distributor & Customer about Order Cancellation from Customer side due to Pending Payment.
+			executor.submit(() -> {
+				for(int i=0; i<orderId.size(); i++) {
+					//To get order Details by orderId
+					OrderProductBOResponse orderDetails = getOrderDetailsForOrderId(orderId.get(i));
+					
+					//Creating message content
+					String distMsg ="<p>Hi,<br><br>" + 
+							orderDetails.getOrderList().get(0).getOrderdProducts().get(0).getProductName()+"from Order Number: "+orderDetails.getOrderList().get(0).getOrderNumber()+" has been Cancelled due to delayed response. <br><br>"+
+							"Thanks And Regards,<br>" + 
+							companyName+" Support Team </p>";
+					//To send Email to distributor for Order Cancel
+					emailUtil.sendDistributermail(orderDetails.getOrderList().get(0).getOrderdProducts().get(0).getDistributorEmailId(), "", "Regarding Order Cancellation", distMsg);
+					
+					//Creating message content
+					String custMsg ="<p>Hi,<br><br>" + 
+							orderDetails.getOrderList().get(0).getOrderdProducts().get(0).getProductName()+"from your Order Number: "+orderDetails.getOrderList().get(0).getOrderNumber()+" has been Cancelled due to delayed response from distributor. <br><br>"+
+							"Thanks And Regards,<br>" + 
+							companyName+" Support Team </p>";
+					//To send Email to customer for Order Cancel
+					emailUtil.sendCustomermail(orderDetails.getOrderList().get(0).getCustomerEmailId(), "", "Regarding Order Cancellation", custMsg);
+				
+					System.out.println("orderId = "+orderId.get(i));
+				}
+			});
+			
+			//Procedure to Fetch Orders that are in Pending Status & Payment Status in Pending till current date & Cancel those Order, Update Stocks for Product.
+			String sql = "SELECT public.auto_cancel_order_by_customer()";
+			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
+			
+			System.out.println("response = "+response);
+			
+			return response;
+		}catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage(), e);
+		}
 	}
 
 

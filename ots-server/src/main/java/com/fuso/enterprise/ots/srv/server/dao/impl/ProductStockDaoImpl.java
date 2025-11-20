@@ -71,11 +71,9 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			super.getEntityManager().merge(otsProductStock);
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		
@@ -116,11 +114,9 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return getProductBOStockResponse;
@@ -137,11 +133,9 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			getProductBOStockResponse.setUserId(out.get("ots_users_id")==null?"":out.get("ots_users_id").toString());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return getProductBOStockResponse;
@@ -170,11 +164,9 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
     	return getProductBOStockResponse;
@@ -219,7 +211,6 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			otsProductStock.setOtsProductId (otsProduct);
 			super.getEntityManager().merge(otsProductStock);
 		}catch (Exception e) {
-			e.printStackTrace();
 	    	throw new BusinessException(e, ErrorEnumeration.User_Not_exists);
 		}
 		logger.info("Inside Event=1014,Class:OTSProduct_WsImpl,Method:removeProductStock");
@@ -274,7 +265,6 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			super.getEntityManager().merge(otsProductStock);
 		}catch (Exception e) {
 			System.out.print(e);
-			e.printStackTrace();
 	    	throw new BusinessException(e, ErrorEnumeration.User_Not_exists);
 		}
 		logger.info("Inside Event=1014,Class:OTSProduct_WsImpl,Method:ProductStockDaoImpl ");
@@ -296,11 +286,9 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			getProductBOStockResponse = otsProductStock.stream().map(OtsProductStock -> convertProductStockEntityToModel(OtsProductStock)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
     	return getProductBOStockResponse;

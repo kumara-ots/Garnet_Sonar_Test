@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorCompanyDetails;
 import com.fuso.enterprise.ots.srv.api.model.domain.OrderProductDetails;
 import com.itextpdf.text.BaseColor;
@@ -24,6 +27,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator; 
 
 public class DeliveryNote {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DeliveryNote.class);
 	
 	//To Generate PDf & file will not be save in local system.
 	public static byte[] getDeliveryNotePdf(List<OrderProductDetails> orderProduct,List<DistributorCompanyDetails> companyDetails) {
@@ -54,7 +59,7 @@ public class DeliveryNote {
             System.out.println("Bill of Supply PDF generated successfully");
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception from DeliveryNote class :" + e.getMessage());
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }

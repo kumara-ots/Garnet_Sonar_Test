@@ -584,4 +584,16 @@ public interface OTSUsersV18_1Ws {
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response forgotAdminPassword(@ApiParam(value = "request", required = true) @NotNull  @Valid ForgotAdminPasswordRequest forgotAdminPasswordRequest);
 	
+	@POST
+    @Path("/deleteDistributor")
+	@ApiOperation(value = "deleteDistributor", notes = "This Api is to Delete distributor details from the main table and inserts the data into deleted table.", response = Response.class)
+	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
+	Response deleteDistributor(@ApiParam(value = "distributorId", required = true) @NotNull @Valid @QueryParam("distributorId") String distributorId);
+	
+	@GET
+    @Path("/sendIncompleteSellerRegistrationReminders")
+	@ApiOperation(value = "sendIncompleteSellerRegistrationReminders", notes = "This Api is to send mail notification to incomplete registered Sellers", response = Response.class)
+	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
+	Response sendIncompleteSellerRegistrationReminders();
+	
 }

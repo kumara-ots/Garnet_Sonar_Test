@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -65,47 +64,6 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 	}
 
 	@Override
-	public long getListOfDeliverdQuantityOfDay(List<OtsOrder> orderList, String otsProductId) {
-		int orderProductList = 0;
-		try {
-			System.out.println("");
-			logger.info("Inside Event=1015,Class:OrderProductDAOImpl, Method:getListOfDeliverdQuantityOfDay, orderList:"
-					+ orderList + "otsProductId: " + otsProductId);
-			OtsProduct otsProduct = new OtsProduct();
-			otsProduct.setOtsProductId(UUID.fromString(otsProductId));
-			for (int i = 0; i < orderList.size(); i++) {
-				Map<String, Object> queryParameter = new HashMap<>();
-				queryParameter.put("otsOrderId", orderList.get(i));
-				queryParameter.put("otsProductId", otsProduct);
-				OtsOrderProduct otsOrderProduct = getQuantity(queryParameter);
-				if (otsOrderProduct != null) {
-				    orderProductList += otsOrderProduct.getOtsOrderedQty();
-				} else {
-				    logger.warn("No order product found for Order ID: " + orderList.get(i).getOtsOrderId());
-				}
-			}
-		} catch (Exception e) {
-			return 0;
-		}
-		return orderProductList;
-
-	}
-	  
-	public OtsOrderProduct getQuantity(Map<String, Object> queryParameter) {
-		OtsOrderProduct otsOrderProduct = new OtsOrderProduct();
-		try {
-			otsOrderProduct = super.getResultByNamedQuery("OtsOrder.fetchOtsSoldProducts", queryParameter);
-			return otsOrderProduct;
-		} catch (NoResultException e) {
-			otsOrderProduct.setOtsOrderedQty(0);
-			return otsOrderProduct;
-		} catch (Exception e) {
-			otsOrderProduct.setOtsOrderedQty(0);
-			return otsOrderProduct;
-		}
-	}
-
-	@Override
 	public List<OrderProductDetails> getUserByStatusAndDistributorId(OrderDetails orderDetails, String DistributerId) {
 		List<OrderProductDetails> otsOrderDetails = new ArrayList<>();
 		List<OtsOrderProduct> OrderList = new ArrayList<>();
@@ -118,11 +76,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			OrderList = super.getResultListByNamedQuery("OtsOrderProduct.GetOrderByDistrubutorIdAndStatus1",queryParameter);
 			otsOrderDetails = OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE" + e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE" + e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
 		}
@@ -152,12 +108,10 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			}
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
 		}
@@ -181,9 +135,10 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 		orderDetails.setDistributorId(otsOrderProduct.getOtsDistributorId()==null?null:otsOrderProduct.getOtsDistributorId().getOtsUsersId().toString());	//G1
 		orderDetails.setAssignedId(otsOrderProduct.getOtsAssignedId()==null?null:otsOrderProduct.getOtsAssignedId().getOtsUsersId().toString());	//G1
 		orderDetails.setSubOrderDeliveredDate(otsOrderProduct.getOtsSuborderDeliveredDt()==null?"":otsOrderProduct.getOtsSuborderDeliveredDt().toString());
-		orderDetails.setSubOrderAssignedDate(otsOrderProduct.getOtsSuborderAssignedDate()==null?"":otsOrderProduct.getOtsSuborderAssignedDate().toString());
 		orderDetails.setSubOrderOfdDate(otsOrderProduct.getOtsSuborderOfdDate()==null?"":otsOrderProduct.getOtsSuborderOfdDate().toString());
 		orderDetails.setSubOrderPickupDate(otsOrderProduct.getOtsSuborderPickupDate()==null?"":otsOrderProduct.getOtsSuborderPickupDate().toString());
+		orderDetails.setSubOrderAssignedDate(otsOrderProduct.getOtsSuborderAssignedDate()==null?"":otsOrderProduct.getOtsSuborderAssignedDate().toString());
+		orderDetails.setSubOrderExpectedDeliveryDate(otsOrderProduct.getOtsSuborderExpectedDeliveryDate()==null?"":otsOrderProduct.getOtsSuborderExpectedDeliveryDate().toString());
 		orderDetails.setOtsOrderDate(otsOrderProduct.getOtsOrderId().getOtsOrderDt()==null?"":otsOrderProduct.getOtsOrderId().getOtsOrderDt().toString());
 		orderDetails.setDistributorFirstName(otsOrderProduct.getOtsDistributorId().getOtsUsersFirstname()==null?"":otsOrderProduct.getOtsDistributorId().getOtsUsersFirstname().toString());
 		orderDetails.setDistributorLastName(otsOrderProduct.getOtsDistributorId().getOtsUsersLastname()==null?"":otsOrderProduct.getOtsDistributorId().getOtsUsersLastname().toString());
@@ -205,6 +160,7 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 		orderDetails.setProductPriceWithoutGst(otsOrderProduct.getOtsProductPriceWithoutGst()==null?"":otsOrderProduct.getOtsProductPriceWithoutGst().toString());
 		orderDetails.setCustomerId(otsOrderProduct.getOtsOrderId().getOtsCustomerId()==null?null:otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersId().toString());
 		orderDetails.setCustomerName(otsOrderProduct.getOtsOrderId().getOtsCustomerName()==null?"":otsOrderProduct.getOtsOrderId().getOtsCustomerName());
+		orderDetails.setCustomerEmailId(otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersEmailid()==null?"":otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersEmailid());
 		orderDetails.setDeliveryAddress((otsOrderProduct.getOtsOrderId().getOtsHouseNo()==null?"":otsOrderProduct.getOtsOrderId().getOtsHouseNo())
 				+" "+(otsOrderProduct.getOtsOrderId().getOtsBuildingName()==null?"":otsOrderProduct.getOtsOrderId().getOtsBuildingName())
 				+" "+(otsOrderProduct.getOtsOrderId().getOtsStreetName()==null?"":otsOrderProduct.getOtsOrderId().getOtsStreetName())
@@ -229,6 +185,8 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 		orderDetails.setOtsProductCountryCode(otsOrderProduct.getOtsProductCountryCode() == null ? "" :otsOrderProduct.getOtsProductCountryCode());
 		orderDetails.setOtsProductCurrency(otsOrderProduct.getOtsProductCurrency() == null ? "" :otsOrderProduct.getOtsProductCurrency());
 		orderDetails.setOtsProductCurrencySymbol(otsOrderProduct.getOtsProductCurrencySymbol() == null ? "" :otsOrderProduct.getOtsProductCurrencySymbol());
+		orderDetails.setOrderCancelledBy(otsOrderProduct.getOtsOrderCancelledBy() == null ? "" :otsOrderProduct.getOtsOrderCancelledBy());
+		orderDetails.setOrderCancelReason(otsOrderProduct.getOtsOrderCancelReason() == null ? "" :otsOrderProduct.getOtsOrderCancelReason());
 		
 		//we will get review rating only when customerId is present for order
 		if(otsOrderProduct.getOtsOrderId().getOtsCustomerId() != null) {
@@ -284,8 +242,7 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderProduct.setOtsProductCurrencySymbol(orderedProductDetails.getOtsProductCurrencySymbol());
 			
 			//To generate 10 digit Random number for SubOrder Id
-//			Random objGenerator = new Random();  
-			SecureRandom secureRandom = new SecureRandom();
+			SecureRandom secureRandom = new SecureRandom(); 
 	   	 	long randomNumber = 1000000000L  + secureRandom.nextInt(900000000);
 	   	 	String SubOrderNumber = subOrderNoFormat+randomNumber;
 			otsOrderProduct.setOtsSuborderId(SubOrderNumber);
@@ -294,11 +251,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			
 			orderProductDetails = convertOrderDetailsFromEntityToDomain(otsOrderProduct);
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_PRODUCT_INSERTION);
 		}catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_PRODUCT_INSERTION);
 		}	
@@ -318,11 +273,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails = ProductList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 			return otsOrderDetails;
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE" + e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING PRODUCT TO ORDER-PRODUCT TABLE" + e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
 		}
@@ -337,16 +290,18 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			queryParameters.put("order_id",UUID.fromString(assignOrderToEmployeeRequest.getRequest().getOrderId()));
 			queryParameters.put("assign_id",UUID.fromString(assignOrderToEmployeeRequest.getRequest().getAssignedId()));
 			queryParameters.put("distributor_id",UUID.fromString(assignOrderToEmployeeRequest.getRequest().getDistributorId()));
-			queryParameters.put("product_id",UUID.fromString(assignOrderToEmployeeRequest.getRequest().getProductId()));	
+			queryParameters.put("product_id",UUID.fromString(assignOrderToEmployeeRequest.getRequest().getProductId()));
+			queryParameters.put("expected_delivery_date",assignOrderToEmployeeRequest.getRequest().getExpectedDeliveryDate());	
 
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	        		.withFunctionName("assign_order")
+	        		.withFunctionName("assign_order1")
 	        		.withSchemaName("public")
 	                .withoutProcedureColumnMetaDataAccess();
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_id", Types.OTHER));
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("assign_id", Types.OTHER));
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("distributor_id", Types.OTHER));
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_id", Types.OTHER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("expected_delivery_date", Types.VARCHAR));
 			
 			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
 			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
@@ -357,17 +312,16 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			//comparing response of procedure & handling response
 			if(response.equalsIgnoreCase("[Updated]")) {
 				assginOrderResponse = "Updated";
-			}
-			else {
+			}else if(response.equalsIgnoreCase("[Insufficient Stock]")) {
+				assginOrderResponse = "Insufficient Stock";
+			}else {
 				assginOrderResponse = "Not Updated";
 			}
 			return assginOrderResponse;
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);}
 		catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
@@ -417,11 +371,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			return orderProductDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}		
@@ -449,7 +401,6 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -482,47 +433,11 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			System.out.println("executed updateSubOrder");
 			return Response;
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-		}
-	}
-	
-	@Override
-	public String addBillOfSupplyToDB(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
-		try {
-			OtsOrderProduct otsOrderProduct = new OtsOrderProduct();
-			Map<String, Object> queryParameter = new HashMap<>();
-			OtsUsers AssginedId = new OtsUsers();
-			AssginedId.setOtsUsersId(UUID.fromString(assignOrderToEmployeeRequest.getRequest().getAssignedId()));
-			
-			OtsOrder OtsorderId = new OtsOrder();
-			OtsorderId.setOtsOrderId(UUID.fromString(assignOrderToEmployeeRequest.getRequest().getOrderId()));
-			
-			OtsProduct  ProductId = new OtsProduct();
-			ProductId.setOtsProductId(UUID.fromString(assignOrderToEmployeeRequest.getRequest().getProductId()));
-
-			queryParameter.put("otsOrderId",OtsorderId);
-			queryParameter.put("otsProductId",ProductId);
-			queryParameter.put("otsAssignedId",AssginedId);
-			otsOrderProduct = super.getResultByNamedQuery("OtsOrderProduct.getEmployeeOrderDetails", queryParameter);
-		
-			otsOrderProduct.setOtsorderbillOfSupply(assignOrderToEmployeeRequest.getRequest().getBillOfSupply());
-
-			String Response = "Bill Of Supply Added";
-			return Response;
-		}catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 	
@@ -542,11 +457,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			return otsOrderDetails;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -574,32 +487,17 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 				otsOrderProduct.setOtsRrcOrderStatus(updateRRCStatusRequest.getRequest().getRRCOrderStatus());
 				otsOrderProduct.setOtsDistributorRrcInitiatedDate(currentDateTime);
 			}
-			if(updateRRCStatusRequest.getRequest().getRRCOrderStatus().equalsIgnoreCase("Cancel")){
-				if(otsOrderProduct.getOtsOrderProductStatus().equalsIgnoreCase("New")) {
-					otsOrderProduct.setOtsRrcOrderStatus(updateRRCStatusRequest.getRequest().getRRCOrderStatus());
-					otsOrderProduct.setOtsCustomerRrcInitiatedDate(currentDateTime);
-					otsOrderProduct.setOtsOrderProductStatus("Cancel");
-				}
-				else {
-					return "Cannot Cancel Order now";
-				}
-			}
 			else {
 				otsOrderProduct.setOtsRrcOrderStatus(updateRRCStatusRequest.getRequest().getRRCOrderStatus());
 				otsOrderProduct.setOtsCustomerRrcInitiatedDate(currentDateTime);
 			}
 			super.getEntityManager().merge(otsOrderProduct);
 	
-			return "Updated";
 		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("Error in inserting order in order table"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-		} catch (Throwable e) {
-			e.printStackTrace();
-			logger.error("Error in inserting order in order table"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
+			System.out.print(e);
+			return "Not Updated";
 		}
+		return "Updated";
 	}
 	
 	@Override
@@ -617,15 +515,11 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails = ProductList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 			System.out.println("otsOrderDetails size = "+otsOrderDetails.size());
 			return otsOrderDetails;
-		}
-		catch(Exception e){
+		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -643,15 +537,11 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails = ProductList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 			System.out.println("otsOrderDetails size = "+otsOrderDetails.size());
 			return otsOrderDetails;
-		}
-		catch(Exception e){
+		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -671,15 +561,11 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails = ProductList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 			System.out.println("otsOrderDetails size = "+otsOrderDetails.size());
 			return otsOrderDetails;
-		}
-		catch(Exception e){
+		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -696,49 +582,11 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			queryParameter.put("otsDistributorId", DistrubutorId);
 			OrderList = super.getResultListByNamedQuery("OtsOrderProduct.getCancelledOrdersByDistributor", queryParameter);
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
-			if(otsOrderDetails.size() != 0) {
-				for(int i=0; i<otsOrderDetails.size(); i++) {
-					otsOrderDetails.get(i).setOrderCancelledBy("Distributor");
-				}
-			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		}
-		return otsOrderDetails;
-	}
-	
-	@Override
-	public List<OrderProductDetails> getDistributorsOrderCancelledByCustomer(String distributorId) {
-		List<OrderProductDetails> otsOrderDetails = new ArrayList<>();
-		List<OtsOrderProduct> OrderList = new ArrayList<>();
-		try {  
-			Map<String, Object> queryParameter = new HashMap<>();
-			OtsUsers DistrubutorId = new OtsUsers();
-			DistrubutorId.setOtsUsersId(UUID.fromString(distributorId));
-			
-			queryParameter.put("otsDistributorId", DistrubutorId);
-			OrderList = super.getResultListByNamedQuery("OtsOrderProduct.getDistributorsOrderCancelledByCustomer", queryParameter);
-			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
-			if(otsOrderDetails.size() != 0) {
-				for(int i=0; i<otsOrderDetails.size(); i++) {
-					otsOrderDetails.get(i).setOrderCancelledBy("Customer");
-				}
-			}
-		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -758,12 +606,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -784,12 +629,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -809,12 +651,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -822,7 +661,6 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 	
 	@Override
 	public List<OrderProductDetails> updateSubOrderStatus(String orderId, String subOrderStatus) {
-		List<OtsOrderProduct> OrderList = new ArrayList<>();
 		List<OrderProductDetails> orderProductDetails = new ArrayList<OrderProductDetails>();
 		try {
 			Map<String, Object> queryParameter = new HashMap<>();
@@ -830,23 +668,20 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			OtsorderId.setOtsOrderId(UUID.fromString(orderId));
 
 			queryParameter.put("otsOrderId",OtsorderId);
-			OrderList = super.getResultListByNamedQuery("OtsOrderProduct.GetOrderByOrderId", queryParameter);
+			List<OtsOrderProduct> orderList = super.getResultListByNamedQuery("OtsOrderProduct.GetOrderByOrderId", queryParameter);
 			
-			for(int i=0; i<OrderList.size(); i++) {
+			for(int i=0; i<orderList.size(); i++) {
 				//To update subOrderStatus for all the products in an Order
-				OrderList.get(i).setOtsOrderProductStatus(subOrderStatus);
-				super.getEntityManager().merge(OrderList.get(i));
+				orderList.get(i).setOtsOrderProductStatus(subOrderStatus);
+				super.getEntityManager().merge(orderList.get(i));
 				
-				orderProductDetails = OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
+				orderProductDetails = orderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 			}
-//			String Response = "Updated";
 			return orderProductDetails;
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
@@ -867,11 +702,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			return orderProductDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}		
@@ -890,12 +723,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -912,12 +742,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails = ProductList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -938,12 +765,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -968,12 +792,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -998,11 +819,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			orderProduct.setOtsOrderProductCustomerInvoice(invoice);
 			super.getEntityManager().merge(orderProduct);
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
@@ -1038,12 +857,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			return otsOrderDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}	
@@ -1062,12 +878,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			save(otsOrderProduct);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Tracking Details Updated Successfully";
@@ -1087,12 +900,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			otsOrderDetails =  OrderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return otsOrderDetails;
@@ -1136,11 +946,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			return "Updated"; 
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return "Not Updated";
 		}catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return "Not Updated";
 		}
 	}
@@ -1175,11 +983,9 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 				closeOrderResponse = "Not Updated";
 			}	
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);}
 		catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Error in inserting order in order table"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}

@@ -12,11 +12,15 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorDetailsForSettlement;
 import com.fuso.enterprise.ots.srv.api.service.request.GetDetailsForExcelRequest;
 
 public class ExcelGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ExcelGenerator.class);
 	
 	public static byte[] generateExcel(GetDetailsForExcelRequest getDetailsForExcelRequest, DistributorDetailsForSettlement distributorDetailsForSettlement) {
         byte[] bytePath = null;
@@ -103,7 +107,7 @@ public class ExcelGenerator {
             System.out.println("excel byte = " + bytePath);
             System.out.println("Excel file has been generated successfully.");
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception from ExcelGenerator class :" + e.getMessage());
         }
         return bytePath;
     }

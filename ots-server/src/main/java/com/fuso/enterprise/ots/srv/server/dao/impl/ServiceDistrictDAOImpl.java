@@ -1,7 +1,6 @@
 package com.fuso.enterprise.ots.srv.server.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,11 +57,9 @@ public class ServiceDistrictDAOImpl extends AbstractIptDao<OtsServiceDistrict, S
 			districtList = otsServiceDistrict.stream().map(serviceDistrict -> convertStateDetailsFromEntityToDomain(serviceDistrict)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return districtList;
@@ -78,11 +75,9 @@ public class ServiceDistrictDAOImpl extends AbstractIptDao<OtsServiceDistrict, S
 			districtList = otsServiceDistrict.stream().map(serviceDistrict -> convertStateDetailsFromEntityToDomain(serviceDistrict)).collect(Collectors.toList());   
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return districtList ;

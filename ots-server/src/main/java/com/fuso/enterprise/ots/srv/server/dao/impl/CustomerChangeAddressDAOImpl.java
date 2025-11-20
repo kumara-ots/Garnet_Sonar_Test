@@ -83,11 +83,9 @@ public class CustomerChangeAddressDAOImpl extends AbstractIptDao<OtsCustomerChan
 			save(customerDetails);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Delivery Address Added Successfully";
@@ -115,11 +113,9 @@ public class CustomerChangeAddressDAOImpl extends AbstractIptDao<OtsCustomerChan
 			save(customerDetails);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Updated";
@@ -138,11 +134,9 @@ public class CustomerChangeAddressDAOImpl extends AbstractIptDao<OtsCustomerChan
 			customerDetailsList = customerDetails.stream().map(changeAddress -> convertCustomerChangeAddressDetailsFromEntityToDomain(changeAddress)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return customerDetailsList;
@@ -159,11 +153,9 @@ public class CustomerChangeAddressDAOImpl extends AbstractIptDao<OtsCustomerChan
 			customerDetailsList = customerDetails.stream().map(changeAddress -> convertCustomerChangeAddressDetailsFromEntityToDomain(changeAddress)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return customerDetailsList;

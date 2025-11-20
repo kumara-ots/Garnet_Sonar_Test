@@ -28,6 +28,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddOrUpdateOrderTrackingR
 import com.fuso.enterprise.ots.srv.api.service.request.AddOrderPaymentDetailsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddTransactionCancelRecordsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AssignOrderToEmployeeRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.CancelOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.CloseEmployeeOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GenerateOrderProductInvoiceRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCustomerOrderByStatusBOrequest;
@@ -45,6 +46,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.UpdateRRCStatusRequest;
 import com.fuso.enterprise.ots.srv.api.service.response.CcAvenueOrderDetailsResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetDistributorSettlementResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetListOfOrderByDateBOResponse;
+import com.fuso.enterprise.ots.srv.api.service.response.GetProductBOStockResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderDetailsBOResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderProductAndOrderResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderProductBOResponse;
@@ -224,14 +226,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	            transactionFuture = executor.submit(() -> oTSOrderService.getOrderByOrderTransactionId(insertOrderRequest.getRequest().getOrderTransactionId()));
 	        }
 	        
-	        // Check stock availability
-	        Future<String> stockFuture = executor.submit(() -> oTSUserService.checkCartStockAvailability(insertOrderRequest.getRequest().getCustomerId()));
-	        
 	        // Get results of futures
 	        List<CustomerChangeAddress> customerChangeAddress = addressFuture.get();
 	        List<OrderDetails> checkTransactionId = (transactionFuture != null) ? transactionFuture.get() : Collections.emptyList();
-	        String stockAvailability = stockFuture.get();
-
+	        
 	        if (customerChangeAddress.isEmpty()) {
 	            return buildResponse(401, "Invalid Customer Address ID");
 	        }
@@ -240,21 +238,15 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	            return buildResponse(401, "Duplicate Transaction ID");
 	        }
 	        
-	        if (stockAvailability.equalsIgnoreCase("Stock Available")) {
-	        	// Insert Order
-		        Future<OrderProductBOResponse> insertOrderFuture = executor.submit(() -> oTSOrderService.insertOrder(insertOrderRequest));
+        	// Insert Order
+	        Future<OrderProductBOResponse> insertOrderFuture = executor.submit(() -> oTSOrderService.insertOrder(insertOrderRequest));
 
-		        OrderProductBOResponse responseValue = insertOrderFuture.get();
-		        if (responseValue == null) {
-		            response = buildResponse(404, "Order Not Inserted");
-		        } else {
-		            response = buildResponse(responseValue, "Inserted Order");
-		        }
-	        }else if(stockAvailability.equalsIgnoreCase("Stock Not Available")) {
-	        	 return buildResponse(401, "Stock Not Available");
-	        }else {
-				return response = buildResponse(401, "Cart is Empty");
-			}
+	        OrderProductBOResponse responseValue = insertOrderFuture.get();
+	        if (responseValue == null) {
+	            response = buildResponse(404, "Order Not Inserted");
+	        } else {
+	            response = buildResponse(responseValue, "Inserted Order");
+	        }
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching data from DB: " + e.getMessage());
 	        e.printStackTrace();
@@ -509,21 +501,23 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 					|| assignOrderToEmployeeRequest.getRequest().getOrderStatus() == null || assignOrderToEmployeeRequest.getRequest().getOrderStatus().equals("")
 					|| assignOrderToEmployeeRequest.getRequest().getAssignedId() == null || assignOrderToEmployeeRequest.getRequest().getAssignedId().equals("")
 					|| assignOrderToEmployeeRequest.getRequest().getProductId() == null || assignOrderToEmployeeRequest.getRequest().getProductId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getDistributorId() == null || assignOrderToEmployeeRequest.getRequest().getDistributorId().equals("")) {
+					|| assignOrderToEmployeeRequest.getRequest().getDistributorId() == null || assignOrderToEmployeeRequest.getRequest().getDistributorId().equals("")
+					|| assignOrderToEmployeeRequest.getRequest().getExpectedDeliveryDate() == null || assignOrderToEmployeeRequest.getRequest().getExpectedDeliveryDate().equals("")) {
 				return response = buildResponse(400,"Please Enter Required Inputs");
 			}
 			if(!assignOrderToEmployeeRequest.getRequest().getOrderStatus().equalsIgnoreCase("Assigned")) {
 				return response = buildResponse(400,"Order Status Should Be Assigned");
 			}
-			String ResponseValue = oTSOrderService.assignOrderToEmployee(assignOrderToEmployeeRequest);
-			if(ResponseValue == null) {
+
+			String responseValue = oTSOrderService.assignOrderToEmployee(assignOrderToEmployeeRequest);
+			if(responseValue == null || responseValue.equalsIgnoreCase("Not Updated")) {
 				response = buildResponse(404,"Order Has Not Been Assigned");
-			}
-			else if(ResponseValue.equalsIgnoreCase("Distributor Not Added Company Details")) {
-				response = buildResponse(404,"Distributor Not Added Company Details");
-			}
-			else {
-				response = buildResponse(200,ResponseValue);
+			}else if(responseValue.equalsIgnoreCase("Order Has Been Assigned Successfully")) {
+				response = buildResponse(200,"Order Has Been Assigned Successfully");
+			}else if(responseValue.equalsIgnoreCase("Insufficient Stock")){
+				response = buildResponse(404,"Insufficient Stock. Add Stock Before Assigning Order");
+			}else {
+				response = buildResponse(404,"Order Has Not Been Assigned");
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -538,18 +532,26 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	}
 	
 	@Override
-	public Response cancelMainAndSubOrder(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
+	public Response cancelMainAndSubOrder(CancelOrderRequest cancelOrderRequest) {
 		Response response = null;
 		try {
-			if(assignOrderToEmployeeRequest.getRequest().getOrderId() == null || assignOrderToEmployeeRequest.getRequest().getOrderId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getCustomerId() == null || assignOrderToEmployeeRequest.getRequest().getCustomerId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getOrderStatus() == null || assignOrderToEmployeeRequest.getRequest().getOrderStatus().equals("")) {
+			if(cancelOrderRequest.getRequest().getOrderId() == null || cancelOrderRequest.getRequest().getOrderId().equals("")
+					|| cancelOrderRequest.getRequest().getCustomerId() == null || cancelOrderRequest.getRequest().getCustomerId().equals("")
+					|| cancelOrderRequest.getRequest().getCancelReason() == null
+					|| cancelOrderRequest.getRequest().getCancelledBy() == null || cancelOrderRequest.getRequest().getCancelledBy().equals("")) {
 				return response = buildResponse(400,"Please Enter Required Inputs");
 			}
-			if(!assignOrderToEmployeeRequest.getRequest().getOrderStatus().equalsIgnoreCase("Cancel")) {
-				return response = buildResponse(400,"Order Status Should Be Cancel");
-			}
-			String ResponseDate = oTSOrderService.cancelMainAndSubOrder(assignOrderToEmployeeRequest);
+			
+			String cancelledBy = cancelOrderRequest.getRequest().getCancelledBy();
+            if(cancelledBy == null ||cancelledBy.trim().isEmpty() || (!cancelledBy.equalsIgnoreCase("Buyer") && !cancelledBy.equalsIgnoreCase("Seller"))) {
+                return buildResponse(400,"Invalid value for cancelledBy, Must be 'Buyer' or 'Seller'");
+            } 
+            
+            if(cancelledBy.equalsIgnoreCase("Seller") && cancelOrderRequest.getRequest().getCancelReason().trim().isEmpty()) {
+            	return response = buildResponse(400,"Please Enter Required Inputs");
+            }
+            
+			String ResponseDate = oTSOrderService.cancelMainAndSubOrder(cancelOrderRequest);
 			if(ResponseDate == null) {
 				response = buildResponse(404,"Order Has Not Been Cancelled");
 			}
@@ -557,14 +559,14 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(200,ResponseDate);
 			}
 			return response;
-		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			return response = buildResponse(500,"Something Went Wrong");
+		}catch(Exception e){
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	    	e.printStackTrace();
+	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	    	e.printStackTrace();
+	        return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
 	
@@ -700,11 +702,8 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				return response = buildResponse(400,"Please Enter Required Inputs");
 			}
 			String ResponseValue = oTSOrderService.updateRRCOrderStatus(updateRRCStatusRequest);
-			if(ResponseValue == null) {
+			if(ResponseValue == null || ResponseValue.equalsIgnoreCase("Not Updated")) {
 				response = responseWrapper.buildResponse(404,"Not Updated");
-			}
-			else if(ResponseValue == "Cannot Cancel Order now") {
-				response = responseWrapper.buildResponse(404,"Cannot Cancel Order now");
 			}else{
 				response = responseWrapper.buildResponse(ResponseValue,"Successful");
 			}
@@ -1130,35 +1129,6 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 		}
 	}
 	
-	@Override
-	public Response generateBillOfSupplyPdf(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
-		Response response = null;
-		try {
-			if(assignOrderToEmployeeRequest.getRequest().getOrderId() == null || assignOrderToEmployeeRequest.getRequest().getOrderId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getDistributorId() == null || assignOrderToEmployeeRequest.getRequest().getDistributorId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getProductId() == null || assignOrderToEmployeeRequest.getRequest().getProductId().equals("")
-					|| assignOrderToEmployeeRequest.getRequest().getAssignedId() == null || assignOrderToEmployeeRequest.getRequest().getAssignedId().equals("")) {
-				return response = buildResponse(400,"Please Enter Required Inputs");
-			}
-			String bosPdf = oTSOrderService.generateBillOfSupplyPdf(assignOrderToEmployeeRequest);
-			if(bosPdf == null) {
-				response = buildResponse(404,"No Orders Found");
-			}
-			else {
-				response = buildResponse(bosPdf,"Successful");
-			}	
-			return response;
-		}catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
-			throw new BusinessException(e.getMessage(), e);
-		}
-	}
-	
 	@Override 
 	public Response checkPendingOrdersOfInactiveDistributor(String distributorId) {
 		Response response = null;
@@ -1201,6 +1171,32 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
 	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
+		}
+	}
+	
+	@Override
+	public Response autoCancelOrderByCustomer() {
+		Response response = null;
+		try {
+			String responseDate = oTSOrderService.autoCancelOrderByCustomer();
+			if(responseDate.equalsIgnoreCase("Updated")) {
+				response = buildResponse("Order Cancelled Successfully","Successful");
+			}
+			else if(responseDate.equalsIgnoreCase("No Orders Found")) {
+				response = buildResponse(404,"No Orders Found");
+			}
+			else {
+				response = buildResponse(404,"Order Not Cancelled");
+			}
+			return response;
+		} catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			return response = buildResponse(500,"Something Went Wrong");
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
+			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
 

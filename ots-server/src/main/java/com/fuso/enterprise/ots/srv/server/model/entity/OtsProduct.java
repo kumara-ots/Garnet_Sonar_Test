@@ -120,7 +120,7 @@ public class OtsProduct implements Serializable {
     @Column(name = "ots_product_created", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date otsProductCreated;
-    @Column(name = "ots_product_updated")
+    @Column(name = "ots_product_updated", insertable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date otsProductUpdated;
     @Size(max = 45)

@@ -40,6 +40,18 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
+	private String getValueOrNull(String value) {
+	    return (value == null || value.equals("")) ? null : value;
+	}
+	
+	private BigDecimal getBigDecimalOrNull(String value) {
+	    return (value == null || value.equals("")) ? null : new BigDecimal(value);
+	}
+	
+	private Boolean getBooleanOrNull(String value) {
+	    return (value == null || value.equals("")) ? null : new Boolean(value);
+	}
+	
 	private ServiceOrderDetails convertServiceOrderDetailsFromEntityToDomain(OtsServiceOrderDetails otsServiceOrderDetails) {
 		ServiceOrderDetails orderProductModel = new ServiceOrderDetails();
         
@@ -149,25 +161,11 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 			return ServiceOrderDetails;
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
-	}
-	
-	private String getValueOrNull(String value) {
-	    return (value == null || value.equals("")) ? null : value;
-	}
-	
-	private BigDecimal getBigDecimalOrNull(String value) {
-	    return (value == null || value.equals("")) ? null : new BigDecimal(value);
-	}
-	
-	private Boolean getBooleanOrNull(String value) {
-	    return (value == null || value.equals("")) ? null : new Boolean(value);
 	}
 	
 	@Override
@@ -184,11 +182,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 			return serviceOrderDetails;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -228,11 +224,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 
 			return "Updated";
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		}
@@ -264,11 +258,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 
 			return "Updated";
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		}
@@ -300,11 +292,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 
 			return "Updated";
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		} catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 			return "Not Updated";
 		}
@@ -326,11 +316,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 			return serviceOrderList;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -351,11 +339,9 @@ public class ServiceOrderDetailsDAOImpl extends AbstractIptDao<OtsServiceOrderDe
 			return serviceOrderList;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

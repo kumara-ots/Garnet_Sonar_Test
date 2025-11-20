@@ -171,11 +171,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -213,11 +211,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			return serviceEntity.getOtsServiceId().toString();
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		
@@ -258,11 +254,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			return serviceEntity.getOtsServiceId().toString();		
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		
@@ -302,11 +296,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			return serviceEntity.getOtsServiceId().toString();
 		} catch (Exception e) {
 			logger.error("Exception while Inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 
@@ -334,11 +326,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			return  otsService.getOtsServiceId().toString();
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -466,13 +456,10 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 				responseJson = objectMapper.readValue((String) otsService.getOtsServiceSlot(), Object.class);
 			} catch (JsonParseException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (JsonMappingException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
             serviceDetails.setOtsServiceSlot(responseJson);
         } else {
@@ -498,11 +485,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			servicedeatils = convertServiceDetailsFromEntityToDomain(otsService);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return servicedeatils;
@@ -555,11 +540,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 	        }
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceList;
@@ -597,11 +580,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			getSlot = convertServiceDetailsFromEntityToSlotDomain(otsService);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return getSlot;
@@ -618,11 +599,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetailsDatas;
@@ -641,11 +620,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetailsDatas;
@@ -662,11 +639,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			serviceDetailsDatas = otsServicesList.stream().map(otsService -> convertServiceDetailsFromEntityToDomain(otsService)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetailsDatas;
@@ -689,11 +664,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -710,11 +683,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			serviceDetailsDatas = otsServicesList.stream().map(otsService -> convertServiceDetailsFromEntityToDomain(otsService)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetailsDatas;
@@ -743,11 +714,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return categoryDetails;
@@ -776,11 +745,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return subcategoryDetails;
@@ -815,11 +782,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetails;
@@ -852,11 +817,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDetails;
@@ -938,11 +901,9 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
 	        serviceDetailsBOResponse.setServiceDetails(serviceList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 		return serviceDetailsBOResponse;

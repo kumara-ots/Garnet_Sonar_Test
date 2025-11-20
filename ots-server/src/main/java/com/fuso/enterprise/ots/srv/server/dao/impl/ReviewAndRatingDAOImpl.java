@@ -64,7 +64,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			super.getEntityManager().merge(ratingReview);
 		}catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -106,7 +105,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			getReviewAndRatingResponses = ratingReviews.stream().map(ratingReview -> convertEntityToModel(ratingReview)).collect(Collectors.toList());
 		}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("review and rating list is empty", e);
         }
 		return getReviewAndRatingResponses;
@@ -142,7 +140,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			super.getEntityManager().merge(otsRatingReview);
 		}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("review and rating list is empty", e);
         }
 		return "Updated";
@@ -163,7 +160,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			super.getEntityManager().merge(ratingReview);
 		}catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Updated";
@@ -183,7 +179,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			getReviewAndRatingResponses = ratingReviews.stream().map(ratingReview -> convertEntityToModel(ratingReview)).collect(Collectors.toList());
 		}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("review and rating list is empty", e);
         }
 		return getReviewAndRatingResponses;
@@ -209,7 +204,6 @@ public class ReviewAndRatingDAOImpl extends AbstractIptDao<OtsRatingReview, Stri
 			getReviewAndRatingResponses = ratingReviews.stream().map(ratingReview -> convertEntityToModel(ratingReview)).collect(Collectors.toList());
 		}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("review and rating list is empty", e);
         }
 		return getReviewAndRatingResponses;

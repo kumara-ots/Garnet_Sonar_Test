@@ -1118,31 +1118,13 @@
 	<named-query name="OtsOrderProduct.getCancelledOrdersByDistributor">
 		<query>SELECT op
 		FROM 
-			OtsOrderProduct op, OtsOrder o
+			OtsOrderProduct op
 		WHERE 
 			op.otsDistributorId = :otsDistributorId
 		AND
 			op.otsOrderProductStatus = 'Cancel'
-		AND
-			op.otsRrcOrderStatus IS null 
-		AND
-			o.otsOrderId = op.otsOrderId
-		ORDER BY op.otsOrderId DESC
-		</query>
-	</named-query>
-	<named-query name="OtsOrderProduct.getDistributorsOrderCancelledByCustomer">
-		<query>SELECT op
-		FROM 
-			OtsOrderProduct op, OtsOrder o
-		WHERE 
-			op.otsDistributorId = :otsDistributorId
-		AND
-			op.otsOrderProductStatus = 'Cancel'
-		AND
-			op.otsRrcOrderStatus = 'Cancel'
-		AND
-			o.otsOrderId = op.otsOrderId
-		ORDER BY op.otsOrderId DESC
+		ORDER BY 
+			op.otsOrderProductId DESC
 		</query>
 	</named-query>
 	<named-query name="OtsOrderProduct.getReturnReplacementOrdersForDistributor">

@@ -1,5 +1,8 @@
 package com.fuso.enterprise.ots.srv.server.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -9,6 +12,9 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.*;
 
 public class HeaderFooterPageEvent extends PdfPageEventHelper {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HeaderFooterPageEvent.class);
+	
 	Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
     Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.NORMAL);
 
@@ -60,7 +66,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
                 document.add(img);
                 headerYPosition = PageSize.A4.rotate().getHeight() - 50;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception while creating pdf :" + e.getMessage());
             }
         } else {
             //Adding image for Portrait
@@ -71,7 +77,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
                 document.add(img);
                 headerYPosition = PageSize.A4.getHeight() - 50;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception while creating pdf :" + e.getMessage());
             }
         }
 

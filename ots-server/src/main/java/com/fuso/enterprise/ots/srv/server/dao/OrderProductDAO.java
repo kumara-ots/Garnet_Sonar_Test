@@ -16,10 +16,8 @@ import com.fuso.enterprise.ots.srv.server.model.entity.OtsOrder;
 
 public interface OrderProductDAO {
 
-	long getListOfDeliverdQuantityOfDay(List<OtsOrder> orderList, String otsProductId);
 	List<OrderProductDetails> getUserByStatusAndDistributorId(OrderDetails orderDetails,String DistributerId);
 	String assignOrderToEmployee(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
-	String addBillOfSupplyToDB(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
 	String updateSubOrder(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
 	OrderProductDetails insertOrdrerProductByOrderId(String orderId,String distributer,OrderedProductDetails orderedProductDetails);
 	List<OrderProductDetails> getProductListByOrderId(String orderId);
@@ -33,7 +31,6 @@ public interface OrderProductDAO {
 	List<OrderProductDetails> getDistributorCurrentWeekSettlemetDetails(String distributorId);
 	List<OrderProductDetails> getDistributorMonthlySettlemetDetails(GetMonthlyDistributorSettlementRequest getDistributorSettlementRequest);
 	List<OrderProductDetails> getCancelledOrdersByDistributor(String distributorId);
-	List<OrderProductDetails> getDistributorsOrderCancelledByCustomer(String distributorId);
 	List<OrderProductDetails> getReturnReplacementOrdersForDistributor(String distributorId);
 	List<OrderProductDetails> getRRCOrdersByDistributor(String distributorId, String rrcOrderStatus);
 	List<OrderProductDetails> getRRClosedOrdersByDistributor(String distributorId);

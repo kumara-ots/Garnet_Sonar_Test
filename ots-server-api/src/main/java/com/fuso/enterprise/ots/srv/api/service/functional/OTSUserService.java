@@ -242,5 +242,10 @@ public interface OTSUserService {
 	
 	ForgotPasswordResponse sendOTPToAdmin(String emailId);
 
+	String addToCartRequestValidation(AddToCartRequest addToCartRequest);
+
+	String deleteDistributor(String distributorId);
+
+	List<UserDetails> sendIncompleteSellerRegistrationReminders();
 
 }

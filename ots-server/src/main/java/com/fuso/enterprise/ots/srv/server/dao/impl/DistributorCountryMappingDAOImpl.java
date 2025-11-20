@@ -20,7 +20,6 @@ import com.fuso.enterprise.ots.srv.api.model.domain.ServiceCountry;
 import com.fuso.enterprise.ots.srv.api.service.request.AddDistributorCountryMappingRequest;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.dao.DistributorCountryMappingDAO;
-import com.fuso.enterprise.ots.srv.server.dao.ProductStockDao;
 import com.fuso.enterprise.ots.srv.server.dao.ServiceCountryDAO;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsDistributorCountryMapping;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsUsers;
@@ -73,12 +72,10 @@ public class DistributorCountryMappingDAOImpl extends AbstractIptDao<OtsDistribu
 			}
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -99,11 +96,9 @@ public class DistributorCountryMappingDAOImpl extends AbstractIptDao<OtsDistribu
 			return distributorCountryMapping;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -127,11 +122,9 @@ public class DistributorCountryMappingDAOImpl extends AbstractIptDao<OtsDistribu
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

@@ -57,11 +57,9 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			save(companyDetails);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -93,11 +91,9 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -135,11 +131,9 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			companyDetails = detailsList.stream().map(Details -> convertDistributorCompanyDetailsFromEntityToDomain(Details)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return companyDetails;
@@ -157,15 +151,12 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			companyDetails = detailsList.stream().map(Details -> convertDistributorCompanyDetailsFromEntityToDomain(Details)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return companyDetails;
 	}
-
 
 }

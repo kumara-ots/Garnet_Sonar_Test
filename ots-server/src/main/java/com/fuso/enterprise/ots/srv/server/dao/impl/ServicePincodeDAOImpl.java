@@ -13,11 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fuso.enterprise.ots.srv.api.model.domain.ServiceDistrict;
 import com.fuso.enterprise.ots.srv.api.model.domain.ServicePincode;
-import com.fuso.enterprise.ots.srv.api.service.response.GetServiceableLocationResponse;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
-import com.fuso.enterprise.ots.srv.server.dao.ServiceDistrictDAO;
 import com.fuso.enterprise.ots.srv.server.dao.ServicePincodeDAO;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceDistrict;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsServicePincode;
@@ -37,16 +34,16 @@ public class ServicePincodeDAOImpl extends AbstractIptDao<OtsServicePincode, Str
 	}
 	
 	private ServicePincode convertPincodeDetailsFromEntityToDomain(OtsServicePincode otsServicePincode) {
-		ServicePincode serivicepincodedeatails = new ServicePincode();			
-		serivicepincodedeatails.setPincode(otsServicePincode.getOtsPincode()== null ? "":otsServicePincode.getOtsPincode().toString());
-		serivicepincodedeatails.setOfficeName(otsServicePincode.getOtsOfficeName()== null ? "" : otsServicePincode.getOtsOfficeName());			
-		serivicepincodedeatails.setPincodeId(otsServicePincode.getOtsPincodeId() == null? "" : otsServicePincode.getOtsPincodeId().toString());
-		serivicepincodedeatails.setStateName(otsServicePincode.getOtsStateName()== null?"" :otsServicePincode.getOtsStateName() );
-		serivicepincodedeatails.setDistrictName(otsServicePincode.getOtsDistrictName()== null?"" :otsServicePincode.getOtsDistrictName() );
-		serivicepincodedeatails.setStateId(otsServicePincode.getOtsStateId()== null?"" :otsServicePincode.getOtsStateId().getOtsStateId().toString());
-		serivicepincodedeatails.setDistrictId(otsServicePincode.getOtsDistrictId()== null?"" :otsServicePincode.getOtsDistrictId().getOtsDistrictId().toString());
+		ServicePincode servicePincodeDetails = new ServicePincode();			
+		servicePincodeDetails.setPincode(otsServicePincode.getOtsPincode()== null ? "":otsServicePincode.getOtsPincode().toString());
+		servicePincodeDetails.setOfficeName(otsServicePincode.getOtsOfficeName()== null ? "" : otsServicePincode.getOtsOfficeName());			
+		servicePincodeDetails.setPincodeId(otsServicePincode.getOtsPincodeId() == null? "" : otsServicePincode.getOtsPincodeId().toString());
+		servicePincodeDetails.setStateName(otsServicePincode.getOtsStateName()== null?"" :otsServicePincode.getOtsStateName() );
+		servicePincodeDetails.setDistrictName(otsServicePincode.getOtsDistrictName()== null?"" :otsServicePincode.getOtsDistrictName() );
+		servicePincodeDetails.setStateId(otsServicePincode.getOtsStateId()== null?"" :otsServicePincode.getOtsStateId().getOtsStateId().toString());
+		servicePincodeDetails.setDistrictId(otsServicePincode.getOtsDistrictId()== null?"" :otsServicePincode.getOtsDistrictId().getOtsDistrictId().toString());
 		
-		return serivicepincodedeatails;
+		return servicePincodeDetails;
 	}
 	
 	@Override
@@ -63,11 +60,9 @@ public class ServicePincodeDAOImpl extends AbstractIptDao<OtsServicePincode, Str
 	       pincodeList = otsPincodeList.stream().map(servicePincode -> convertPincodeDetailsFromEntityToDomain(servicePincode)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
        return pincodeList;
@@ -84,11 +79,9 @@ public class ServicePincodeDAOImpl extends AbstractIptDao<OtsServicePincode, Str
 			 pincodeList = otsPincodeList.stream().map(Pincodes -> convertPincodeDetailsFromEntityToDomain(Pincodes)).collect(Collectors.toList()); 
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		 return pincodeList;

@@ -12,6 +12,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddOrUpdateOrderTrackingR
 import com.fuso.enterprise.ots.srv.api.service.request.AddOrderPaymentDetailsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddTransactionCancelRecordsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AssignOrderToEmployeeRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.CancelOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.CloseEmployeeOrderRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCustomerOrderByStatusBOrequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetDistributorSettlementRequest;
@@ -48,17 +49,17 @@ public interface OTSOrderService {
 	String closeEmployeeOrder(CloseEmployeeOrderRequest  closeEmployeeOrderRequest);
 	String assignOrderToEmployee(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
 	boolean checkForOrderAssigned(String orderId);
-	String cancelMainAndSubOrder(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
+	String cancelMainOrder(String orderId, String orderCancelReason, String orderCancelledBy);
+	String cancelSubOrder(String orderId, String productId, String orderCancelReason, String orderCancelledBy);
+	String cancelMainAndSubOrder(CancelOrderRequest cancelOrderRequest);
 	boolean checkForOrderCancel(String orderId);
-	List<String> getSubOrderIdsWithNewStatusLessThanCurrentDate();
+	List<String> getNewSubordersBeforeCurrentDate();
 	String autoCancelOrderByDistributor();
 	CcAvenueOrderDetailsResponse getCCAvenueCredentials();
 	OrderDetails addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest);
 	List<List<String>> getOrderDetailsForInvoice(String orderId);
-	List<List<String>> getOrderDetailsForBillOfSupply(String orderId, String distributorId);
 	List<List<String>> getDistributorForOrderInvoice(String orderId);
 	OrderProductBOResponse getOrdersByStatus(String orderStatus);
-	String generateBillOfSupplyPdf(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
 	String generateOrderInvoicePdf(String orderId, String customerId);
 	List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String subOrderStatus);
 	String updateRRCOrderStatus(UpdateRRCStatusRequest updateRRCStatusRequest);
@@ -87,5 +88,8 @@ public interface OTSOrderService {
 	OrderProductDetails getOrderProductByOrderIdProductId(String orderId, String productId);
 	List<OrderProductDetails> checkPendingOrdersOfInactiveDistributor(String distributorId);
 	String updateOrderProductStatus(UpdateOrderProductStatusRequest updateOrderProductStatusRequest);
+	List<String> getPaymentPendingOrdersBeforeCurrentDate();
+	String autoCancelOrderByCustomer();
+	
 	
 }

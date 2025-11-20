@@ -1,55 +1,56 @@
 package com.fuso.enterprise.ots.srv.api.model.domain;
 
 public class AssignOrderToEmployeeModel {
-	private String OrderId;
-	private String DistributorId;
-	private String AssignedId;
-	private String OrderStatus;
-	private String ProductId;
-	private String CustomerId;
-	private String BillOfSupply;
+	private String orderId;
+	private String distributorId;
+	private String assignedId;
+	private String orderStatus;
+	private String productId;
+	private String customerId;
+	private String expectedDeliveryDate;
 	
-	public String getBillOfSupply() {
-		return BillOfSupply;
-	}
-	public void setBillOfSupply(String billOfSupply) {
-		BillOfSupply = billOfSupply;
-	}
-	public String getCustomerId() {
-		return CustomerId;
-	}
-	public void setCustomerId(String customerId) {
-		CustomerId = customerId;
-	}
 	public String getOrderId() {
-		return OrderId;
+		return orderId;
 	}
 	public void setOrderId(String orderId) {
-		OrderId = orderId;
+		this.orderId = orderId;
 	}
 	public String getDistributorId() {
-		return DistributorId;
+		return distributorId;
 	}
 	public void setDistributorId(String distributorId) {
-		DistributorId = distributorId;
+		this.distributorId = distributorId;
 	}
 	public String getAssignedId() {
-		return AssignedId;
+		return assignedId;
 	}
 	public void setAssignedId(String assignedId) {
-		AssignedId = assignedId;
+		this.assignedId = assignedId;
 	}
 	public String getOrderStatus() {
-		return OrderStatus;
+		return orderStatus;
 	}
 	public void setOrderStatus(String orderStatus) {
-		OrderStatus = orderStatus;
+		this.orderStatus = orderStatus;
 	}
 	public String getProductId() {
-		return ProductId;
+		return productId;
 	}
 	public void setProductId(String productId) {
-		ProductId = productId;
+		this.productId = productId;
 	}
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+	public void setExpectedDeliveryDate(String expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
+	
 	
 }

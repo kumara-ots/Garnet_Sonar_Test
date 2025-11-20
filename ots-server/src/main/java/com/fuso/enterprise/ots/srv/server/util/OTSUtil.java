@@ -5,12 +5,17 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class OTSUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OTSUtil.class);
 
 	public static String generateReportPDFFromHTMLPortrait(String html ,String value) {
 		String pdfPath = "C:\\template\\"+value;
@@ -29,7 +34,7 @@ public class OTSUtil {
 		    document.close();
 		    file.close();
 		} catch (Exception e) {
-		    e.printStackTrace();
+			logger.error("Exception while creating pdf :" + e.getMessage());
 		}
 		return pdfPath;
 	}
@@ -51,7 +56,7 @@ public class OTSUtil {
   	       	document.close();
   	       	file.close();
 		} catch (Exception e) {
-		    e.printStackTrace();
+			logger.error("Exception while creating pdf :" + e.getMessage());
 		}
 		return pdfPath;
 	}

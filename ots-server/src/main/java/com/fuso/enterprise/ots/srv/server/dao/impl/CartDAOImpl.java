@@ -45,9 +45,6 @@ public class CartDAOImpl extends AbstractIptDao<OtsCart, String> implements Cart
 		OtsCart cart = new OtsCart();
 		cart.setOtsCartQty(addToCartRequest.getRequestData().getOtsCartQty());
 
-		if(addToCartRequest.getRequestData().getOtsCartId()!=0){
-			cart.setOtsCartId(addToCartRequest.getRequestData().getOtsCartId());
-		}
 		try{
 			cart = super.getResultByNamedQuery("OtsCart.getCartListByCustomerIdAndProductId", queryParameter);
 			if(addToCartRequest.getRequestData().getOtsCartQty()>=1){
@@ -85,7 +82,6 @@ public class CartDAOImpl extends AbstractIptDao<OtsCart, String> implements Cart
 			return getcartListResponseList;
 		}catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("cart list is empty", e);
         }
 	}
@@ -161,7 +157,6 @@ public class CartDAOImpl extends AbstractIptDao<OtsCart, String> implements Cart
 			}
 		} catch (NoResultException e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		e.printStackTrace();
         	throw new BusinessException("Successfully", e);
         }
 		return "Success";

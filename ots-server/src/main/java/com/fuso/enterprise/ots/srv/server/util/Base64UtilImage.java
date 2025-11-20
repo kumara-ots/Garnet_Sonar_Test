@@ -4,23 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.fuso.enterprise.ots.srv.api.model.domain.Base64ByteImage;
-import com.fuso.enterprise.ots.srv.api.model.domain.ZipBase64Images;
-
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
-
-	
 
 public class Base64UtilImage {
 	

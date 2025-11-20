@@ -62,11 +62,9 @@ public class RegistrationTransactionCancelRecordsDAOImpl  extends AbstractIptDao
 		
 		}catch (Exception e) {
 	        logger.error("Exception while fetching data from DB:" + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    } catch (Throwable e) {
 	        logger.error("Exception while fetching data from DB:" + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    }
 	    return "Inserted";

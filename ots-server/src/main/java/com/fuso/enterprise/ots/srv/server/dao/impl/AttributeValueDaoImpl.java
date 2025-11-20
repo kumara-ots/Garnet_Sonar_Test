@@ -57,11 +57,9 @@ public class AttributeValueDaoImpl extends AbstractIptDao<OtsAttributeValue, Str
 			attributeValueList = otsAttributeValueList.stream().map(otsAttributeValue -> convertAttributeValueDetailsFromEntityToDomain(otsAttributeValue)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeValueList;
@@ -127,7 +125,6 @@ public class AttributeValueDaoImpl extends AbstractIptDao<OtsAttributeValue, Str
 	    } catch (Exception e) {
 	        // Log and throw BusinessException if an exception occurs
 	        logger.error("Exception while fetching data from DB: " + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    }
 

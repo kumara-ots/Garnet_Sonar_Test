@@ -11,14 +11,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.ProductAttributesMapping;
-import com.fuso.enterprise.ots.srv.api.service.request.AddProductAttributeMappingRequest;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.dao.ProductAttributesMappingDAO;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsAttributeKey;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsAttributeValue;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsProduct;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsProductAttributeMapping;
-
 import com.fuso.enterprise.ots.srv.server.util.AbstractIptDao;
 
 @Repository
@@ -68,11 +66,9 @@ public class ProductAttributesMappingDAOImpl extends AbstractIptDao<OtsProductAt
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeMapping;

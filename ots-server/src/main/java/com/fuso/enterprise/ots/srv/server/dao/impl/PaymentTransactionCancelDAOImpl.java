@@ -50,11 +50,9 @@ public class PaymentTransactionCancelDAOImpl extends AbstractIptDao<OtsPaymentTr
 			save(paymentTransactionCancelRecords);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data in DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";

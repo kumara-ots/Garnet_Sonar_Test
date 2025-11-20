@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorCompanyDetails;
 import com.itextpdf.text.BaseColor;
@@ -30,6 +32,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class BillOfSupplyPdf {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BillOfSupplyPdf.class);
 
 	//To Generate PDf & file will not be save in local system.
     public static byte[] generateBillOfSupply(List<DistributorCompanyDetails> distcompanyDetailsList, List<List<String>> orderDetails, String orderNumber) {
@@ -49,7 +53,7 @@ public class BillOfSupplyPdf {
             System.out.println("Bill of Supply PDF generated successfully");
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -59,7 +63,6 @@ public class BillOfSupplyPdf {
   	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd"); // Date in YYYYMMDD format
   	    String datePart = LocalDate.now().format(dtf); // Get the current date
 
-//  	    Random random = new Random();
   	    SecureRandom secureRandom = new SecureRandom();
   	    int randomNumber = 1000 + secureRandom.nextInt(9000); // Generate a random 4-digit number
 
@@ -92,7 +95,7 @@ public class BillOfSupplyPdf {
 		try {
 			document.add(invoiceTable);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
 		}
 	}
 
@@ -174,7 +177,7 @@ public class BillOfSupplyPdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
 		}
 		
 	}
@@ -253,7 +256,7 @@ public class BillOfSupplyPdf {
 		try {
 			document.add(header);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
 		}
 		
 	}
@@ -277,7 +280,7 @@ public class BillOfSupplyPdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+decfor.format(sum), font);
@@ -359,7 +362,7 @@ public class BillOfSupplyPdf {
 			document.add(headerTax);
 			document.add(pr);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from BillOfSupplyPdf class :" + e.getMessage());
 		}
     }
 

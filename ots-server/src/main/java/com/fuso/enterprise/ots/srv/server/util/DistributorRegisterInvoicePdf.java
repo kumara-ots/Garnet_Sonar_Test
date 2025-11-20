@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorCompanyDetails;
@@ -62,9 +61,8 @@ public class DistributorRegisterInvoicePdf {
  	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd"); // Date in YYYYMMDD format
  	    String datePart = LocalDate.now().format(dtf); // Get the current date
 
-// 	    Random random = new Random();
- 	    SecureRandom random = new SecureRandom();
- 	    int randomNumber = 1000 + random.nextInt(9000); // Generate a random 4-digit number
+ 	    SecureRandom secureRandom = new SecureRandom();
+ 	    int randomNumber = 1000 + secureRandom.nextInt(9000); // Generate a random 4-digit number
 
  	    return "INV-" + datePart + "-" + randomNumber; // Combine all parts
  	}

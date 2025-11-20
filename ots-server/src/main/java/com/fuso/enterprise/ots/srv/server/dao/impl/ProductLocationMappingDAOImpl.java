@@ -68,12 +68,10 @@ public class ProductLocationMappingDAOImpl extends AbstractIptDao<OtsProductLoca
 			}
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -134,11 +132,9 @@ public class ProductLocationMappingDAOImpl extends AbstractIptDao<OtsProductLoca
 			System.out.println("am getting output productLocationMapping ="+productLocationMapping.size());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationMapping;
@@ -156,11 +152,9 @@ public class ProductLocationMappingDAOImpl extends AbstractIptDao<OtsProductLoca
 			productLocationMapping = productLocationMap.stream().map(productLocation -> convertProductLocationMappingFromEntityToDomain(productLocation)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationMapping;
@@ -183,11 +177,9 @@ public class ProductLocationMappingDAOImpl extends AbstractIptDao<OtsProductLoca
 			
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationMapping;
@@ -208,11 +200,9 @@ public class ProductLocationMappingDAOImpl extends AbstractIptDao<OtsProductLoca
 			productLocationMapping = productLocationMap.stream().map(productLocation -> convertProductLocationMappingFromEntityToDomain(productLocation)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationMapping;

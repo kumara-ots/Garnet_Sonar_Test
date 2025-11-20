@@ -57,6 +57,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "OtsOrderProduct.findByOtsSuborderPickupDate", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsSuborderPickupDate = :otsSuborderPickupDate"),
 	@NamedQuery(name = "OtsOrderProduct.findByOtsSuborderOfdDate", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsSuborderOfdDate = :otsSuborderOfdDate"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsSuborderDeliveredDt", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsSuborderDeliveredDt = :otsSuborderDeliveredDt"),
+    @NamedQuery(name = "OtsOrderProduct.findByOtsSuborderExpectedDeliveryDate", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsSuborderExpectedDeliveryDate = :otsSuborderExpectedDeliveryDate"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsOrderProductCreated", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsOrderProductCreated = :otsOrderProductCreated"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsOrderProductUpdated", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsOrderProductUpdated = :otsOrderProductUpdated"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsRrcOrderStatus", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsRrcOrderStatus = :otsRrcOrderStatus"),
@@ -76,7 +77,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "OtsOrderProduct.findByOtsProductCountry", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsProductCountry = :otsProductCountry"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsProductCountryCode", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsProductCountryCode = :otsProductCountryCode"),
     @NamedQuery(name = "OtsOrderProduct.findByOtsProductCurrency", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsProductCurrency = :otsProductCurrency"),
-    @NamedQuery(name = "OtsOrderProduct.findByOtsProductCurrencySymbol", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsProductCurrencySymbol = :otsProductCurrencySymbol"),})
+    @NamedQuery(name = "OtsOrderProduct.findByOtsProductCurrencySymbol", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsProductCurrencySymbol = :otsProductCurrencySymbol"),
+    @NamedQuery(name = "OtsOrderProduct.findByOtsOrderCancelledBy", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsOrderCancelledBy = :otsOrderCancelledBy"),
+    @NamedQuery(name = "OtsOrderProduct.findByOtsOrderCancelReason", query = "SELECT o FROM OtsOrderProduct o WHERE o.otsOrderCancelReason = :otsOrderCancelReason")
+    })
 public class OtsOrderProduct implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -145,14 +149,14 @@ public class OtsOrderProduct implements Serializable {
     @Column(name = "ots_suborder_delivered_dt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date otsSuborderDeliveredDt;
-    @Column(name = "ots_order_billOfSupply")
-    private String otsorderbillOfSupply;
+    @Column(name = "ots_suborder_expected_delivery_date")
+    private String otsSuborderExpectedDeliveryDate;
     @Basic(optional = false)
-    @Column(name = "ots_order_product_created")
+    @Column(name = "ots_order_product_created", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date otsOrderProductCreated;
     @Basic(optional = false)
-    @Column(name = "ots_order_product_updated")
+    @Column(name = "ots_order_product_updated", insertable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date otsOrderProductUpdated;
     @Size(max = 45)
@@ -202,6 +206,13 @@ public class OtsOrderProduct implements Serializable {
     private String otsProductCurrency;
     @Column(name = "ots_product_currency_symbol")
     private String otsProductCurrencySymbol;
+    @Column(name = "ots_order_cancelled_by")
+    private String otsOrderCancelledBy;
+    @Column(name = "ots_order_cancel_reason")
+    private String otsOrderCancelReason;
+    @Column(name = "ots_suborder_cancelled_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date otsSuborderCancelledDate;
     @JoinColumn(name = "ots_assigned_id", referencedColumnName = "ots_users_id")
     @ManyToOne
     private OtsUsers otsAssignedId;
@@ -421,15 +432,15 @@ public class OtsOrderProduct implements Serializable {
         this.otsSuborderDeliveredDt = otsSuborderDeliveredDt;
     }
 
-    public String getOtsorderbillOfSupply() {
-        return otsorderbillOfSupply;
-    }
+    public String getOtsSuborderExpectedDeliveryDate() {
+		return otsSuborderExpectedDeliveryDate;
+	}
 
-    public void setOtsorderbillOfSupply(String otsorderbillOfSupply) {
-        this.otsorderbillOfSupply = otsorderbillOfSupply;
-    }
+	public void setOtsSuborderExpectedDeliveryDate(String otsSuborderExpectedDeliveryDate) {
+		this.otsSuborderExpectedDeliveryDate = otsSuborderExpectedDeliveryDate;
+	}
 
-    public Date getOtsOrderProductCreated() {
+	public Date getOtsOrderProductCreated() {
         return otsOrderProductCreated;
     }
 
@@ -603,6 +614,30 @@ public class OtsOrderProduct implements Serializable {
 
 	public void setOtsProductCurrencySymbol(String otsProductCurrencySymbol) {
 		this.otsProductCurrencySymbol = otsProductCurrencySymbol;
+	}
+
+	public String getOtsOrderCancelledBy() {
+		return otsOrderCancelledBy;
+	}
+
+	public void setOtsOrderCancelledBy(String otsOrderCancelledBy) {
+		this.otsOrderCancelledBy = otsOrderCancelledBy;
+	}
+
+	public String getOtsOrderCancelReason() {
+		return otsOrderCancelReason;
+	}
+
+	public void setOtsOrderCancelReason(String otsOrderCancelReason) {
+		this.otsOrderCancelReason = otsOrderCancelReason;
+	}
+
+	public Date getOtsSuborderCancelledDate() {
+		return otsSuborderCancelledDate;
+	}
+
+	public void setOtsSuborderCancelledDate(Date otsSuborderCancelledDate) {
+		this.otsSuborderCancelledDate = otsSuborderCancelledDate;
 	}
 
 	public OtsUsers getOtsAssignedId() {

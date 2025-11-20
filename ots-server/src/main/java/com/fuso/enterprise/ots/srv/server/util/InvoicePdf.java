@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.OrderDetails;
 import com.itextpdf.text.BaseColor;
@@ -33,6 +35,8 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class InvoicePdf {
 	
+	private static final Logger logger = LoggerFactory.getLogger(InvoicePdf.class);
+	
 	//To Generate PDf & file will not be save in local system.
     public static byte[] generateOrderInvoiceCopy(List<OrderDetails> orderList, List<List<String>> distDetails,List<List<String>> orderDetails){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -50,7 +54,7 @@ public class InvoicePdf {
 			document.close();
 			System.out.println("Pdf created successfully.");
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception from InvoicePdf class :" + e.getMessage());
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -60,9 +64,8 @@ public class InvoicePdf {
  	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd"); // Date in YYYYMMDD format
  	    String datePart = LocalDate.now().format(dtf); // Get the current date
 
-// 	    Random random = new Random();
- 	    SecureRandom random = new SecureRandom();
- 	    int randomNumber = 1000 + random.nextInt(9000); // Generate a random 4-digit number
+ 	    SecureRandom secureRandom = new SecureRandom();
+ 	    int randomNumber = 1000 + secureRandom.nextInt(9000); // Generate a random 4-digit number
 
  	    return "INV-" + datePart + "-" + randomNumber; // Combine all parts
  	}
@@ -117,7 +120,7 @@ public class InvoicePdf {
 	    try {
 	        document.add(invoiceTable);
 	    } catch (DocumentException e) {
-	        e.printStackTrace();
+	        logger.error("Exception from InvoicePdf class :" + e.getMessage());
 	    }
 	}
 
@@ -196,7 +199,7 @@ public class InvoicePdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from InvoicePdf class :" + e.getMessage());
 		}
 	}
 	
@@ -232,7 +235,7 @@ public class InvoicePdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from InvoicePdf class :" + e.getMessage());
 		}
 	}
 	
@@ -310,7 +313,7 @@ public class InvoicePdf {
 		try {
 			document.add(header);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Exception from InvoicePdf class :" + e.getMessage());
 		}
 		
 	}
@@ -334,7 +337,7 @@ public class InvoicePdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception from InvoicePdf class :" + e.getMessage());
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+decfor.format(sum), font);
@@ -451,7 +454,7 @@ public class InvoicePdf {
     			document.add(header);
     			document.add(pr);
     		} catch (DocumentException e) {
-    			e.printStackTrace();
+    			logger.error("Exception from InvoicePdf class :" + e.getMessage());
     		}
 
         } catch(DocumentException de) {

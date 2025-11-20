@@ -50,11 +50,9 @@ public class CouponOrderDAOImpl extends AbstractIptDao<OtsCouponOrder, String> i
 			return "Inserted";
 		}catch(Exception e){
 			logger.error("Exception while inserting data in DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data in DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -79,11 +77,9 @@ public class CouponOrderDAOImpl extends AbstractIptDao<OtsCouponOrder, String> i
 			return couponOrderList;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

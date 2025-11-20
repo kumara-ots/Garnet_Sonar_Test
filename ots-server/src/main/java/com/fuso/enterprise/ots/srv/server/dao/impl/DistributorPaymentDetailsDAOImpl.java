@@ -75,11 +75,9 @@ public class DistributorPaymentDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			distributorPaymentDetails = paymentDetails.stream().map(Details -> convertDistributorPaymentDetailsFromEntityToDomain(Details)).collect(Collectors.toList());
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return distributorPaymentDetails;

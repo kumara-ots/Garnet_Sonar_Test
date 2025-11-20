@@ -53,11 +53,9 @@ public class AttributeKeyDaoImpl extends AbstractIptDao<OtsAttributeKey, String>
 			variantKey = resultList.stream().map(OtsAttributeKey -> convertAttributeKeyDetailsFromEntityToDomain(OtsAttributeKey)).collect(Collectors.toList());
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return variantKey;
@@ -77,11 +75,9 @@ public class AttributeKeyDaoImpl extends AbstractIptDao<OtsAttributeKey, String>
             }
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeKeyDetails;
@@ -100,11 +96,9 @@ public class AttributeKeyDaoImpl extends AbstractIptDao<OtsAttributeKey, String>
 			attributeKeyList = otsAttributeKeyList.stream().map(otsAttributeKey -> convertAttributeKeyDetailsFromEntityToDomain(otsAttributeKey)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return attributeKeyList;

@@ -13,11 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fuso.enterprise.ots.srv.api.model.domain.CustomerChangeAddress;
 import com.fuso.enterprise.ots.srv.api.model.domain.ServiceState;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.dao.ServiceStateDAO;
-import com.fuso.enterprise.ots.srv.server.model.entity.OtsCustomerChangeAddress;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceState;
 import com.fuso.enterprise.ots.srv.server.util.AbstractIptDao;
 
@@ -52,11 +50,9 @@ public class ServiceStateDAOImpl extends AbstractIptDao<OtsServiceState, String>
 			stateList = otsServiceState.stream().map(serviceState -> convertStateDetailsFromEntityToDomain(serviceState)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return stateList;

@@ -74,4 +74,8 @@ public interface UserServiceDAO {
 
 	List<UserDetails> getUserDetailsByRoleAndStatus(GetUserStatusRequest getUserStatusRequest);
 
+	String deleteDistributor(String distributorId);
+
+	List<UserDetails> getIncompleteSellerRegistrations();
+
 }

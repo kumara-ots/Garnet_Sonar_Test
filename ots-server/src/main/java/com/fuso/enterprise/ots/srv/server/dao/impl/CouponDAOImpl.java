@@ -72,7 +72,6 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			
 		}catch (NoResultException e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return responseData;
@@ -108,7 +107,6 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails = convertCouponDetailsFromEntityToDomain(couponList);
 		}catch (NoResultException e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -149,7 +147,6 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 		}
 		catch (Throwable e) {
             logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -171,12 +168,10 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails =  couponList.stream().map(coupon -> convertCouponDetailsFromEntityToDomain(coupon)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
             logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -194,12 +189,10 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails = convertCouponDetailsFromEntityToDomain(couponList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
             logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -223,12 +216,10 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails =  couponList.stream().map(coupon -> convertCouponDetailsFromEntityToDomain(coupon)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
             logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -259,7 +250,6 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			
 		}catch (NoResultException e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -276,12 +266,10 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails = convertCouponDetailsFromEntityToDomain(couponList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
             logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;

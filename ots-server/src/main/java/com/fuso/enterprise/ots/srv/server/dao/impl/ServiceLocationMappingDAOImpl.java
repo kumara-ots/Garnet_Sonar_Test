@@ -14,13 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fuso.enterprise.ots.srv.api.model.domain.ProductLocationMapping;
 import com.fuso.enterprise.ots.srv.api.model.domain.ServiceLocationMapping;
 import com.fuso.enterprise.ots.srv.api.service.request.AddServiceLocationMappingRequest;
-import com.fuso.enterprise.ots.srv.api.service.response.ServiceLocationResponse;
 import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.dao.ServiceLocationMappingDAO;
-import com.fuso.enterprise.ots.srv.server.model.entity.OtsProductLocationMapping;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsServiceLocationMapping;
 import com.fuso.enterprise.ots.srv.server.model.entity.OtsUsers;
 import com.fuso.enterprise.ots.srv.server.util.AbstractIptDao;
@@ -73,12 +70,9 @@ public class ServiceLocationMappingDAOImpl extends AbstractIptDao<OtsServiceLoca
 			}
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
-		}
-		catch (Throwable e) {
+		}catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -140,11 +134,9 @@ public class ServiceLocationMappingDAOImpl extends AbstractIptDao<OtsServiceLoca
 			System.out.println("am getting output productLocationMapping ="+serviceLocationMapping.size());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationMapping;
@@ -166,11 +158,9 @@ public class ServiceLocationMappingDAOImpl extends AbstractIptDao<OtsServiceLoca
 			
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationMapping;
@@ -191,11 +181,9 @@ public class ServiceLocationMappingDAOImpl extends AbstractIptDao<OtsServiceLoca
 			serviceLocationMapping = serviceLocationMap.stream().map(serviceLocation -> convertServiceLocationMappingFromEntityToDomain(serviceLocation)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationMapping;

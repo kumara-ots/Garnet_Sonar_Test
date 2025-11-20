@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.persistence.NoResultException;
@@ -81,7 +80,6 @@ public class ServiceOrderDAOImpl extends AbstractIptDao <OtsServiceOrder, String
 	        otsServiceOrder.setOtsServiceOrderId(uuid);
 
 	        // ✅ Generate 10-digit random order number
-//	        Random objGenerator = new Random();
 	        SecureRandom secureRandom = new SecureRandom();
 	        long randomNumber = 1000000000L + secureRandom.nextInt(900000000);
 	        System.out.println("Random No : " + randomNumber);
@@ -126,11 +124,9 @@ public class ServiceOrderDAOImpl extends AbstractIptDao <OtsServiceOrder, String
 	        return serviceOrder;
 	    }catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -152,11 +148,9 @@ public class ServiceOrderDAOImpl extends AbstractIptDao <OtsServiceOrder, String
 			return serviceOrder;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,6 @@ public class SubadminValidityDAOImpl extends AbstractIptDao<OtsSubadminValidity,
         super(OtsSubadminValidity.class);
     }
     
-    
-
 	@Override
 	public String addSubAdminValidity(AddUpdateSubadminValidity addUpdateSubadminValidity) {
 	    OtsSubadminValidity otsSubadminValidity = new OtsSubadminValidity();
@@ -54,11 +51,9 @@ public class SubadminValidityDAOImpl extends AbstractIptDao<OtsSubadminValidity,
 	        save(otsSubadminValidity);
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching data from DB:" + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    } catch (Throwable e) {
 	        logger.error("Exception while fetching data from DB:" + e.getMessage());
-	        e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 	    }
 	    return "Validity Added Successfully";
@@ -81,11 +76,9 @@ public class SubadminValidityDAOImpl extends AbstractIptDao<OtsSubadminValidity,
 			save(subadminValidity);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Validity Updated Succesfully";
@@ -111,11 +104,9 @@ public class SubadminValidityDAOImpl extends AbstractIptDao<OtsSubadminValidity,
 			}
     	}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 	}
