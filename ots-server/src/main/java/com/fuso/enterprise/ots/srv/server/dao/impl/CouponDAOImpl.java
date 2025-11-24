@@ -142,7 +142,6 @@ public class CouponDAOImpl extends AbstractIptDao<OtsCoupon, String> implements 
 			couponDetails =  couponList.stream().map(coupon -> convertCouponDetailsFromEntityToDomain(coupon)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {

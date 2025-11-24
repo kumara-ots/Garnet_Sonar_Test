@@ -1449,7 +1449,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				encodedString = Base64.getEncoder().encodeToString(fileContent);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Exception while fetching data from DB :"+e.getMessage());
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
