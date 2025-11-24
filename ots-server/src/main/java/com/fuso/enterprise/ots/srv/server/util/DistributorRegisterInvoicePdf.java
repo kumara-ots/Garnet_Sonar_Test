@@ -57,7 +57,6 @@ public class DistributorRegisterInvoicePdf {
 
         } catch (Exception e) {
         	logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-            e.printStackTrace();
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -295,7 +294,7 @@ public class DistributorRegisterInvoicePdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+totalAmount, font);
