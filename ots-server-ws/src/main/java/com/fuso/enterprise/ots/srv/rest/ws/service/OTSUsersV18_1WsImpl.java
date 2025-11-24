@@ -142,11 +142,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -233,11 +231,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -282,11 +278,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -303,11 +297,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			response = buildResponse(200,responseData);
 	  	} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -335,11 +327,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -364,11 +354,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -429,11 +417,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -454,11 +440,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -499,11 +483,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}catch (Throwable e){
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -552,11 +534,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -584,11 +564,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -611,11 +589,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -635,11 +611,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -678,11 +652,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -701,11 +673,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -729,11 +699,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -755,11 +723,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -777,11 +743,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 
@@ -812,11 +776,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -841,11 +803,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -871,11 +831,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -894,11 +852,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -917,11 +873,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -944,11 +898,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -973,11 +925,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1066,11 +1016,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1090,11 +1038,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1112,11 +1058,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1140,11 +1084,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1162,11 +1104,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1188,11 +1128,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1221,11 +1159,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1261,11 +1197,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1299,11 +1233,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1321,11 +1253,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1343,11 +1273,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1370,11 +1298,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1407,11 +1333,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1442,11 +1366,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1464,11 +1386,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1495,11 +1415,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1548,11 +1466,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 
 	    } catch(Exception e) {
 	        logger.error("Exception while updating user status  :" + e.getMessage());
-	        e.printStackTrace();
 	        return response = buildResponse(500, "Something Went Wrong");
 	    } catch (Throwable e) {
 	        logger.error("Exception while updating user status  :" + e.getMessage());
-	        e.printStackTrace();
 	        return response = buildResponse(500, "Something Went Wrong");
 	    }
 	    return response;
@@ -1577,11 +1493,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1603,11 +1517,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1626,11 +1538,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1649,11 +1559,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1741,11 +1649,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -1771,11 +1677,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1794,11 +1698,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1817,11 +1719,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1840,11 +1740,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1863,11 +1761,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1889,11 +1785,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1912,11 +1806,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1935,11 +1827,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1958,11 +1848,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1993,11 +1881,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2028,11 +1914,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2058,11 +1942,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2095,7 +1977,6 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			return buildResponse(500, "Something Went Wrong");
 		}
 	}
@@ -2113,11 +1994,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2136,11 +2015,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2173,11 +2050,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -2196,11 +2071,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		return response = buildResponse(500,"Something Went Wrong");
     	}
 		return response;
@@ -2226,11 +2099,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2259,11 +2130,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 	}
@@ -2297,11 +2166,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2328,11 +2195,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2362,11 +2227,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			response = responseWrapper.buildResponse(buildInfo,"Successful");
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2384,11 +2247,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2407,11 +2268,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response;
 		} catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 	}
@@ -2428,11 +2287,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2451,11 +2308,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 		}
 		catch (Exception e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2548,11 +2403,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2571,11 +2424,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2594,11 +2445,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2617,11 +2466,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2640,11 +2487,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -2669,11 +2514,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			return response;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 	}
@@ -2696,11 +2539,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2724,11 +2565,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while deleting distributor: " + e.getMessage(), e);
-			e.printStackTrace();
 			response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Unexpected error while deleting distributor: " + e.getMessage(), e);
-			e.printStackTrace();
 			response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -2748,11 +2587,9 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 	        }
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching incomplete seller registrations: " + e.getMessage(), e);
-	        e.printStackTrace();
 	        response = buildResponse(500, "Something Went Wrong");
 	    } catch (Throwable t) {
 	        logger.error("Unexpected error while fetching incomplete seller registrations: " + t.getMessage(), t);
-	        t.printStackTrace();
 	        response = buildResponse(500, "Something Went Wrong");
 	    }
 	    return response;

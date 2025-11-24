@@ -155,11 +155,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 				return response;
 			} catch(Exception e){
 				logger.error("Exception while fetching data from DB  :"+e.getMessage());
-				e.printStackTrace();
 				throw new BusinessException(e.getMessage(), e);
 			} catch (Throwable e) {
 				logger.error("Exception while fetching data from DB  :"+e.getMessage());
-				e.printStackTrace();
 				throw new BusinessException(e.getMessage(), e);
 			}
 		
@@ -171,11 +169,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 	    	  return serviceDetails;
 	    } catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	  
@@ -190,11 +186,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 	    	return serviceDetailsResponse;
 	    } catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	   
@@ -208,11 +202,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return getSlot;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -316,11 +308,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -333,11 +323,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -351,11 +339,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -367,11 +353,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return data;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 
@@ -386,11 +370,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -402,11 +384,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return data;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 
@@ -419,11 +399,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return getServiceReviewAndRatingResponses;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -461,11 +439,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 
 	    } catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
    } 
@@ -479,11 +455,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		
@@ -499,11 +473,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 		
@@ -516,11 +488,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			return serviceDetailsBOResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}	
 	
@@ -543,11 +513,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationResponse;
@@ -577,11 +545,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			serviceLocationResponse.setServiceLocation(serviceLocationMapping);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationResponse;
@@ -611,11 +577,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			serviceLocationResponse.setServiceLocation(serviceLocationMapping);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationResponse;
@@ -629,11 +593,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			serviceLocationResponse.setServiceLocation(serviceLocationMapping);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationResponse;
@@ -647,11 +609,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 			serviceLocationResponse.setServiceLocation(serviceLocationMapping);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceLocationResponse;
@@ -747,11 +707,9 @@ public class OTSServicesServiceImpl implements OTSServicesService {
 	        return getServiceableLocationResponse;
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

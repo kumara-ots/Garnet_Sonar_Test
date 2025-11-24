@@ -99,11 +99,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -127,11 +125,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -155,11 +151,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -189,11 +183,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-            e.printStackTrace();
             return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -249,7 +241,6 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	        }
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching data from DB: " + e.getMessage());
-	        e.printStackTrace();
 	        return buildResponse(500, "Something Went Wrong");
 	    } finally {
 	        executor.shutdown();
@@ -271,11 +262,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -298,11 +287,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -325,11 +312,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -355,11 +340,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -376,7 +359,6 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e) {
 			System.out.print(e);
-			e.printStackTrace();
 		}
 		return response;
 	}
@@ -394,11 +376,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -423,11 +403,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -445,11 +423,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -482,11 +458,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -521,11 +495,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -561,11 +533,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -587,11 +557,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response;
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -613,11 +581,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -635,11 +601,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -659,11 +623,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -682,11 +644,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -709,11 +669,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -747,11 +705,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -770,11 +726,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -799,11 +753,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -822,11 +774,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -845,11 +795,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -873,11 +821,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -896,11 +842,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -923,11 +867,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -945,11 +887,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -967,11 +907,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -995,11 +933,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1023,11 +959,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1046,11 +980,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1069,11 +1001,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1092,11 +1022,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1120,11 +1048,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response;
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1141,11 +1067,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1165,11 +1089,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -1191,11 +1113,9 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response;
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}

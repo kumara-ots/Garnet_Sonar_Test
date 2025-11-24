@@ -221,11 +221,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -240,7 +238,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			logger.error("Inside Event=1004,Class:OTSUserServiceImpl,Method:CheckForExists ");
         } catch (Exception e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
         }
     	return userDataBOResponse;
@@ -402,11 +399,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse = userServiceDAO.updateUser(addUserDataBORequest);
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -421,11 +416,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -439,11 +432,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -456,11 +447,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			responseData = userMapDAO.mappUser(mapUsersDataBORequest);
 		}catch (BusinessException e){
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
 	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }
 		return responseData;
@@ -484,11 +473,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return loginUserResponse;
 		}catch (BusinessException e){
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
 	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -530,11 +517,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 	}
@@ -546,11 +531,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			changeAddress = userServiceDAO.changePassword(changePasswordRequest);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return changeAddress;
@@ -562,11 +545,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return userServiceDAO.updatePassword(updatePasswordRequest);
 		}catch(Exception e) {
 			logger.error("Exception while inserting data into DB:"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}catch (Throwable e) {
 			logger.error("Exception while inserting data into DB:"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -578,11 +559,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			addWishList = otsProductWishlistDAO.addWishList(addWishListRequest);
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return addWishList;
@@ -605,11 +584,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return wishList;
@@ -622,11 +599,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
             return cartDAO.addToCart(addToCartRequest);
         }  catch (Exception e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -705,7 +680,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			list.setCartList(cartList);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return list;
@@ -717,7 +691,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return cartDAO.removeFromCart(addToCartRequest);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -728,7 +701,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return otsProductWishlistDAO.removeFromWishList(addWishListRequest);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -739,7 +711,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return cartDAO.emptyCart(addToCartRequest);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 
@@ -760,7 +731,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return response;
@@ -773,7 +743,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			reviewRating = reviewAndRatingDAO.getReviewAndRating(getReviewRatingRequest);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return reviewRating;
@@ -786,7 +755,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			reviewRating = reviewAndRatingDAO.getReviewAndRatingByOrderId(getReviewsAndRatingRequest.getRequest().getOrderId(),getReviewsAndRatingRequest.getRequest().getProductId(),getReviewsAndRatingRequest.getRequest().getCustomerId());
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return reviewRating;
@@ -828,11 +796,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 
 	    } catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -844,7 +810,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			updateReview = reviewAndRatingDAO.updateReviewAndRating(addReviewAndRatingRequest);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return updateReview;
@@ -857,7 +822,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			updateReview = reviewAndRatingDAO.updateReviewStatus(updateReviewStatusRequest);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return updateReview;
@@ -894,11 +858,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return bannerInfo;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -922,11 +884,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return accountfooter;
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -946,11 +906,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			distributerBOResponse.setDistributerList(distributer);
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return distributerBOResponse;
@@ -975,11 +933,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	        return jdbcTemplate.queryForList(sql);
 	    }catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -999,11 +955,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return "Inserted";
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1015,11 +969,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			bannerDetails = distributorBannerDAO.getDistributorBanner(distributorId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return bannerDetails;
@@ -1032,11 +984,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return "Updated";
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1048,11 +998,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			bannerDetails = distributorBannerDAO.getBannerDetailsByBannerId(bannerId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return bannerDetails;
@@ -1075,11 +1023,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Deleted Successfully";
@@ -1098,11 +1044,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1114,11 +1058,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return update;
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1130,11 +1072,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			customerDetailsList = customerChangeAddressDAO.getCustomerChangeAddressByCustomerId(customerId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return customerDetailsList;
@@ -1147,11 +1087,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			customerDetailsList = customerChangeAddressDAO.getCustomerChangeAddressById(customerChangeAddressId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return customerDetailsList;
@@ -1174,11 +1112,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
 		}catch(Exception e){
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Deleted Successfully";
@@ -1196,11 +1132,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1212,11 +1146,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return updateDistributor;
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1228,11 +1160,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			companyDetailsList = distributorCompanyDetailsDAO.getDistributorCompanyDetails(distributorId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return companyDetailsList;
@@ -1290,11 +1220,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1427,11 +1355,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return updateUserResponse;
@@ -1447,11 +1373,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return "Inserted";
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1464,11 +1388,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -1482,11 +1404,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			serviceStateResponse.setStateDetails(stateList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceStateResponse;
@@ -1500,11 +1420,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			serviceDistrictResponse.setDistrictDetails(districtList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDistrictResponse;
@@ -1527,11 +1445,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationResponse;
@@ -1545,11 +1461,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			productLocationResponse.setProductLocation(productLocationMap);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationResponse;
@@ -1578,11 +1492,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			productLocationResponse.setProductLocation(ProductLocationMapping);
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationResponse;
@@ -1627,11 +1539,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1644,11 +1554,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			serviceDistrictResponse.setDistrictDetails(districtList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDistrictResponse;
@@ -1675,11 +1583,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1702,11 +1608,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			distributorPaymentDetailsResponse.setDistributorPaymentDetails(distributorPaymentDetails);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return distributorPaymentDetailsResponse;
@@ -1719,11 +1623,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			productDetails = productServiceDAO.getProductsByDistributorWithReviewAndRating(distributorId);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productDetails;
@@ -1737,11 +1639,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			servicePincodeResponse.setPincodeDetails(servicePincodeList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return servicePincodeResponse;
@@ -1755,11 +1655,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			pincodeResponse.setPincodeDetails(servicePincodeList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return pincodeResponse;
@@ -1773,11 +1671,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			productLocationResponse.setProductLocation(productLocationMap);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationResponse;
@@ -1795,11 +1691,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			servicePincodeResponse.setPincodeDetails((allServicePincodeList));
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return servicePincodeResponse;
@@ -1817,11 +1711,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			serviceDistrictResponse.setDistrictDetails(allServiceDistrictsList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceDistrictResponse;
@@ -1835,11 +1727,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -1880,11 +1770,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1924,11 +1812,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1973,11 +1859,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2015,11 +1899,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2066,11 +1948,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2093,11 +1973,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return outputResult;
 		 }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2110,11 +1988,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userAccountsResponse.setUserAccounts(userList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userAccountsResponse;
@@ -2127,11 +2003,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			subAdmindetails = subadminValidityDAO.addSubAdminValidity(AddUpdateSubadminValidity);
 		}catch(Exception e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while inserting data into DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 		return subAdmindetails;
@@ -2212,11 +2086,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			subadminDetailsModel.setOtsDistributorCount(outputResult.get("ots_distributor_count")==null?"":outputResult.get("ots_distributor_count").toString());
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return subadminDetailsModel;
@@ -2230,11 +2102,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			subAdmindetails =subadminValidityDAO.updateSubAdminValidity(addUpdateSubadminValidity);
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return subAdmindetails;
@@ -2247,11 +2117,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return subadminValidity;
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2326,11 +2194,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2358,11 +2224,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			productLocationResponse.setProductLocation(ProductLocationMappings);
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productLocationResponse;
@@ -2499,11 +2363,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			cancelRecords = registrationTransactionCancelRecordsDAO.addRegistrationTransactionCancelRecords(addRegistrationTransactionCancelRecord);
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return cancelRecords;
@@ -2516,11 +2378,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return addHoliday;
 		}catch(Exception e){
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2532,11 +2392,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return getHolidayListResponse;
 		} catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2549,11 +2407,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		}catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data to DB  :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -2568,11 +2424,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return userDataBOResponse;
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB: " + e.getMessage(), e);
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB: " + e.getMessage(), e);
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2585,11 +2439,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return addDistributorCountryMapping;
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2602,11 +2454,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			distributorCountryResponse.setDistributorCountry(distributorCountryMap);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return distributorCountryResponse;
@@ -2626,11 +2476,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return deleteDistributorCountryMapping;
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2643,11 +2491,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			serviceCountryResponse.setCountryDetails(countryList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return serviceCountryResponse;
@@ -2661,11 +2507,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDetailsResponse.setUserDetails(userDetailList);
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDetailsResponse;
@@ -2692,11 +2536,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			response.setDistributorPaymentDetails(distributorPaymentDetails);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return response;
@@ -2710,11 +2552,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			userDataBOResponse.setUserDetails(userDetailList);
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return userDataBOResponse;
@@ -2745,11 +2585,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 		}catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 	}
@@ -2794,11 +2632,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			}
 	    }catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2810,11 +2646,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			return deleteDistributor;
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2862,11 +2696,9 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	        executor.shutdown();
 	    } catch(Exception e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}catch (Throwable e) {
     		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		e.printStackTrace();
     		throw new BusinessException(e.getMessage(), e);
     	}
 	    return userDetails;

@@ -243,11 +243,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -274,11 +272,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -506,12 +502,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					}
 				}catch(Exception e){
 					logger.error("Exception while inserting data into DB :"+e.getMessage());
-					e.printStackTrace();
 					throw new BusinessException(e.getMessage(), e);
 				}
 				catch (Throwable e) {
 		            logger.error("Exception while inserting data into DB :"+e.getMessage());
-		            e.printStackTrace();
 		            throw new BusinessException(e.getMessage(), e);
 				}
 
@@ -743,11 +737,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 
 		}catch(Exception e){
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -789,11 +781,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        executor.shutdown();
 	    }catch(Exception e){
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -815,11 +805,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        }
 	    }catch(Exception e){
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
-	    	e.printStackTrace();
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -900,11 +888,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	            emailUtil.sendCustomermail(customer.getEmailId(), "", "Regarding Order Update", custMsg);
 	        });
 	    } catch (Exception e) {
-	        e.printStackTrace();
 	        logger.error("Error in inserting order in order table" + e.getMessage());
 	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 	    } catch (Throwable e) {
-	        e.printStackTrace();
 	        logger.error("Error in inserting order in order table" + e.getMessage());
 	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 	    } finally {
@@ -935,11 +921,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProductBOResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -965,11 +949,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProductBOResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1010,11 +992,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return getListOfOrderByDateBOResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1059,12 +1039,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProductBOResponse;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1086,10 +1064,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//When count of Not New is equal to Total order product list count, then the function return True or else False
 			return productList.size() == count;
 		}catch(Exception e){
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
@@ -1113,10 +1089,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//When addition of both the count's of Assigned & Cancel is equal to Total order product list count, then the function return true else false
 			return productList.size() == count;
 		}catch(Exception e){
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
@@ -1189,10 +1163,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//When count of Not New is equal to Total order product list count, then the function return True or else False
 			return productList.size() == closeCount+cancelCount;
 		}catch(Exception e){
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
@@ -1237,11 +1209,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 	    }catch (BusinessException e){
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
 	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -1282,11 +1252,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 	    }catch (BusinessException e){
 			logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
 	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
-        	e.printStackTrace();
         	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -1342,11 +1310,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	            return response;
 	        }
 	    } catch (Exception e) {
-	        e.printStackTrace();
 	        logger.error("Error in inserting order in order table" + e.getMessage());
 	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 	    } catch (Throwable e) {
-	        e.printStackTrace();
 	        logger.error("Error in inserting order in order table" + e.getMessage());
 	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 	    } finally {
@@ -1418,11 +1384,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
  	            encodedString = Base64.getEncoder().encodeToString(fileContent);
  	        } catch (IOException e) {
  	            logger.error("Error reading PDF file: " + e.getMessage());
- 	            e.printStackTrace();
  	        }
  	    } catch (Exception e) {
  	        logger.error("Exception while generating ledger report: " + e.getMessage());
- 	        e.printStackTrace();
  	        throw new BusinessException(e.getMessage(), e);
  	    }
  	    return encodedString;
@@ -1489,11 +1453,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return encodedString;		
@@ -1527,7 +1489,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				System.out.println(e);
-				e.printStackTrace();
 			} // amount in the smallest currency unit
 			 Order order = razorpay.Orders.create(orderRequest);
 			 System.out.println(order);
@@ -1539,7 +1500,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			 orderDetailsList.add(orderDetails);
 			 orderDetailsBOResponse.setOrderDetails(orderDetailsList);
 		} catch (RazorpayException e) {
-			e.printStackTrace();
+			logger.error("Exception while fetching getRazorPayOrder data from DB :"+e.getMessage());	
 			System.out.println(e);
 		}
 		return orderDetailsBOResponse;
@@ -1555,11 +1516,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			ccAvenueOrderDetailsResponse.setCcAvenueWorkingKey(ccAvenueWorkingKey);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return ccAvenueOrderDetailsResponse;
@@ -1575,8 +1534,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			payment = razorpay.Payments.fetch(paymentId);
 			paymentDetails = new JSONObject(payment);
 		} catch (RazorpayException e1) {
-			e1.printStackTrace();
-		}
+			logger.error("Exception while fetching data from DB :"+e1.getMessage());		}
 		System.out.print(payment);
 		return paymentDetails;
 	}
@@ -1600,11 +1558,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProductBOResponse;
@@ -1647,11 +1603,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return order;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
 	}
@@ -1694,11 +1648,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return order;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1745,11 +1697,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return Response;
 		}
 		catch(Exception e){
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
 		catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1795,10 +1745,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				return Response;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 		return Response;
@@ -1815,11 +1763,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        );
 	    }catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1871,11 +1817,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1998,11 +1942,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				return otsOrderDetails;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
 		catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
 		}
@@ -2060,11 +2002,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return addInvoice;
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2199,11 +2139,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			});
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return Response;
@@ -2510,11 +2448,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2573,11 +2509,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace(); 
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2645,11 +2579,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2753,11 +2685,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2784,11 +2714,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2815,11 +2743,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2846,11 +2772,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -2862,11 +2786,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			Response = paymentTransactionCancelDAO.addPaymentTransactionCancelRecords(addPaymentTransactionCancelRecords);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return Response;
@@ -2892,11 +2814,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return encodedString;
@@ -2909,11 +2829,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			orderProduct = orderProductDao.getSubOrderDetailsByOrderProductId(orderProductId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProduct;
@@ -2940,11 +2858,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProductBOResponse;
@@ -2971,11 +2887,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProductBOResponse;
@@ -3002,11 +2916,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProductBOResponse;
@@ -3033,11 +2945,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderProductBOResponse;
@@ -3050,11 +2960,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			orderDetails = orderServiceDAO.getOrderByOrderTransactionId(orderTransactionId);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return orderDetails;
@@ -3099,11 +3007,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return order;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -3148,11 +3054,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return order;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -3183,11 +3087,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			}
 		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -3199,11 +3101,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderprodcutraking;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
 	}
@@ -3215,11 +3115,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProduct;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
 	}
@@ -3231,11 +3129,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return distributorOrders;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -3251,11 +3147,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProductDetail;
 		} catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}	
 	}
@@ -3271,11 +3165,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        );
 	    }catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -3327,11 +3219,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

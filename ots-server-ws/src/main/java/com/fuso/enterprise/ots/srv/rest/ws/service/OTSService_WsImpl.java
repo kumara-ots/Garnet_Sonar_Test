@@ -79,11 +79,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -102,11 +100,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -129,11 +125,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -151,11 +145,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -180,11 +172,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -203,11 +193,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -225,11 +213,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -247,11 +233,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -273,11 +257,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -299,11 +281,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			return response;
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -328,11 +308,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		} catch (Exception e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
@@ -355,11 +333,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -378,11 +354,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -405,11 +379,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -427,11 +399,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			}
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -455,11 +425,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -510,11 +478,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -546,11 +512,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -580,11 +544,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 			
 		}catch(Exception e){
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while inserting data into DB :"+e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -614,11 +576,9 @@ public class OTSService_WsImpl implements OTSService_Ws {
 				}
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :" + e.getMessage());
-			e.printStackTrace();
 			return response = buildResponse(500, "Something Went Wrong");
 		}
 	}

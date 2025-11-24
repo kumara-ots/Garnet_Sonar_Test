@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.helpers.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.Base64ByteImage;
 import com.fuso.enterprise.ots.srv.api.model.domain.ZipBase64Images;
@@ -17,6 +19,7 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class Base64Util {
 	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public Base64ByteImage convertPasswordProtectedzip(ZipBase64Images zipBase64Images) {
 		Base64ByteImage base64ByteImage = new Base64ByteImage();
@@ -27,7 +30,7 @@ public class Base64Util {
 						base64ByteImage.setBase64String(base64.encodeBase64String(zipFileProtected(base64Item.getBase64String(), zipBase64Images.getFilename(), zipBase64Images.getPassword()))); 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error("Unexpected error while fetching iconvertPasswordProtectedzip: " + e.getMessage());
 					}
 				}
 		);
@@ -35,7 +38,7 @@ public class Base64Util {
 		
 	}
 	
-	private static byte[] zipFileProtected(String fileBytes, String fileName, String pass) throws IOException {
+	private  byte[] zipFileProtected(String fileBytes, String fileName, String pass) throws IOException {
 
         ByteArrayInputStream inputByteStream = null;
         ByteArrayOutputStream outputByteStream = null;
@@ -76,7 +79,7 @@ public class Base64Util {
 
         } catch (ZipException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+             logger.error("Unexpected error while fetching zipFileProtected data: " + e.getMessage());
         } finally {
            /* IOUtils.closeQuietly(inputByteStream);
             IOUtils.closeQuietly(outputByteStream);

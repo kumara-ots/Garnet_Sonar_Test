@@ -46,7 +46,6 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			couponDAO.addCoupon(addCouponRequest);
 		}catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return "Inserted";
@@ -59,7 +58,6 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			couponDetails = couponDAO.checkForExistingCoupon(couponCode);
 		}catch (Exception e) {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -72,11 +70,9 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			couponDetails = couponDAO.getCouponsBasedOnStatusAndAdminId(getCouponBasedOnRequest);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -95,11 +91,9 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			}
 		}catch(Exception e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return Response;
@@ -112,7 +106,6 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			couponDetails = couponDAO.updateCoupon(updateCouponRequest);
 		}catch (Exception e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -125,11 +118,9 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			couponDetails = couponDAO.getCouponsByStatusOrCategory(getCouponBasedOnRequest);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponDetails;
@@ -143,11 +134,9 @@ public class OTSCouponServiceImpl implements OTSCouponService
 			
 		}catch(Exception e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return couponOrderList;
