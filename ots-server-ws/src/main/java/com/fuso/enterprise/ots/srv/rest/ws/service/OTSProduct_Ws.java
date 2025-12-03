@@ -22,12 +22,13 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductAttributeMappin
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSimilarProductRequest;
@@ -110,10 +111,10 @@ public interface OTSProduct_Ws {
 	Response getAllProductsWithDiscount();
 
 	@POST
-	@Path("/getProductsByDistributerPagination")
-	@ApiOperation(value = "getProductsByDistributerPagination", notes = "To get all the Products under Distributor by Pagination", response = Response.class)
+	@Path("/getProductsByDistributorPagination")
+	@ApiOperation(value = "getProductsByDistributorPagination", notes = "To get all the Products under Distributor by Pagination", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
-	Response getProductsByDistributerPagination(@ApiParam(value = "request", required = true) @NotNull @Valid GetProductsByDistributerPaginationRequest getProductsByDistributerPagination);
+	Response getProductsByDistributorPagination(@ApiParam(value = "request", required = true) @NotNull @Valid GetProductsByDistributorPaginationRequest getProductsByDistributorPagination);
 	
 	@POST
 	@Path("/addStockForMultipleProductByDistributor")
@@ -360,5 +361,12 @@ public interface OTSProduct_Ws {
 	@ApiOperation(value = "getAllManufacturerDetails", notes = "To get list of All Product Manufacturers", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response getAllManufacturerDetails();
+	
+	@POST
+	@Path("/addVariantProduct")
+	@ApiOperation(value = "addVariantProduct", notes = "To Add New Varient Product", response = Response.class)
+	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
+	Response addVariantProduct(@ApiParam(value = "request", required = true) @NotNull @Valid AddVariantProductRequest addVariantProductRequest);
+
 	
 }

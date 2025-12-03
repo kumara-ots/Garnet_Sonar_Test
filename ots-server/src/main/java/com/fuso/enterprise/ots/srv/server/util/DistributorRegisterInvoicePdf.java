@@ -10,9 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorCompanyDetails;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -34,8 +31,6 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class DistributorRegisterInvoicePdf {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DistributorRegisterInvoicePdf.class);
-	
 	//To Generate PDf & file will not be save in local system.
 	public static byte[] generateRegistrationInvoiceCopy(List<DistributorCompanyDetails> distDetails,String registrationPaymentId){
     	String distributorId = distDetails.get(0).getDistributorId();
@@ -56,7 +51,7 @@ public class DistributorRegisterInvoicePdf {
 			System.out.println("Pdf created successfully.");
 
         } catch (Exception e) {
-        	logger.error("Exception while Fetching data from DB  :"+e.getMessage());
+            e.printStackTrace();
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -98,7 +93,7 @@ public class DistributorRegisterInvoicePdf {
 		try {
 			document.add(invoiceTable);
 		} catch (DocumentException e) {
-			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -165,7 +160,8 @@ public class DistributorRegisterInvoicePdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			logger.error("Exception while Fetching data from DB  :"+e.getMessage());		}
+			e.printStackTrace();
+		}
 	}
 	
 	private static void addDistributorTable(Document document,List<List<String>> distDetails) throws DocumentException {
@@ -200,7 +196,8 @@ public class DistributorRegisterInvoicePdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			logger.error("Exception while Fetching data from DB  :"+e.getMessage());		}
+			e.printStackTrace();
+		}
 	}
 	
 	private static void addThankYouNoteAtTheEndOfPage(Document document, PdfWriter writer) {  
@@ -277,7 +274,8 @@ public class DistributorRegisterInvoicePdf {
 		try {
 			document.add(header);
 		} catch (DocumentException e) {
-			logger.error("Exception while Fetching data from DB  :"+e.getMessage());		}
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -294,7 +292,7 @@ public class DistributorRegisterInvoicePdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("Exception while Fetching data from DB  :"+e.getMessage());
+			e.printStackTrace();
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+totalAmount, font);
@@ -411,7 +409,8 @@ public class DistributorRegisterInvoicePdf {
     			document.add(header);
     			document.add(pr);
     		} catch (DocumentException e) {
-    			logger.error("Exception while Fetching data from DB  :"+e.getMessage());    		}
+    			e.printStackTrace();
+    		}
 
         } catch(DocumentException de) {
             throw new ExceptionConverter(de);

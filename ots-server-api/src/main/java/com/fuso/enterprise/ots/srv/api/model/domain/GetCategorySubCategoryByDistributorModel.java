@@ -5,6 +5,7 @@ public class GetCategorySubCategoryByDistributorModel {
 	private String searchKey;
 	private String searchValue;
 	private String distributorId;
+	private String countryCode;
 	
 	public String getSearchKey() {
 		return searchKey;
@@ -23,6 +24,12 @@ public class GetCategorySubCategoryByDistributorModel {
 	}
 	public void setDistributorId(String distributorId) {
 		this.distributorId = distributorId;
+	}
+	public String getCountryCode() {
+		return countryCode;
+	}
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 	
 }

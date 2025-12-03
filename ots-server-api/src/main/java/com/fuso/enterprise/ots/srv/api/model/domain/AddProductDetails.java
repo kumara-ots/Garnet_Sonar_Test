@@ -21,6 +21,8 @@ public class AddProductDetails {
 
 	private String unitOfMeasurement;
 	
+	private String netQuantity;
+	
 	private String createdUser;
 	
 	private String productStockQuantity;
@@ -56,6 +58,8 @@ public class AddProductDetails {
     private String otsProductCurrencySymbol;
 	
     private String otsProductDetailsPdf;
+    
+    private String otsProductSellerType;
 
 	public String getProductId() {
 		return productId;
@@ -135,6 +139,14 @@ public class AddProductDetails {
 
 	public void setUnitOfMeasurement(String unitOfMeasurement) {
 		this.unitOfMeasurement = unitOfMeasurement;
+	}
+
+	public String getNetQuantity() {
+		return netQuantity;
+	}
+
+	public void setNetQuantity(String netQuantity) {
+		this.netQuantity = netQuantity;
 	}
 
 	public String getCreatedUser() {
@@ -279,6 +291,14 @@ public class AddProductDetails {
 
 	public void setOtsProductDetailsPdf(String otsProductDetailsPdf) {
 		this.otsProductDetailsPdf = otsProductDetailsPdf;
+	}
+
+	public String getOtsProductSellerType() {
+		return otsProductSellerType;
+	}
+
+	public void setOtsProductSellerType(String otsProductSellerType) {
+		this.otsProductSellerType = otsProductSellerType;
 	}
 
 }

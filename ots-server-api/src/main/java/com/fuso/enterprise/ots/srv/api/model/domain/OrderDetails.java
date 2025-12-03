@@ -34,7 +34,7 @@ public class OrderDetails {
 	  
 	private String customerChangeAddressId;
 	  
-	private String customerOrderInvoice;
+	private String orderProformaInvoice;
 	 
 	private String customerName;
 	
@@ -172,12 +172,12 @@ public class OrderDetails {
 		this.customerChangeAddressId = customerChangeAddressId;
 	}
 
-	public String getCustomerOrderInvoice() {
-		return customerOrderInvoice;
+	public String getOrderProformaInvoice() {
+		return orderProformaInvoice;
 	}
 
-	public void setCustomerOrderInvoice(String customerOrderInvoice) {
-		this.customerOrderInvoice = customerOrderInvoice;
+	public void setOrderProformaInvoice(String orderProformaInvoice) {
+		this.orderProformaInvoice = orderProformaInvoice;
 	}
 
 	public String getCustomerName() {

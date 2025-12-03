@@ -72,42 +72,46 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 	private String getValueOrNull(String value) {
 	    return (value == null || value.equals("")) ? null : value;
 	}
-
+    
     @Override
-	public UserDetails getUserIdUsers(String userId) {
-    	UserDetails userDetails = new UserDetails();
-    	try {
+    public UserDetails getUserIdUsers(String userId) {
+        UserDetails userDetails = new UserDetails();
+        try {
             OtsUsers otsUsers = null;
-        	Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("otsUsersId", UUID.fromString(userId));
-			try {
-				otsUsers  = super.getResultByNamedQuery("OtsUsers.findByOtsUsersId", queryParameter);
-			}catch(NoResultException e) {
-				return null;
-			}
-	
-			userDetails =  convertUserDetailsFromEntityToDomain(otsUsers);
-    	}catch(Exception e) {
-    		logger.error("Exception while fetching data from DB:"+e.getMessage());
-    		throw new BusinessException(e.getMessage(), e);
-    	}
-    	return userDetails;
-	}
-
+            Map<String, Object> queryParameter = new HashMap<>();
+            queryParameter.put("otsUsersId", UUID.fromString(userId));
+            try {
+                otsUsers = super.getResultByNamedQuery("OtsUsers.findByOtsUsersId", queryParameter);
+            } catch (NoResultException e) {
+                // No record found — return null is fine
+                logger.debug("No user found for userId: {}", userId);
+                return null;
+            }
+            userDetails = convertUserDetailsFromEntityToDomain(otsUsers);
+        } catch (Exception e) {
+            logger.error("Exception while fetching user details for userId: {}", userId, e);
+            throw new BusinessException("Failed to fetch user details: " + e.getMessage(), e);
+        }
+        return userDetails;
+    }
+    
     public List<UserDetails> getEmailIdUsers(String emailId) {
-    	List<UserDetails> userDetails = new ArrayList<UserDetails>();
-    	try {
-            List<OtsUsers> userList = null;
-        	Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("otsUsersEmailid", emailId);
-			userList  = super.getResultListByNamedQuery("OtsUsers.findByOtsUsersEmailid", queryParameter);
-            userDetails =  userList.stream().map(otsUsers -> convertUserDetailsFromEntityToDomainForResponse(otsUsers)).collect(Collectors.toList());
-    	}catch(Exception e) {
-    		logger.error("Exception while fetching data from DB :"+e.getMessage());
-    		throw new BusinessException(e.getMessage(), e);
-    	}
-    	return userDetails;
-	}
+        try {
+            Map<String, Object> queryParameter = new HashMap<>();
+            queryParameter.put("otsUsersEmailid", emailId);
+
+            List<OtsUsers> userList =
+                    super.getResultListByNamedQuery("OtsUsers.findByOtsUsersEmailid", queryParameter);
+
+            return userList.stream()
+                    .map(this::convertUserDetailsFromEntityToDomainForResponse)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            logger.error("Error fetching users for emailId: {}", emailId, e);
+            throw new BusinessException("Failed to fetch users by email", e);
+        }
+    }
     
     @Override
 	public UserDataBOResponse updateUser(AddUserDataBORequest addUserDataBORequest) {

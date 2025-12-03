@@ -27,14 +27,13 @@ public interface OrderServiceDAO {
 	List<OrderDetails> checkForFirstOrderByCustomer(String CustomerId);
 	String UpdateOrderStatus(String orderId, String orderStatus);
 	OrderDetails addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest);
-	String addCustomerOrderInvoiceToDB(String orderId, String invoice);
 	List<OrderDetails> getOrdersByStatus(String orderStatus);
 	List<OrderDetails> getOrderByDistributorOrderProductStatus(String distributorId, String orderProductStatus);
-	String UpdateOrderCostWhenSubOrderCancelled(String orderId, String orderProductCost);
 	List<OrderDetails> getRRCOrdersByCustomer(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest);
 	List<OrderDetails> getCustomerOrderByOrderProductStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest);
 	List<OrderDetails> getOrderByOrderIdOrderProductStatus(String orderId, String orderProductStatus);
 	List<OrderDetails> getOrderByOrderIdRRCOrderStatus(String orderId, String rrcOrderStatus);
 	List<OrderDetails> getOrderByOrderTransactionId(String orderTransactionId);
+	String addProformaInvoiceToDB(String orderId, String invoice);
 	
 }

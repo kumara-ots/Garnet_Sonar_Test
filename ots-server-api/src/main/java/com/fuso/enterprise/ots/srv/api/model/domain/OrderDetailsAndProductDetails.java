@@ -16,7 +16,7 @@ public class OrderDetailsAndProductDetails {
     private String payementStatus;
     private String paymentId;
     private String paymentDate;
-    private String customerOrderInvoice;
+    private String orderProformaInvoice;
     private UserDetails distributorDetails;
     private UserDetails employeeDetails;
     private UserDetails customerDetails;
@@ -104,11 +104,11 @@ public class OrderDetailsAndProductDetails {
 	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;
 	}
-	public String getCustomerOrderInvoice() {
-		return customerOrderInvoice;
+	public String getOrderProformaInvoice() {
+		return orderProformaInvoice;
 	}
-	public void setCustomerOrderInvoice(String customerOrderInvoice) {
-		this.customerOrderInvoice = customerOrderInvoice;
+	public void setOrderProformaInvoice(String orderProformaInvoice) {
+		this.orderProformaInvoice = orderProformaInvoice;
 	}
 	public UserDetails getDistributorDetails() {
 		return distributorDetails;

@@ -46,7 +46,6 @@ import com.fuso.enterprise.ots.srv.api.service.request.UpdateRRCStatusRequest;
 import com.fuso.enterprise.ots.srv.api.service.response.CcAvenueOrderDetailsResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetDistributorSettlementResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetListOfOrderByDateBOResponse;
-import com.fuso.enterprise.ots.srv.api.service.response.GetProductBOStockResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderDetailsBOResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderProductAndOrderResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.OrderProductBOResponse;
@@ -1119,6 +1118,7 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
+
 
 }
  

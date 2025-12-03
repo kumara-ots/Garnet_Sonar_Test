@@ -143,10 +143,8 @@ public class OtsOrder implements Serializable {
     @Size(max = 45)
     @Column(name = "ots_customer_change_address_id")
     private String otsCustomerChangeAddressId;
-    @Lob
-    @Size(max = 2147483647)
-    @Column(name = "ots_order_customer_invoice")
-    private String otsOrderCustomerInvoice;
+    @Column(name = "ots_order_proforma_invoice")
+    private String otsOrderProformaInvoice;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "otsOrderId")
     private Collection<OtsCouponOrder> otsCouponOrderCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "otsOrderId")
@@ -372,15 +370,15 @@ public class OtsOrder implements Serializable {
         this.otsCustomerChangeAddressId = otsCustomerChangeAddressId;
     }
 
-    public String getOtsOrderCustomerInvoice() {
-        return otsOrderCustomerInvoice;
-    }
+    public String getOtsOrderProformaInvoice() {
+		return otsOrderProformaInvoice;
+	}
 
-    public void setOtsOrderCustomerInvoice(String otsOrderCustomerInvoice) {
-        this.otsOrderCustomerInvoice = otsOrderCustomerInvoice;
-    }
+	public void setOtsOrderProformaInvoice(String otsOrderProformaInvoice) {
+		this.otsOrderProformaInvoice = otsOrderProformaInvoice;
+	}
 
-    @XmlTransient
+	@XmlTransient
     public Collection<OtsCouponOrder> getOtsCouponOrderCollection() {
         return otsCouponOrderCollection;
     }

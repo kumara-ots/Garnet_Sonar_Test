@@ -27,7 +27,6 @@ import com.fuso.enterprise.ots.srv.api.service.request.ProviderAndServiceRequest
 import com.fuso.enterprise.ots.srv.api.service.request.UpdateServiceStatusRequestModel;
 import com.fuso.enterprise.ots.srv.api.service.response.AverageServiceReviewRatingResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetServiceReviewAndRatingResponse;
-import com.fuso.enterprise.ots.srv.api.service.response.GetServiceableLocationResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.GetServiceableServiceLocationResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.ServiceDetailsBOResponse;
 import com.fuso.enterprise.ots.srv.api.service.response.ServiceDetailsResponse;

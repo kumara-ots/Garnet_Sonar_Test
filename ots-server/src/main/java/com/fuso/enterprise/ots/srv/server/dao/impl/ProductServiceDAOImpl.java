@@ -39,10 +39,11 @@ import com.fuso.enterprise.ots.srv.api.model.domain.UserDetails;
 import com.fuso.enterprise.ots.srv.api.service.functional.OTSUserService;
 import com.fuso.enterprise.ots.srv.api.service.request.AddOrUpdateCategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSimilarProductRequest;
@@ -238,6 +239,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		productDetails.setOtsNutritionalBrandOwnerFSSAILicenseNo(otsProduct.getOtsNutritionalBrandOwnerFSSAILicenseNo()==null?"":otsProduct.getOtsNutritionalBrandOwnerFSSAILicenseNo());	
 		productDetails.setOtsNutritionalOtherFSSAILicenseNo(otsProduct.getOtsNutritionalOtherFSSAILicenseNo()==null?"":otsProduct.getOtsNutritionalOtherFSSAILicenseNo());
 		productDetails.setOtsNutritionalImporterFSSAILicenseNo(otsProduct.getOtsNutritionalImporterFSSAILicenseNo()==null?"":otsProduct.getOtsNutritionalImporterFSSAILicenseNo());
+		productDetails.setOtsProductSellerType(otsProduct.getOtsProductSellerType()==null?"":otsProduct.getOtsProductSellerType());
 		
 		//setting category Id and name  for product in domain
 		CategoryDetails category = getCategoryForProductId(otsProduct.getOtsProductId().toString());
@@ -276,7 +278,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductId", UUID.fromString(productId));
 			try {
-				otsProduct = super.getResultByNamedQuery("OtsProduct.findActiveproductByOtsProductId", queryParameter);
+				otsProduct = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
 			}catch(NoResultException e) {
 				return null;
 			}
@@ -645,58 +647,44 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		return productDetailsBOResponse;
 	}
 	
-	//getting distributor products by subCategory for pagination
-	@Override
-	public ProductDetailsBOResponse getProductsByDistributerPagination(GetProductsByDistributerPaginationRequest getProductsByDistributerPagination) {
+	//getting distributor products by All,Category,SubCategory for pagination
+	@Override 
+	public ProductDetailsBOResponse getProductsByDistributorPagination(GetProductsByDistributorPaginationRequest getProductsByDistributorPagination) {
 	    ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
 	    List<ProductDetails> productList = new ArrayList<>();
 
 	    try {
-	        // Extract and parse input parameters
-	        String distributorId = getProductsByDistributerPagination.getRequest().getDistributerId();
-	        int pageNumber = Integer.parseInt(getProductsByDistributerPagination.getRequest().getPageNumber());
-	        int dataSize = Integer.parseInt(getProductsByDistributerPagination.getRequest().getDataSize());
-	        String productCountryCode = getProductsByDistributerPagination.getRequest().getProductCountryCode();
-
-	        // Prepare input map
+	    	//To set default value as "1" for key "all"
+			if(getProductsByDistributorPagination.getRequest().getSearchKey().equalsIgnoreCase("all")) {
+				getProductsByDistributorPagination.getRequest().setSearchValue("1");
+			}
+			
+	        // Prepare input parameters
 	        Map<String, Object> inParamMap = new HashMap<>();
-	        inParamMap.put("distributor_id", UUID.fromString(distributorId));
-	        inParamMap.put("page_number", pageNumber);
-	        inParamMap.put("data_size", dataSize);
-	        inParamMap.put("product_country_code", productCountryCode);
+	        inParamMap.put("search_key", getProductsByDistributorPagination.getRequest().getSearchKey());
+	        inParamMap.put("search_value", getProductsByDistributorPagination.getRequest().getSearchValue());
+	        inParamMap.put("distributor_id", UUID.fromString(getProductsByDistributorPagination.getRequest().getDistributorId()));
+	        inParamMap.put("page_number", Integer.parseInt(getProductsByDistributorPagination.getRequest().getPageNumber()));
+	        inParamMap.put("data_size", Integer.parseInt(getProductsByDistributorPagination.getRequest().getDataSize()));
+	        inParamMap.put("product_country_code", getProductsByDistributorPagination.getRequest().getProductCountryCode());
+	        
+	        // Call the function
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("get_products_by_distributor_pagination")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+			
+			//setting up the data type for the JDBC call
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("search_key", Types.VARCHAR));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("search_value", Types.VARCHAR));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("distributor_id", Types.OTHER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("page_number", Types.INTEGER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("data_size", Types.INTEGER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_country_code", Types.VARCHAR));
 
-	        SimpleJdbcCall simpleJdbcCall;    	
-			//To get All the products by distributor
-			if(getProductsByDistributerPagination.getRequest().getSubCategoryId()== null || getProductsByDistributerPagination.getRequest().getSubCategoryId().equals("")) {
-	            simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	                .withSchemaName("public")
-	                .withFunctionName("get_products_by_distributor_pagination")
-	                .withoutProcedureColumnMetaDataAccess()
-	                .declareParameters(
-	                    new SqlParameter("distributor_id", Types.OTHER),
-	                    new SqlParameter("page_number", Types.INTEGER),
-	                    new SqlParameter("data_size", Types.INTEGER),
-	                    new SqlParameter("product_country_code", Types.VARCHAR)
-	                );
-	        } else {
-	        	//To get All the Products under Sub Category by distributor
-	            inParamMap.put("subcategory_id", UUID.fromString(getProductsByDistributerPagination.getRequest().getSubCategoryId()));
-	            simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	                .withSchemaName("public")
-	                .withFunctionName("get_products_by_subcat_and_distributor_pagination")
-	                .withoutProcedureColumnMetaDataAccess()
-	                .declareParameters(
-	                    new SqlParameter("distributor_id", Types.OTHER),
-	                    new SqlParameter("subcategory_id", Types.OTHER),
-	                    new SqlParameter("page_number", Types.INTEGER),
-	                    new SqlParameter("data_size", Types.INTEGER),
-	                    new SqlParameter("product_country_code", Types.VARCHAR)
-	                );
-	        }
-
-	        // Execute the function
 	        Map<String, Object> result = simpleJdbcCall.execute(inParamMap);
 
+	        // Extract result from result-set-1
 	        List<Map<String, Object>> resultSet = (List<Map<String, Object>>) result.get("#result-set-1");
 
 	        if (resultSet == null || resultSet.isEmpty() || resultSet.get(0).get("result") == null) {
@@ -710,14 +698,13 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        ObjectMapper objectMapper = new ObjectMapper();
 	        JsonNode rootNode = objectMapper.readTree(jsonResponse);
 
-	        // Set total count & pages
 	        productDetailsBOResponse.setTotalProductsCount(rootNode.get("totalProductsCount").asText());
 	        productDetailsBOResponse.setTotalPages(rootNode.get("totalPages").asText());
 
-	        // Parse product list
 	        JsonNode productDetailsNode = rootNode.get("productDetails");
 	        if (productDetailsNode != null && productDetailsNode.isArray()) {
 	            for (JsonNode productNode : productDetailsNode) {
+	                // Convert each JsonNode to Map<String, Object>
 	                Map<String, Object> productMap = objectMapper.convertValue(productNode, new TypeReference<Map<String, Object>>() {});
 	                productList.add(convertProductDetailsFromProcedureToDomain(productMap));
 	            }
@@ -730,7 +717,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
-		}
+		}	
 	    return productDetailsBOResponse;
 	}
 	
@@ -896,6 +883,158 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productDetails.setOtsNutritionalBrandOwnerFSSAILicenseNo(out.get("ots_nutritional_brand_owner_fssai_license_no")==null?"":out.get("ots_nutritional_brand_owner_fssai_license_no").toString());	
 			productDetails.setOtsNutritionalOtherFSSAILicenseNo(out.get("ots_nutritional_other_fssai_license_no")==null?"":out.get("ots_nutritional_other_fssai_license_no").toString());
 			productDetails.setOtsNutritionalImporterFSSAILicenseNo(out.get("ots_nutritional_importer_fssai_license_no")==null?"":out.get("ots_nutritional_importer_fssai_license_no").toString());
+			productDetails.setOtsProductSellerType(out.get("ots_product_seller_type")==null?"":out.get("ots_product_seller_type").toString());
+			
+			//To fetch Distributor Details, Average Rating, Product Stock & Attributes Only for Products & Variants
+			if(productDetails.getProductLevel().equalsIgnoreCase("3") || productDetails.getProductLevel().equalsIgnoreCase("4")) {
+				//setting Distributor Details only for Product & Variants
+				UserDetails distributorDetails = userServiceDAO.getUserDetails(productDetails.getDistributorId());
+				productDetails.setDistributerName(distributorDetails == null?"":distributorDetails.getFirstName()+" "+distributorDetails.getLastName());
+				productDetails.setDistributorEmailId(distributorDetails == null?"":distributorDetails.getEmailId());
+				
+				//setting Average Rating & Total Rating Count for Products
+				AverageReviewRatingResponse averageReviewRatingResponse = otsUserService.getAverageRatingOfProduct(productDetails.getProductId());
+				productDetails.setProductAverageRating(averageReviewRatingResponse== null?"":averageReviewRatingResponse.getAverageReviewRating().getAverageRating().toString());
+				productDetails.setProductTotalRatingCount(averageReviewRatingResponse== null?"":averageReviewRatingResponse.getAverageReviewRating().getTotalReviewRating().toString());
+			
+				//setting Product Stock Quantity for Products
+				List<GetProductBOStockResponse> productStock = productStockDao.getProductStockByProductId(productDetails.getProductId());
+				productDetails.setProductStockQuantity(productStock.size() == 0? "": productStock.get(0).getStockQuantity());
+				
+				//setting Attributes for Products
+				List<AttributeDetails> productAttribute = getProductAttribute(productDetails.getProductId());
+				productDetails.setProductAttribute(productAttribute);
+			}
+			
+			//setting category Id and name  for product in domain
+			CategoryDetails category = getCategoryForProductId(productDetails.getProductId());
+			productDetails.setCategoryId(category == null?"":category.getCategoryId().toString());	
+			productDetails.setCategoryName(category == null?"":category.getCategoryName().toString());
+			
+			//setting Sub-category Id and name  for product in domain
+			SubCategoryDetails subcategory = getSubCategoryForProductId(productDetails.getProductId());
+			productDetails.setSubCategoryId(subcategory == null?"":subcategory.getSubCategoryId().toString());	
+			productDetails.setSubCategoryName(subcategory == null?"":subcategory.getSubcategoryName().toString());
+		}catch(Exception e){
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+		}
+		return productDetails;
+	}
+	
+	private ProductDetails convertIntermediateStatusProductDetailsFromProcedureToDomain(Map<String, Object> out) {
+		ProductDetails productDetails = new ProductDetails();
+		try {
+			productDetails.setProductId(out.get("ots_product_id")==null?"":out.get("ots_product_id").toString());
+			productDetails.setProductName(out.get("ots_product_name")==null?"":out.get("ots_product_name").toString());
+			productDetails.setProductDescription(out.get("ots_product_description")==null?"":out.get("ots_product_description").toString());
+			productDetails.setProductDescriptionLong(out.get("ots_product_description_long")==null?"":out.get("ots_product_description_long").toString());
+			productDetails.setProductStatus(out.get("ots_product_status")==null?"":out.get("ots_product_status").toString());
+			productDetails.setProductLevel(out.get("ots_product_level_id")==null?"":out.get("ots_product_level_id").toString());
+			productDetails.setProductHsnSac(out.get("ots_product_hsn_sac")==null?"":out.get("ots_product_hsn_sac").toString());
+			
+			//Setting Empty String "" for Status 1 & for other status will fetch the existing data's
+			if(productDetails.getProductStatus().equalsIgnoreCase("1")) {
+				productDetails.setProductSellerPrice("");
+				productDetails.setProductBasePrice("");
+				productDetails.setProductPrice("");
+				productDetails.setProductDiscountPrice("");
+				productDetails.setProductDiscountPercentage("");
+				productDetails.setGst("");
+				productDetails.setGstPrice("");
+				productDetails.setProductFinalPrice("");
+				productDetails.setProductDeliveryCharge("");
+				productDetails.setProductReturnDeliveryCharge("");
+			}else {
+				productDetails.setProductSellerPrice(out.get("ots_product_seller_price")==null?"":out.get("ots_product_seller_price").toString());
+				productDetails.setProductBasePrice(out.get("ots_product_base_price")==null?"":out.get("ots_product_base_price").toString());
+				productDetails.setProductPrice(out.get("ots_product_price")==null?"":out.get("ots_product_price").toString());
+				productDetails.setProductDiscountPrice(out.get("ots_product_discount_price")==null?"":out.get("ots_product_discount_price").toString());
+				productDetails.setProductDiscountPercentage(out.get("ots_product_discount_percentage")==null?"":out.get("ots_product_discount_percentage").toString());
+				productDetails.setGst(out.get("ots_product_gst")==null?"":out.get("ots_product_gst").toString());
+				productDetails.setGstPrice(out.get("ots_product_gst_price")==null?"":out.get("ots_product_gst_price").toString());
+				productDetails.setProductFinalPrice(out.get("ots_product_final_price_with_gst")==null?"":out.get("ots_product_final_price_with_gst").toString());
+				productDetails.setProductDeliveryCharge(out.get("ots_product_delivery_charge")==null?"":out.get("ots_product_delivery_charge").toString());
+				productDetails.setProductReturnDeliveryCharge(out.get("ots_product_return_delivery_charge")==null?"":out.get("ots_product_return_delivery_charge").toString());
+			}
+			
+			//Setting Empty String "" for Status (1,2) & for other status will fetch the existing data's
+			if(productDetails.getProductStatus().equalsIgnoreCase("1") || productDetails.getProductStatus().equalsIgnoreCase("2")) {
+				productDetails.setProductDeliveryPolicy("");
+				productDetails.setProductCancellationAvailability("");
+				productDetails.setProductCancellationPolicy("");	
+				productDetails.setProductReplacementAvailability("");
+				productDetails.setProductReplacementPolicy("");
+				productDetails.setProductReplacementDays("");
+				productDetails.setProductReturnAvailability("");
+				productDetails.setProductReturnPolicy("");
+				productDetails.setProductReturnDays("");
+				productDetails.setOtsTimeToShip("");
+				productDetails.setOtsTimeToDeliver("");
+				productDetails.setOtsSellerPickupReturn("");
+				productDetails.setOtsCodAvailability("");
+			}else {
+				productDetails.setProductDeliveryPolicy(out.get("ots_product_delivery_policy")==null?"":out.get("ots_product_delivery_policy").toString());
+				productDetails.setProductCancellationAvailability(out.get("ots_product_cancellation_availability")==null?"":out.get("ots_product_cancellation_availability").toString());
+				productDetails.setProductCancellationPolicy(out.get("ots_product_cancellation_policy")==null?"":out.get("ots_product_cancellation_policy").toString());	
+				productDetails.setProductReplacementAvailability(out.get("ots_product_replacement_availability")==null?null:out.get("ots_product_replacement_availability").toString());
+				productDetails.setProductReplacementPolicy(out.get("ots_product_replacement_policy")==null?"":out.get("ots_product_replacement_policy").toString());
+				productDetails.setProductReplacementDays(out.get("ots_product_replacement_days")==null?"":out.get("ots_product_replacement_days").toString());
+				productDetails.setProductReturnAvailability(out.get("ots_product_return_availability")==null?null:out.get("ots_product_return_availability").toString());
+				productDetails.setProductReturnPolicy(out.get("ots_product_return_policy")==null?"":out.get("ots_product_return_policy").toString());
+				productDetails.setProductReturnDays(out.get("ots_product_return_days")==null?"":out.get("ots_product_return_days").toString());
+				productDetails.setOtsTimeToShip(out.get("ots_time_to_ship")==null?"":out.get("ots_time_to_ship").toString());
+				productDetails.setOtsTimeToDeliver(out.get("ots_time_to_deliver")==null?"":out.get("ots_time_to_deliver").toString());
+				productDetails.setOtsSellerPickupReturn(out.get("ots_seller_pickup_return")==null?"":out.get("ots_seller_pickup_return").toString());
+				productDetails.setOtsCodAvailability(out.get("ots_cod_availability")==null?"":out.get("ots_cod_availability").toString());
+			}
+
+			productDetails.setProductImage(out.get("ots_product_image")==null?"":out.get("ots_product_image").toString());
+			productDetails.setDistributorId(out.get("ots_distributor_id")==null?null:out.get("ots_distributor_id").toString());
+			productDetails.setMultiProductImage1(out.get("ots_multi_product_image1")==null?"":out.get("ots_multi_product_image1").toString());
+			productDetails.setMultiProductImage2(out.get("ots_multi_product_image2")==null?"":out.get("ots_multi_product_image2").toString());
+			productDetails.setMultiProductImage3(out.get("ots_multi_product_image3")==null?"":out.get("ots_multi_product_image3").toString());
+			productDetails.setMultiProductImage4(out.get("ots_multi_product_image4")==null?"":out.get("ots_multi_product_image4").toString());
+			productDetails.setMultiProductImage5(out.get("ots_multi_product_image5")==null?"":out.get("ots_multi_product_image5").toString());
+			productDetails.setMultiProductImage6(out.get("ots_multi_product_image6")==null?"":out.get("ots_multi_product_image6").toString());
+			productDetails.setMultiProductImage7(out.get("ots_multi_product_image7")==null?"":out.get("ots_multi_product_image7").toString());
+			productDetails.setMultiProductImage8(out.get("ots_multi_product_image8")==null?"":out.get("ots_multi_product_image8").toString());
+			productDetails.setMultiProductImage9(out.get("ots_multi_product_image9")==null?"":out.get("ots_multi_product_image9").toString());
+			productDetails.setMultiProductImage10(out.get("ots_multi_product_image10")==null?"":out.get("ots_multi_product_image10").toString());
+			productDetails.setCreatedUser(out.get("created_user")==null?"":out.get("created_user").toString());	
+			productDetails.setProductTag(out.get("ots_product_tag")==null?"":out.get("ots_product_tag").toString());
+			productDetails.setUnitOfMeasurement(out.get("unit_of_measurement")==null?"":out.get("unit_of_measurement").toString());
+			productDetails.setProductNetQuantity(out.get("ots_net_quantity")==null?"":out.get("ots_net_quantity").toString());
+			productDetails.setOtsProductCountry(out.get("ots_product_country")==null?"":out.get("ots_product_country").toString());
+			productDetails.setOtsProductCountryCode(out.get("ots_product_country_code")==null?"":out.get("ots_product_country_code").toString());
+			productDetails.setOtsProductCurrency(out.get("ots_product_currency")==null?"":out.get("ots_product_currency").toString());
+			productDetails.setOtsProductCurrencySymbol(out.get("ots_product_currency_symbol")==null?"":out.get("ots_product_currency_symbol").toString());
+			productDetails.setOtsOemModelNumber(out.get("ots_oem_model_number")==null?"":out.get("ots_oem_model_number").toString());
+			productDetails.setOtsOemPartNumber(out.get("ots_oem_part_number")==null?"":out.get("ots_oem_part_number").toString());
+			productDetails.setOtsOemShortDescription(out.get("ots_oem_short_description")==null?"":out.get("ots_oem_short_description").toString());
+			productDetails.setOtsOemLongDescription(out.get("ots_oem_long_description")==null?"":out.get("ots_oem_long_description").toString());
+			productDetails.setOtsOemUom(out.get("ots_oem_uom")==null?"":out.get("ots_oem_uom").toString());
+			productDetails.setOtsVendorItemCode(out.get("ots_vendor_item_code")==null?"":out.get("ots_vendor_item_code").toString());
+			productDetails.setOtsProductDetailsPdf(out.get("ots_product_details_pdf")==null?"":out.get("ots_product_details_pdf").toString());		
+			productDetails.setVariantFlag(out.get("variant_flag")==null?"":out.get("variant_flag").toString());
+			productDetails.setOtsProductTagValue(out.get("ots_product_tag_value")==null?"":out.get("ots_product_tag_value").toString());
+			productDetails.setOtsManufacturerName(out.get("ots_manufacturer_name")==null?"":out.get("ots_manufacturer_name").toString());
+			productDetails.setOtsManufacturerAddress(out.get("ots_manufacturer_address")==null?"":out.get("ots_manufacturer_address").toString());
+			productDetails.setOtsManufacturerGenericName(out.get("ots_manufacturer_generic_name")==null?"":out.get("ots_manufacturer_generic_name").toString());
+			productDetails.setOtsManufacturerPackingImport(out.get("ots_manufacturer_packing_import")==null?"":out.get("ots_manufacturer_packing_import").toString());
+			productDetails.setOtsConsumerCareName(out.get("ots_consumer_care_name")==null?"":out.get("ots_consumer_care_name").toString());
+			productDetails.setOtsConsumerCareEmail(out.get("ots_consumer_care_email")==null?"":out.get("ots_consumer_care_email").toString());
+			productDetails.setOtsConsumerCarePhoneNumber(out.get("ots_consumer_care_phone_number")==null?"":out.get("ots_consumer_care_phone_number").toString());
+			productDetails.setOriginCountry(out.get("origin_country")==null?"":out.get("origin_country").toString());
+			productDetails.setOtsNutritionalFlag(out.get("ots_nutritional_flag")==null?"":out.get("ots_nutritional_flag").toString());
+			productDetails.setOtsNutritionalInfo(out.get("ots_nutritional_info")==null?"":out.get("ots_nutritional_info").toString());
+			productDetails.setOtsNutritionalAdditivesInfo(out.get("ots_nutritional_additives_info")==null?"":out.get("ots_nutritional_additives_info").toString());
+			productDetails.setOtsNutritionalBrandOwnerFSSAILicenseNo(out.get("ots_nutritional_brand_owner_fssai_license_no")==null?"":out.get("ots_nutritional_brand_owner_fssai_license_no").toString());	
+			productDetails.setOtsNutritionalOtherFSSAILicenseNo(out.get("ots_nutritional_other_fssai_license_no")==null?"":out.get("ots_nutritional_other_fssai_license_no").toString());
+			productDetails.setOtsNutritionalImporterFSSAILicenseNo(out.get("ots_nutritional_importer_fssai_license_no")==null?"":out.get("ots_nutritional_importer_fssai_license_no").toString());
 
 			//To fetch Distributor Details, Average Rating, Product Stock & Attributes Only for Products & Variants
 			if(productDetails.getProductLevel().equalsIgnoreCase("3") || productDetails.getProductLevel().equalsIgnoreCase("4")) {
@@ -951,6 +1090,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			inParamMap.put("search_key", getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey());
 			inParamMap.put("search_value", getCategorySubCategoryByDistributorRequest.getRequest().getSearchValue());
 			inParamMap.put("distributor_id",UUID.fromString(getCategorySubCategoryByDistributorRequest.getRequest().getDistributorId()));
+			inParamMap.put("product_country_code", getCategorySubCategoryByDistributorRequest.getRequest().getCountryCode());
 
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_category_and_subcategory_by_distributor")
@@ -961,6 +1101,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("search_key", Types.VARCHAR));
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("search_value", Types.VARCHAR));
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("distributor_id", Types.OTHER));
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_country_code", Types.VARCHAR));
 
 			//calling stored procedure and getting response
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(inParamMap);
@@ -1716,8 +1857,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsProductDescription(addProductDetails.getProductDescription());
 				otsProduct.setOtsProductDescriptionLong(addProductDetails.getProductDescriptionLong());
 				otsProduct.setOtsProductStatus(addProductDetails.getProductStatus());
-				otsProduct.setUnitOfMeasurement(addProductDetails.getUnitOfMeasurement());
 				otsProduct.setOtsProductHsnSac(addProductDetails.getProductHsnSac());
+				otsProduct.setUnitOfMeasurement(addProductDetails.getUnitOfMeasurement());
+				otsProduct.setOtsNetQuantity(addProductDetails.getNetQuantity());
 				otsProduct.setOtsProductImage(getValueOrNull(addProductDetails.getProductImage()));
 				otsProduct.setOtsMultiProductImage1(getValueOrNull(addProductDetails.getMultiProductImage1()));
 				otsProduct.setOtsMultiProductImage2(getValueOrNull(addProductDetails.getMultiProductImage2()));
@@ -1734,6 +1876,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsProductCurrency(getValueOrNull(addProductDetails.getOtsProductCurrency()));
 				otsProduct.setOtsProductCurrencySymbol(getValueOrNull(addProductDetails.getOtsProductCurrencySymbol()));
 				otsProduct.setOtsProductDetailsPdf(getValueOrNull(addProductDetails.getOtsProductDetailsPdf()));
+				otsProduct.setOtsProductSellerType(getValueOrNull(addProductDetails.getOtsProductSellerType()));
 				
 				save(otsProduct);
 				System.out.println(otsProduct);
@@ -1767,6 +1910,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsProductDescriptionLong(addProductDetails.getProductDescriptionLong());
 				otsProduct.setOtsProductHsnSac(addProductDetails.getProductHsnSac());
 				otsProduct.setUnitOfMeasurement(addProductDetails.getUnitOfMeasurement());
+				otsProduct.setOtsNetQuantity(addProductDetails.getNetQuantity());
 				otsProduct.setOtsProductImage(getValueOrNull(addProductDetails.getProductImage()));
 				otsProduct.setOtsMultiProductImage1(getValueOrNull(addProductDetails.getMultiProductImage1()));
 				otsProduct.setOtsMultiProductImage2(getValueOrNull(addProductDetails.getMultiProductImage2()));
@@ -1778,7 +1922,8 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsMultiProductImage8(getValueOrNull(addProductDetails.getMultiProductImage8()));
 				otsProduct.setOtsMultiProductImage9(getValueOrNull(addProductDetails.getMultiProductImage9()));
 				otsProduct.setOtsMultiProductImage10(getValueOrNull(addProductDetails.getMultiProductImage10()));
-				otsProduct.setOtsProductDetailsPdf(addProductDetails.getOtsProductDetailsPdf());
+				otsProduct.setOtsProductDetailsPdf(getValueOrNull(addProductDetails.getOtsProductDetailsPdf()));
+				otsProduct.setOtsProductSellerType(getValueOrNull(addProductDetails.getOtsProductSellerType()));
 				save(otsProduct);
 				System.out.println(otsProduct);
 				return otsProduct.getOtsProductId().toString();
@@ -2128,7 +2273,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 			//to convert procedure output into product details object
 			for(int i=0; i<out.size(); i++) {
-				productList.add(convertProductDetailsFromProcedureToDomain(out.get(i)));
+				productList.add(convertIntermediateStatusProductDetailsFromProcedureToDomain(out.get(i)));
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
@@ -2211,6 +2356,121 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				productDetails = productList.stream().map(this::convertProductDetailsFromEntityToDomain)
 						.collect(Collectors.toList());
 			}
+			return productDetails;
+		}catch(Exception e){
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public ProductDetails addVarientProduct(AddVariantProductRequest addVariantProductRequest) {
+		try {
+			Map<String, Object> queryParameter = new HashMap<>();
+			queryParameter.put("otsProductId", UUID.fromString(addVariantProductRequest.getRequest().getProductId()));
+			
+			OtsProduct oldProduct;
+			try {
+				oldProduct = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
+			}catch (NoResultException e) {
+				return null;
+			}
+											
+			//To generate random
+			SecureRandom secureRandom = new SecureRandom();
+			int eightDigitNumber = 10000000 + secureRandom.nextInt(90000000); // Ensures the number is 8 digits
+			UUID uuid = UUID.randomUUID();
+			
+			OtsProduct newProduct = new OtsProduct();
+			newProduct.setOtsProductId(uuid);
+			
+			//Setting Product Level ID for Product
+			OtsProductLevel productLevel = new OtsProductLevel();
+			productLevel.setOtsProductLevelId(Integer.parseInt("4"));
+			newProduct.setOtsProductLevelId(productLevel);
+						
+			newProduct.setOtsProductNumber(productNoFormat+eightDigitNumber);
+			newProduct.setOtsProductName(addVariantProductRequest.getRequest().getProductName());
+			newProduct.setOtsProductDescription(oldProduct.getOtsProductDescription());
+			newProduct.setOtsProductDescriptionLong(oldProduct.getOtsProductDescriptionLong());
+			newProduct.setOtsProductStatus("active");
+			newProduct.setOtsProductHsnSac(oldProduct.getOtsProductHsnSac());
+			newProduct.setUnitOfMeasurement(oldProduct.getUnitOfMeasurement());
+			newProduct.setOtsNetQuantity(oldProduct.getOtsNetQuantity());
+			newProduct.setOtsProductImage(getValueOrNull(addVariantProductRequest.getRequest().getProductImage()));
+			newProduct.setOtsMultiProductImage1(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage1()));
+			newProduct.setOtsMultiProductImage2(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage2()));
+			newProduct.setOtsMultiProductImage3(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage3()));
+			newProduct.setOtsMultiProductImage4(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage4()));
+			newProduct.setOtsMultiProductImage5(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage5()));
+			newProduct.setOtsMultiProductImage6(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage6()));
+			newProduct.setOtsMultiProductImage7(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage7()));
+			newProduct.setOtsMultiProductImage8(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage8()));
+			newProduct.setOtsMultiProductImage9(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage9()));
+			newProduct.setOtsMultiProductImage10(getValueOrNull(addVariantProductRequest.getRequest().getMultiProductImage10()));
+			newProduct.setOtsProductSellerPrice(addVariantProductRequest.getRequest().getProductSellerPrice());
+			newProduct.setOtsProductBasePrice(getBigDecimalOrNull(addVariantProductRequest.getRequest().getProductBasePrice()));
+			newProduct.setOtsProductPrice(getBigDecimalOrNull(addVariantProductRequest.getRequest().getProductPrice()));
+			newProduct.setOtsProductDiscountPercentage(addVariantProductRequest.getRequest().getProductDiscountPercentage());	
+			newProduct.setOtsProductDiscountPrice(addVariantProductRequest.getRequest().getProductDiscountPrice());	
+			newProduct.setOtsProductGst(addVariantProductRequest.getRequest().getGst());
+			newProduct.setOtsProductGstPrice(addVariantProductRequest.getRequest().getGstPrice().toString());
+			newProduct.setOtsProductFinalPriceWithGst(addVariantProductRequest.getRequest().getProductFinalPriceWithGst());
+			newProduct.setOtsProductDeliveryCharge(addVariantProductRequest.getRequest().getProductDeliveryCharge());
+			newProduct.setOtsProductReturnDeliveryCharge(Integer.parseInt(addVariantProductRequest.getRequest().getProductReturnDeliveryCharge()));	
+			newProduct.setOtsProductCountry(oldProduct.getOtsProductCountry());
+			newProduct.setOtsProductCountryCode(oldProduct.getOtsProductCountryCode());
+			newProduct.setOtsProductCurrency(oldProduct.getOtsProductCurrency());
+			newProduct.setOtsProductCurrencySymbol(oldProduct.getOtsProductCurrencySymbol());
+			newProduct.setOtsDistributorId(oldProduct.getOtsDistributorId());		
+			newProduct.setCreatedUser(oldProduct.getCreatedUser());
+			newProduct.setOtsProductBulkEligible(oldProduct.getOtsProductBulkEligible());
+			newProduct.setOtsProductBulkMinQty(oldProduct.getOtsProductBulkMinQty());
+			newProduct.setOtsProductDeliveryPolicy(oldProduct.getOtsProductDeliveryPolicy());
+			newProduct.setOtsProductCancellationAvailability(new Boolean(oldProduct.getOtsProductCancellationAvailability()));
+			newProduct.setOtsProductCancellationPolicy(oldProduct.getOtsProductCancellationPolicy());
+			newProduct.setOtsProductReplacementAvailability(new Boolean(oldProduct.getOtsProductReplacementAvailability()));
+			newProduct.setOtsProductReplacementPolicy(oldProduct.getOtsProductReplacementPolicy());
+			newProduct.setOtsProductReplacementDays(oldProduct.getOtsProductReplacementDays());
+			newProduct.setOtsProductReturnAvailability(new Boolean(oldProduct.getOtsProductReturnAvailability()));
+			newProduct.setOtsProductReturnPolicy(oldProduct.getOtsProductReturnPolicy());
+			newProduct.setOtsProductReturnDays(oldProduct.getOtsProductReturnDays());
+			newProduct.setBulkAvailability(oldProduct.getBulkAvailability());
+			newProduct.setOtsProductTag(oldProduct.getOtsProductTag());
+			newProduct.setVariantFlag(oldProduct.getVariantFlag());
+			newProduct.setOtsProductTagValue(oldProduct.getOtsProductTagValue());
+			newProduct.setOtsManufacturerName(oldProduct.getOtsManufacturerName());
+			newProduct.setOtsManufacturerAddress(oldProduct.getOtsManufacturerAddress());
+			newProduct.setOtsManufacturerGenericName(oldProduct.getOtsManufacturerGenericName());
+			newProduct.setOtsManufacturerPackingImport(oldProduct.getOtsManufacturerPackingImport());
+			newProduct.setOtsConsumerCareName(oldProduct.getOtsConsumerCareName());
+			newProduct.setOtsConsumerCareEmail(oldProduct.getOtsConsumerCareEmail());
+			newProduct.setOtsConsumerCarePhoneNumber(oldProduct.getOtsConsumerCarePhoneNumber());
+			newProduct.setOriginCountry(oldProduct.getOriginCountry());
+			newProduct.setOtsTimeToShip(oldProduct.getOtsTimeToShip());
+			newProduct.setOtsTimeToDeliver(oldProduct.getOtsTimeToDeliver());
+			newProduct.setOtsSellerPickupReturn(oldProduct.getOtsSellerPickupReturn());
+			newProduct.setOtsCodAvailability(oldProduct.getOtsCodAvailability());
+			newProduct.setOtsNutritionalFlag(oldProduct.getOtsNutritionalFlag());
+			newProduct.setOtsNutritionalInfo(oldProduct.getOtsNutritionalInfo());
+			newProduct.setOtsNutritionalAdditivesInfo(oldProduct.getOtsNutritionalAdditivesInfo());
+			newProduct.setOtsNutritionalBrandOwnerFSSAILicenseNo(oldProduct.getOtsNutritionalBrandOwnerFSSAILicenseNo());
+			newProduct.setOtsNutritionalOtherFSSAILicenseNo(oldProduct.getOtsNutritionalOtherFSSAILicenseNo());
+			newProduct.setOtsNutritionalImporterFSSAILicenseNo(oldProduct.getOtsNutritionalImporterFSSAILicenseNo());
+			newProduct.setOtsOemModelNumber(oldProduct.getOtsOemModelNumber());
+			newProduct.setOtsOemPartNumber(oldProduct.getOtsOemPartNumber());
+			newProduct.setOtsOemShortDescription(oldProduct.getOtsOemShortDescription());
+			newProduct.setOtsOemLongDescription(oldProduct.getOtsOemLongDescription());
+			newProduct.setOtsOemUom(oldProduct.getOtsOemUom());
+			newProduct.setOtsVendorItemCode(oldProduct.getOtsVendorItemCode());
+			newProduct.setOtsProductDetailsPdf(oldProduct.getOtsProductDetailsPdf());
+			newProduct.setOtsProductSellerType(oldProduct.getOtsProductSellerType());
+			
+			save(newProduct);
+			ProductDetails productDetails = convertProductDetailsFromEntityToDomain(newProduct);
 			return productDetails;
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());

@@ -134,7 +134,7 @@ public class CartDAOImpl extends AbstractIptDao<OtsCart, String> implements Cart
 				return "Product Removed Successfully";
 			}
 		}catch(Exception e) {
-        	logger.error("Exception while fetching data from DB :"+e.getMessage());
+			e.printStackTrace();
 			return "No Data Found";
 		}
 	}

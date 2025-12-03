@@ -60,7 +60,6 @@ public interface OTSOrderService {
 	List<List<String>> getOrderDetailsForInvoice(String orderId);
 	List<List<String>> getDistributorForOrderInvoice(String orderId);
 	OrderProductBOResponse getOrdersByStatus(String orderStatus);
-	String generateOrderInvoicePdf(String orderId, String customerId);
 	List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String subOrderStatus);
 	String updateRRCOrderStatus(UpdateRRCStatusRequest updateRRCStatusRequest);
 	boolean checkForOrderClosed(String orderId);
@@ -90,6 +89,9 @@ public interface OTSOrderService {
 	String updateOrderProductStatus(UpdateOrderProductStatusRequest updateOrderProductStatusRequest);
 	List<String> getPaymentPendingOrdersBeforeCurrentDate();
 	String autoCancelOrderByCustomer();
+	List<List<String>> getDistributorPaymentDetailsForProformaInvoice(String distributorId);
+	List<List<String>> getOrderDetailsForProformaInvoice(String orderId);
+	String generateProformaOrderInvoicePdf(String orderId, String distributorId);
 	
 	
 }

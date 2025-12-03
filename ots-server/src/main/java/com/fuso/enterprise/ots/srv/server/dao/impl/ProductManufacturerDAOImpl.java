@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +43,8 @@ public class ProductManufacturerDAOImpl extends AbstractIptDao<OtsProductManufac
 
 				OtsProductManufacturer manufacturer = new OtsProductManufacturer();
 				manufacturer.setOtsProductManufacturerName(addProductManufacturerRequest.getRequest().getManufacturerName());
-				save(manufacturer);	
+				super.getEntityManager().persist(manufacturer);	
+				super.getEntityManager().flush();
 				
 				return "Inserted Successfully";
 			
@@ -49,24 +53,25 @@ public class ProductManufacturerDAOImpl extends AbstractIptDao<OtsProductManufac
 				OtsProductManufacturer manufacturer = new OtsProductManufacturer();
 				Map<String, Object> queryParameter = new HashMap<>();
 				queryParameter.put("otsProductManufacturerId",(Integer.valueOf(addProductManufacturerRequest.getRequest().getManufacturerId())));
-	
 				try {
 					manufacturer = super.getResultByNamedQuery("OtsProductManufacturer.findById", queryParameter);
 				} catch (NoResultException e) {
 					return null;
 				}
 				manufacturer.setOtsProductManufacturerName(addProductManufacturerRequest.getRequest().getManufacturerName());
+			
+				super.getEntityManager().persist(manufacturer);	
+				super.getEntityManager().flush();
 				
-				save(manufacturer); 
 				return "Updated Successfully";
 			}
-		}catch(Exception e){
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
+		} catch (PersistenceException | ConstraintViolationException e) {
+			logger.error("Exception while fetching data from DB :" + e.getMessage());
+	        return "Manufacturer Name Already Exists";
+	    } catch (Exception e) {
+	    	logger.error("Exception while fetching data from DB :" + e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		}
+	    }
 	}
 		
 	@Override

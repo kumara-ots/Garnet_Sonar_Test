@@ -18,12 +18,13 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductAttributeMappin
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSellerForProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
@@ -72,7 +73,7 @@ public interface OTSProductService {
 
 	String getDeliveryChargeForProduct(String productId);
 
-	ProductDetailsBOResponse getProductsByDistributerPagination(GetProductsByDistributerPaginationRequest getProductsByDistributerPagination);
+	ProductDetailsBOResponse getProductsByDistributorPagination(GetProductsByDistributorPaginationRequest getProductsByDistributorPagination);
 
 	ProductDetailsBOResponse getAllProductsWithDiscount();
 
@@ -159,5 +160,7 @@ public interface OTSProductService {
 	String deleteManufacturerDetails(String productManufacturerId);
 
 	ProductManufacturersResponse getAllManufacturerDetails();
+
+	String addVarientProduct(AddVariantProductRequest addVariantProductRequest);
 
 }

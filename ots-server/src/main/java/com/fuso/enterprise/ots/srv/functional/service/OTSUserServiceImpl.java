@@ -2014,18 +2014,10 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	@Override
 	public List<SubadminDetailsModel> getApprovedSubAdmins() {
 	    List<SubadminDetailsModel> subadminDetailsModel = new ArrayList<>();
-
 	    try {
-	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	            .withFunctionName("get_approved_subadmins")
-	            .withSchemaName("public")
-	            .withoutProcedureColumnMetaDataAccess()
-	            .declareParameters(new SqlOutParameter("return", Types.OTHER));
+	        String sql = "SELECT * FROM public.get_approved_subadmins()";
 	        
-	        Map<String, Object> result = simpleJdbcCall.execute(new HashMap<>());
-
-	        // Extract result from result-set-1
-	        List<Map<String, Object>> resultSet = (List<Map<String, Object>>) result.get("#result-set-1");
+	        List<Map<String, Object>> resultSet = jdbcTemplate.queryForList(sql);
 
 	        if (resultSet == null || resultSet.isEmpty() || resultSet.get(0).get("result") == null) {
 	            return subadminDetailsModel;
@@ -2033,6 +2025,8 @@ public class OTSUserServiceImpl implements  OTSUserService{
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
 	        System.out.println("Parsed JSON Response: " + jsonResponse);
+	        
+	        logger.info("get_approved_subadmins procedure response ={}", jsonResponse);
 
 	        // Parse JSON
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -2067,7 +2061,7 @@ public class OTSUserServiceImpl implements  OTSUserService{
 			subadminDetailsModel.setFirstName(outputResult.get("first_name")==null?"":outputResult.get("first_name").toString());
 			subadminDetailsModel.setLastName(outputResult.get("last_name")==null?"":outputResult.get("last_name").toString());
 			subadminDetailsModel.setUserRole(outputResult.get("user_role")==null?"":outputResult.get("user_role").toString());
-			subadminDetailsModel.setAccountType(outputResult.get("account_type")==null?"":outputResult.get("acount_type").toString());
+			subadminDetailsModel.setAccountType(outputResult.get("account_type")==null?"":outputResult.get("account_type").toString());
 			subadminDetailsModel.setEmail(outputResult.get("email")==null?"":outputResult.get("email").toString());
 			subadminDetailsModel.setPhone(outputResult.get("phone")==null?"":outputResult.get("phone").toString());
 			subadminDetailsModel.setDateCreated(outputResult.get("date_created")==null?"":outputResult.get("date_created").toString());

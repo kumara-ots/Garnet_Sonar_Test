@@ -96,7 +96,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "OtsProduct.findByOtsOemShortDescription", query = "SELECT o FROM OtsProduct o WHERE o.otsOemShortDescription = :otsOemShortDescription"),
     @NamedQuery(name = "OtsProduct.findByOtsOemLongDescription", query = "SELECT o FROM OtsProduct o WHERE o.otsOemLongDescription = :otsOemLongDescription"),
     @NamedQuery(name = "OtsProduct.findByOtsOemUom", query = "SELECT o FROM OtsProduct o WHERE o.otsOemUom = :otsOemUom"),
-    @NamedQuery(name = "OtsProduct.findByOtsVendorItemCode", query = "SELECT o FROM OtsProduct o WHERE o.otsVendorItemCode = :otsVendorItemCode")
+    @NamedQuery(name = "OtsProduct.findByOtsVendorItemCode", query = "SELECT o FROM OtsProduct o WHERE o.otsVendorItemCode = :otsVendorItemCode"),
+    @NamedQuery(name = "OtsProduct.findByOtsProductSellerType", query = "SELECT o FROM OtsProduct o WHERE o.otsProductSellerType = :otsProductSellerType")
     })
 public class OtsProduct implements Serializable {
 
@@ -309,6 +310,8 @@ public class OtsProduct implements Serializable {
     private String otsVendorItemCode;
     @Column(name = "ots_product_details_pdf")
     private String otsProductDetailsPdf;
+    @Column(name = "ots_product_seller_type")
+    private String otsProductSellerType;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "otsProductId")
     private Collection<OtsCart> otsCartCollection;
@@ -966,6 +969,14 @@ public class OtsProduct implements Serializable {
 
 	public void setOtsProductDetailsPdf(String otsProductDetailsPdf) {
 		this.otsProductDetailsPdf = otsProductDetailsPdf;
+	}
+
+	public String getOtsProductSellerType() {
+		return otsProductSellerType;
+	}
+
+	public void setOtsProductSellerType(String otsProductSellerType) {
+		this.otsProductSellerType = otsProductSellerType;
 	}
 
 	@XmlTransient

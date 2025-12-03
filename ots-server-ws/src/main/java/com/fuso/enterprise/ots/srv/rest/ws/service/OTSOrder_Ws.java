@@ -298,4 +298,5 @@ public interface OTSOrder_Ws {
 	@ApiOperation(value = "autoCancelOrderByCustomer", notes = "To Auto Cancel Order when Order Payment Details not updated by Customer, within 3 days of order date", response = Response.class)
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response autoCancelOrderByCustomer();
+	
 }

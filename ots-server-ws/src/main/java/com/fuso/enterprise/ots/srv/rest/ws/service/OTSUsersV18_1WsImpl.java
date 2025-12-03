@@ -1316,11 +1316,11 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyPincode() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyPincode().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
+					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")) {
+//					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
 				return response = responseWrapper.buildResponse(400,"Please Enter Required Inputs");
 			}
 			String responseValue = otsUserService.addDistributorCompanyDetails(addDistributorCompanyDetailsRequest);
@@ -1351,11 +1351,11 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyPincode() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyPincode().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
-					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
+					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")) {
+//					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
+//					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
 				return response = responseWrapper.buildResponse(400,"Please Enter Required Inputs");
 			}
 			String responseValue = otsUserService.updateDistributorCompanyDetails(addDistributorCompanyDetailsRequest);

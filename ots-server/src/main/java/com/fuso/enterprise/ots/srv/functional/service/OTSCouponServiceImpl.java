@@ -25,11 +25,13 @@ import com.fuso.enterprise.ots.srv.server.dao.CouponOrderDAO;
 
 @Service
 @Transactional
-public class OTSCouponServiceImpl implements OTSCouponService 
-{
+public class OTSCouponServiceImpl implements OTSCouponService {
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private CouponDAO couponDAO;
 	private CouponOrderDAO couponOrderDAO;
 	

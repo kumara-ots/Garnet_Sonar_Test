@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -62,12 +64,13 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductAttributeMappin
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSellerForProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
@@ -351,8 +354,6 @@ public class OTSProductServiceImpl implements OTSProductService {
 			fileContent = FileUtils.readFileToByteArray(new File(path));
 			encodedString = Base64.encodeBase64String(fileContent);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error("Exception while fetching data to DB  :"+e.getMessage());
 		}
 		return encodedString;	
 	}
@@ -498,10 +499,10 @@ public class OTSProductServiceImpl implements OTSProductService {
 	}
 	
 	@Override
-	public ProductDetailsBOResponse getProductsByDistributerPagination(GetProductsByDistributerPaginationRequest getProductsByDistributerPagination) {
+	public ProductDetailsBOResponse getProductsByDistributorPagination(GetProductsByDistributorPaginationRequest getProductsByDistributorPagination) {
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
 		try {
-			productDetailsBOResponse = productServiceDAO.getProductsByDistributerPagination(getProductsByDistributerPagination);
+			productDetailsBOResponse = productServiceDAO.getProductsByDistributorPagination(getProductsByDistributorPagination);
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
@@ -1234,21 +1235,22 @@ public class OTSProductServiceImpl implements OTSProductService {
 
 	@Override
 	public String addOrUpdateProduct(AddOrUpdateProductRequest addOrUpdateProductRequest) {
+		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			String productId = null;	
 			if (addOrUpdateProductRequest.getRequest().getProductDetails() != null) {
 				
 				AddProductDetails productDetails = addOrUpdateProductRequest.getRequest().getProductDetails();
+				
+				//Mandatory Request fields for both Adding & Updating Product
 				if (productDetails.getProductName() == null || productDetails.getProductName().equalsIgnoreCase("")
 						|| productDetails.getProductLevelId() == null  || productDetails.getProductLevelId().equals("")
 						|| productDetails.getProductDescription() == null || productDetails.getProductDescription().equalsIgnoreCase("")
 						|| productDetails.getProductDescriptionLong() == null || productDetails.getProductDescriptionLong().equalsIgnoreCase("")
-						|| productDetails.getCreatedUser() == null || productDetails.getCreatedUser().equalsIgnoreCase("")
-						|| productDetails.getDistributorId() == null || productDetails.getDistributorId().equalsIgnoreCase("")
 						|| productDetails.getProductImage() == null || productDetails.getProductImage().equalsIgnoreCase("") 
-						|| productDetails.getProductStockQuantity() == null || productDetails.getProductStockQuantity().equalsIgnoreCase("")
+						|| productDetails.getProductHsnSac() == null || productDetails.getProductHsnSac().equalsIgnoreCase("") 
 						|| productDetails.getUnitOfMeasurement() == null || productDetails.getUnitOfMeasurement() .equalsIgnoreCase("")
-						|| productDetails.getProductSubCategoryId() == null || productDetails.getProductSubCategoryId().equalsIgnoreCase("")
+						|| productDetails.getNetQuantity() == null || productDetails.getNetQuantity().equalsIgnoreCase("") 
 						|| productDetails.getOtsProductDetailsPdf() == null || productDetails.getOtsProductDetailsPdf().equalsIgnoreCase("")
 						|| productDetails.getProductStatus() == null || productDetails.getProductStatus().equalsIgnoreCase("")) {
 					  return "Please Enter Required Inputs";
@@ -1277,12 +1279,16 @@ public class OTSProductServiceImpl implements OTSProductService {
 			        return "Invalid Input for ProductLevelId";
 			    } 
 				
-				//Validating Mandatory fields while Adding Product 
+				//Mandatory Request fields for Adding Product only
 				if (productDetails.getProductId() == null || productDetails.getProductId().isEmpty()) {
 					if (productDetails.getOtsProductCountry() == null || productDetails.getOtsProductCountry().equalsIgnoreCase("")
 							|| productDetails.getOtsProductCountryCode() == null  || productDetails.getOtsProductCountryCode().equals("")
 							|| productDetails.getOtsProductCurrencySymbol() == null || productDetails.getOtsProductCurrencySymbol().equalsIgnoreCase("")
-							|| productDetails.getOtsProductCurrency() == null || productDetails.getOtsProductCurrency().equalsIgnoreCase("")) {
+							|| productDetails.getOtsProductCurrency() == null || productDetails.getOtsProductCurrency().equalsIgnoreCase("")
+							|| productDetails.getCreatedUser() == null || productDetails.getCreatedUser().equalsIgnoreCase("")
+							|| productDetails.getDistributorId() == null || productDetails.getDistributorId().equalsIgnoreCase("")
+							|| productDetails.getProductSubCategoryId() == null || productDetails.getProductSubCategoryId().equalsIgnoreCase("")
+							|| productDetails.getProductStockQuantity() == null || productDetails.getProductStockQuantity().equalsIgnoreCase("")) {
 						 return "Please Enter Required Inputs";
 					}
 				}
@@ -1350,6 +1356,8 @@ public class OTSProductServiceImpl implements OTSProductService {
 			    
 				//To Add or Update Pricing Details For Product
 				productId = productServiceDAO.addProductPricingDetails(pricingDetails);
+				
+				return productId;	
 			}
 
 			//To Add or Update Policy For Product
@@ -1403,6 +1411,28 @@ public class OTSProductServiceImpl implements OTSProductService {
 				}
 				//To Add or Update Policy For Product
 				productId = productServiceDAO.addProductPolicyDetails(policyDetails);
+				
+				executor.submit(() -> {
+					// To Update Policy Details for Variants
+				    if(policyDetails.getProductStatus().equalsIgnoreCase("active")) {
+				    	//To get List of Variants for Parent Product
+				    	List<ProductDetails> variants = productServiceDAO.getVariantsByProductId(policyDetails.getProductId());
+					    // To Update Policy Details for Variants
+					    if (variants.size() >0) {		    
+						    //Update all the Variants
+					        for (ProductDetails variant : variants) {
+					        	//Setting Variant Product Id as request
+					        	policyDetails.setProductId(variant.getProductId());
+					            
+					            productServiceDAO.addProductPolicyDetails(policyDetails);
+					            
+					            logger.info("Variant Updated Successfully ={}", variant.getProductId());
+					        }
+					    }
+				    }
+				});
+				
+				return productId;	
 			}	
 				
 			//To Add Manufacturing Details for Product
@@ -1441,6 +1471,29 @@ public class OTSProductServiceImpl implements OTSProductService {
 			    
 			    //To Add or Update Manufacturing Details for Product
 			    productId = productServiceDAO.addProductManufactureDetails(manufactureDetails);
+			    
+			    executor.submit(() -> {
+				    // To Update Manufacturing Details for Variants
+				    if(manufactureDetails.getProductStatus().equalsIgnoreCase("active")) {
+				    	//To get List of Variants for Parent Product
+				    	List<ProductDetails> variants = productServiceDAO.getVariantsByProductId(manufactureDetails.getProductId());
+					    // To Update Manufacturing Details for Variants
+					    if (variants.size() >0) {		    
+						    //Update all the Variants
+					        for (ProductDetails variant : variants) {
+					        	
+					        	//Setting Variant Product Id as request
+					        	manufactureDetails.setProductId(variant.getProductId());
+					            
+					            productServiceDAO.addProductManufactureDetails(manufactureDetails);
+					            
+					            logger.info("Variant Updated Successfully ={}", variant.getProductId());
+					        }
+					    }
+				    }
+			    });
+			    
+			    return productId;	
 			}
 			
 			//To Add Attributes for Product
@@ -1461,6 +1514,8 @@ public class OTSProductServiceImpl implements OTSProductService {
 
 				return updateProductStatus.getProductId();
 			}
+			executor.shutdown();
+			
 			return productId;	
 		} catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
@@ -1617,7 +1672,8 @@ public class OTSProductServiceImpl implements OTSProductService {
 			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
-}
+	}
+	
 	@Override
 	public ProductManufacturersResponse getAllManufacturerDetails() {
 		ProductManufacturersResponse productManufacturerResponse = new ProductManufacturersResponse();
@@ -1633,6 +1689,45 @@ public class OTSProductServiceImpl implements OTSProductService {
 			throw new BusinessException(e.getMessage(), e);
 		}
 		return productManufacturerResponse;
+	}
+	
+	@Override
+	public String addVarientProduct(AddVariantProductRequest addVariantProductRequest) {
+		ProductDetails productDetails = new ProductDetails();
+		try {
+			//To Add Variant Product
+			productDetails = productServiceDAO.addVarientProduct(addVariantProductRequest);
+			if (productDetails == null) {
+				return null;
+			}
+			
+			//To Map Variant Product to Parent Product
+			ProductCategoryMapping mapping = new ProductCategoryMapping();
+			mapping.setOtsProductCategoryId(addVariantProductRequest.getRequest().getProductId());
+			mapping.setOtsProductId(productDetails.getProductId());
+			mapping.setCreatedUser(productDetails.getCreatedUser().toString());
+			productCategoryMappingDAO.addProductCategoryMapping(mapping);
+
+			// To Add Product Stock
+			AddProductStock addProductStock = new AddProductStock();
+			addProductStock.setProductId(productDetails.getProductId());
+			addProductStock.setProductStockQty(addVariantProductRequest.getRequest().getProductStockQuantity());
+			addProductStock.setProductStockStatus("active");
+			addProductStock.setUsersId(productDetails.getDistributorId().toString());
+			AddProductStockBORequest addProductStockBORequest = new AddProductStockBORequest();
+			addProductStockBORequest.setRequestData(addProductStock);
+
+			// Add Stock for Newly Added Product
+			addOrUpdateProductStock(addProductStockBORequest);
+
+			return productDetails.getProductId();
+		} catch (Exception e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
 	}
 	
 }

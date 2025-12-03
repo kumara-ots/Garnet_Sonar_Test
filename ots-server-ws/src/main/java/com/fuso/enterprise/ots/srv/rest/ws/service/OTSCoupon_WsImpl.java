@@ -1,6 +1,5 @@
 package com.fuso.enterprise.ots.srv.rest.ws.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,12 +15,13 @@ import com.fuso.enterprise.ots.srv.api.service.request.ActiveInActiveCouponReque
 import com.fuso.enterprise.ots.srv.api.service.request.AddCouponRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCouponBasedOnRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.UpdateCouponRequest;
-import com.fuso.enterprise.ots.srv.common.exception.BusinessException;
 import com.fuso.enterprise.ots.srv.server.util.ResponseWrapper;
 
 public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	ResponseWrapper responseWrapper ;
+	
 	@Inject
 	private OTSCouponService oTSCouponService;
 	
@@ -43,35 +43,28 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	@Override
 	public Response addCoupon(AddCouponRequest addCouponRequest) {
 		Response response = null;
-		List<Coupon> couponDetails = new ArrayList<Coupon>();
-		logger.info("Inside Event=1020,Class:OTSCoupon_WsImpl,Method:addCoupon,addCouponRequest " + addCouponRequest);
 		try {	
-			try {
-				if(addCouponRequest.getRequest().getCouponCode() == null || addCouponRequest.getRequest().getCouponCode().equals("") 
-						|| addCouponRequest.getRequest().getCouponDescription() == null || addCouponRequest.getRequest().getCouponDescription().equals("")
-						|| addCouponRequest.getRequest().getCouponStartDate() == null || addCouponRequest.getRequest().getCouponStartDate().equals("")
-						|| addCouponRequest.getRequest().getCouponEndDate() == null || addCouponRequest.getRequest().getCouponEndDate().equals("")
-						|| addCouponRequest.getRequest().getCouponBasedOn() == null || addCouponRequest.getRequest().getCouponBasedOn().equals("")) {
+			if(addCouponRequest.getRequest().getCouponCode() == null || addCouponRequest.getRequest().getCouponCode().equals("") 
+					|| addCouponRequest.getRequest().getCouponDescription() == null || addCouponRequest.getRequest().getCouponDescription().equals("")
+					|| addCouponRequest.getRequest().getCouponStartDate() == null || addCouponRequest.getRequest().getCouponStartDate().equals("")
+					|| addCouponRequest.getRequest().getCouponEndDate() == null || addCouponRequest.getRequest().getCouponEndDate().equals("")
+					|| addCouponRequest.getRequest().getCouponBasedOn() == null || addCouponRequest.getRequest().getCouponBasedOn().equals("")) {
+				return response = buildResponse(400,"Please Enter required inputs");
+			}
+			if(addCouponRequest.getRequest().getCouponBasedOn().equals("FirstUser")) {
+				if(addCouponRequest.getRequest().getCouponPrice() == null || addCouponRequest.getRequest().getCouponPrice().equals("") 
+						|| addCouponRequest.getRequest().getCouponMinPurchasePrice() == null || addCouponRequest.getRequest().getCouponMinPurchasePrice().equals("")) {
 					return response = buildResponse(400,"Please Enter required inputs");
 				}
-				if(addCouponRequest.getRequest().getCouponBasedOn().equals("FirstUser")) {
-					if(addCouponRequest.getRequest().getCouponPrice() == null || addCouponRequest.getRequest().getCouponPrice().equals("") 
-							|| addCouponRequest.getRequest().getCouponMinPurchasePrice() == null || addCouponRequest.getRequest().getCouponMinPurchasePrice().equals("")) {
-						return response = buildResponse(400,"Please Enter required inputs");
-					}
-				}
-				if(addCouponRequest.getRequest().getCouponBasedOn().equals("TotalPrice")) {
-					if(addCouponRequest.getRequest().getCouponPercentage() == null || addCouponRequest.getRequest().getCouponPercentage().equals("") 
-							|| addCouponRequest.getRequest().getCouponMaxPrice() == null || addCouponRequest.getRequest().getCouponMaxPrice().equals("")
-							|| addCouponRequest.getRequest().getCouponMinPurchasePrice() == null || addCouponRequest.getRequest().getCouponMinPurchasePrice().equals("")) {
-						return response = buildResponse(400,"Please Enter required inputs");
-					}
-				}
-				
-			}catch(Exception e) {
-				return response = buildResponse(400,"Coupon Not Added");
 			}
-			couponDetails = oTSCouponService.checkForExistingCoupon(addCouponRequest.getRequest().getCouponCode());
+			if(addCouponRequest.getRequest().getCouponBasedOn().equals("TotalPrice")) {
+				if(addCouponRequest.getRequest().getCouponPercentage() == null || addCouponRequest.getRequest().getCouponPercentage().equals("") 
+						|| addCouponRequest.getRequest().getCouponMaxPrice() == null || addCouponRequest.getRequest().getCouponMaxPrice().equals("")
+						|| addCouponRequest.getRequest().getCouponMinPurchasePrice() == null || addCouponRequest.getRequest().getCouponMinPurchasePrice().equals("")) {
+					return response = buildResponse(400,"Please Enter required inputs");
+				}
+			}
+			List<Coupon> couponDetails = oTSCouponService.checkForExistingCoupon(addCouponRequest.getRequest().getCouponCode());
 			if(couponDetails.size()!=0) {
 				response = buildResponse(404,"Coupon Code Already Exists");
 			}else {
@@ -95,18 +88,13 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	@Override
 	public Response getCouponsBasedOnStatusAndAdminId(GetCouponBasedOnRequest getCouponBasedOnRequest) {
 		Response response = null;
-		List<Coupon> couponDetails = new ArrayList<Coupon>();
 		try {	
-			try {
-				if(getCouponBasedOnRequest.getRequest().getAdminId() == null || getCouponBasedOnRequest.getRequest().getAdminId().equals("") 
-						|| getCouponBasedOnRequest.getRequest().getCouponBasedOn() == null || getCouponBasedOnRequest.getRequest().getCouponBasedOn().equals("")
-						|| getCouponBasedOnRequest.getRequest().getCouponStatus() == null || getCouponBasedOnRequest.getRequest().getCouponStatus().equals("")) {
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"No Coupons available");
-			}
-			couponDetails = oTSCouponService.getCouponsBasedOnStatusAndAdminId(getCouponBasedOnRequest);
+			if(getCouponBasedOnRequest.getRequest().getAdminId() == null || getCouponBasedOnRequest.getRequest().getAdminId().equals("") 
+					|| getCouponBasedOnRequest.getRequest().getCouponBasedOn() == null || getCouponBasedOnRequest.getRequest().getCouponBasedOn().equals("")
+					|| getCouponBasedOnRequest.getRequest().getCouponStatus() == null || getCouponBasedOnRequest.getRequest().getCouponStatus().equals("")) {
+				return response = buildResponse(400,"Please Enter required inputs");
+			}	
+			List<Coupon> couponDetails = oTSCouponService.getCouponsBasedOnStatusAndAdminId(getCouponBasedOnRequest);
 			if(couponDetails.size()==0) {
 				response = buildResponse(404,couponDetails,"No Coupons available");
 			}else {
@@ -126,20 +114,14 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	public Response activeInActiveCoupon(ActiveInActiveCouponRequest activeInActiveCouponRequest) {
 		Response response = null;
 		try {	
-			try {
-				if(activeInActiveCouponRequest.getRequest().getCouponId()==null || activeInActiveCouponRequest.getRequest().getCouponId().equals("")
-						|| activeInActiveCouponRequest.getRequest().getCouponStatus()==null || activeInActiveCouponRequest.getRequest().getCouponStatus().equals("")) 
-				{
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-				if(!activeInActiveCouponRequest.getRequest().getCouponStatus().equalsIgnoreCase("active")
-						&& !activeInActiveCouponRequest.getRequest().getCouponStatus().equalsIgnoreCase("inactive")) 
-				{
-					return response = buildResponse(400,"Coupon status can only be changed to Active/Inactive");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"Coupon status could not be updated");
-			}
+			if(activeInActiveCouponRequest.getRequest().getCouponId()==null || activeInActiveCouponRequest.getRequest().getCouponId().equals("")
+					|| activeInActiveCouponRequest.getRequest().getCouponStatus()==null || activeInActiveCouponRequest.getRequest().getCouponStatus().equals("")) {
+				return response = buildResponse(400,"Please Enter required inputs");
+			}	
+			if(!activeInActiveCouponRequest.getRequest().getCouponStatus().equalsIgnoreCase("active")
+					&& !activeInActiveCouponRequest.getRequest().getCouponStatus().equalsIgnoreCase("inactive")) {
+				return response = buildResponse(400,"Coupon status can only be changed to Active/Inactive");
+			}	
 			String ResponseDate = oTSCouponService.activeInActiveCoupon(activeInActiveCouponRequest);
 			if(ResponseDate == null) {
 				response = buildResponse(404,"Coupon status could not be updated");
@@ -149,8 +131,7 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
-		}
-		catch(Throwable e) {
+		}catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
@@ -161,14 +142,6 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	public Response checkForExistingCoupon(String couponCode) {
 		Response response = null;
 		try {	
-			try {
-				if(couponCode==null || couponCode.equals(""))
-				{
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"Coupon code already exists");
-			}
 			List<Coupon> couponDetails = oTSCouponService.checkForExistingCoupon(couponCode);
 			if(couponDetails.size() != 0) {
 				response = buildResponse(404,"Coupon code already exists");
@@ -178,8 +151,7 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
-		}
-		catch(Throwable e) {
+		}catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
@@ -190,14 +162,9 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	public Response updateCoupon(UpdateCouponRequest updateCouponRequest) {
 		Response response = null;
 		try {	
-			try {
-				if(updateCouponRequest.getRequest().getCouponId()==null || updateCouponRequest.getRequest().getCouponId().equals(""))
-				{
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"Coupon is not updated");
-			}
+			if(updateCouponRequest.getRequest().getCouponId()==null || updateCouponRequest.getRequest().getCouponId().equals("")){
+				return response = buildResponse(400,"Please Enter required inputs");
+			}	
 			Coupon couponDetails = oTSCouponService.updateCoupon(updateCouponRequest);
 			if(couponDetails == null) {
 				response = buildResponse(404,"Coupon is not updated");
@@ -207,8 +174,7 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
-		}
-		catch(Throwable e) {
+		}catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
@@ -218,27 +184,21 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	@Override
 	public Response getCouponsByStatusOrCategory(GetCouponBasedOnRequest getCouponBasedOnRequest) {
 		Response response = null;
-		List<Coupon> couponDetails = new ArrayList<Coupon>();
 		try {	
-			try {
-				if(getCouponBasedOnRequest.getRequest().getCouponStatus()==null || getCouponBasedOnRequest.getRequest().getCouponStatus().isEmpty())
-				{
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"No Coupons available");
-			}
-			couponDetails = oTSCouponService.getCouponsByStatusOrCategory(getCouponBasedOnRequest);
+			if(getCouponBasedOnRequest.getRequest().getCouponStatus()==null || getCouponBasedOnRequest.getRequest().getCouponStatus().isEmpty()){
+				return response = buildResponse(400,"Please Enter required inputs");
+			}	
+			List<Coupon> couponDetails = oTSCouponService.getCouponsByStatusOrCategory(getCouponBasedOnRequest);
 			if(couponDetails.size()==0) {
 				response = buildResponse(404,couponDetails,"No Coupons available");
 			}else {
 				response = buildResponse(couponDetails,"Successful");	
 			}	
 		}catch(Exception e){
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
-		} catch (Throwable e) {
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
+		}catch(Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -247,29 +207,18 @@ public class OTSCoupon_WsImpl implements OTSCoupon_Ws {
 	@Override
 	public Response couponUsed(String couponId) {
 		Response response = null;
-		List<CouponOrder> couponOrderList = new ArrayList<CouponOrder>();
 		try {	
-			try {
-				if(couponId.isEmpty())
-				{
-					return response = buildResponse(400,"Please Enter required inputs");
-				}	
-			}catch(Exception e) {
-				return response = buildResponse(404,"Coupon count is not available");
-			}
-			couponOrderList = oTSCouponService.couponUsed(couponId);
+			List<CouponOrder> couponOrderList = oTSCouponService.couponUsed(couponId);
 			if(couponOrderList.size() == 0) {
 				response = buildResponse(404,"CouponId not found");
 			}else {
 				Integer count = couponOrderList.size();
 				response = buildResponse(200,count,"Successful");
 			}
-			
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
-		}
-		catch(Throwable e) {
+		}catch(Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}

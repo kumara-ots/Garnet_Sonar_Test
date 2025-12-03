@@ -108,6 +108,7 @@ import com.fuso.enterprise.ots.srv.server.util.ExcelGenerator;
 import com.fuso.enterprise.ots.srv.server.util.FcmPushNotification;
 import com.fuso.enterprise.ots.srv.server.util.InvoicePdf;
 import com.fuso.enterprise.ots.srv.server.util.OTSUtil;
+import com.fuso.enterprise.ots.srv.server.util.ProformaPdf;
 import com.razorpay.Order;
 import com.razorpay.Payment;
 import com.razorpay.RazorpayClient;
@@ -293,7 +294,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setDelivaryDate(orderDetails.getOrderDeliveryDate());
 		orderDetailsAndProductDetails.setOrderDate(orderDetails.getOrderDate());
 		orderDetailsAndProductDetails.setDelivaredDate(orderDetails.getOrderDeliverdDate());
-		orderDetailsAndProductDetails.setCustomerOrderInvoice(orderDetails.getCustomerOrderInvoice());
+		orderDetailsAndProductDetails.setOrderProformaInvoice(orderDetails.getOrderProformaInvoice());
 		orderDetailsAndProductDetails.setCustomerDetails(userServiceDAO.getUserDetails(orderDetails.getCustomerId())); 
 		orderDetailsAndProductDetails.setCustomerName(orderDetails.getCustomerName());
 		orderDetailsAndProductDetails.setCustomerContactNo(orderDetails.getCustomerContactNo());
@@ -321,7 +322,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setDelivaryDate(orderDetails.getOrderDeliveryDate());
 		orderDetailsAndProductDetails.setOrderDate(orderDetails.getOrderDate());
 		orderDetailsAndProductDetails.setDelivaredDate(orderDetails.getOrderDeliverdDate());
-		orderDetailsAndProductDetails.setCustomerOrderInvoice(orderDetails.getCustomerOrderInvoice());
+		orderDetailsAndProductDetails.setOrderProformaInvoice(orderDetails.getOrderProformaInvoice());
 		orderDetailsAndProductDetails.setCustomerName(orderDetails.getCustomerName());
 		orderDetailsAndProductDetails.setCustomerContactNo(orderDetails.getCustomerContactNo());
 		orderDetailsAndProductDetails.setCustomerEmailId(orderDetails.getCustomerEmailId());
@@ -623,6 +624,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//To insert Order & fetch OrderId from order table
 	        OrderDetails otsOrderDetails = orderServiceDAO.insertOrderAndGetOrderId(addOrUpdateOrderProductBOrequest);
 	        
+	        logger.info("orderId: {}", otsOrderDetails.getOrderId());
+	        
 	        // Executor for concurrent tasks
 	        ExecutorService executor = Executors.newFixedThreadPool(10);
 			
@@ -694,7 +697,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//Notify Customer & Admin for Successful Order Placed only for COD Orders
 			if(otsOrderDetails.getOrderStatus().equalsIgnoreCase("New")) {
 				try {
-		        	String customerMailId = response.getOrderList().get(0).getCustomerDetails().getEmailId();
+		        	String customerMailId = otsOrderDetails.getCustomerEmailId();
 		        	
 		        	//Clickable Link for customer page
 					String custPageLink = "<a href= '"+customerPageLoginLink+"'>Login</a> </p>";
@@ -721,10 +724,15 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					
 					//sending mail order details for Admin
 					executor.submit(() -> emailUtil.sendAdminMail(adminDetails.getEmail(), "", "Order Placed By Customer", adminMsg));
+					
+					logger.info("Send notification mails");
 
 				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 				}
 			}
+			
+			//To Generate Proforma Invoice PDF & save in DB
+			executor.submit(() -> generateProformaOrderInvoicePdf(otsOrderDetails.getOrderId(),response.getOrderList().get(0).getOrderdProducts().get(0).getDistributorId()));
 
 	        executor.shutdown();
 			
@@ -1448,8 +1456,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				fileContent = FileUtils.readFileToByteArray(new File(path));
 				encodedString = Base64.getEncoder().encodeToString(fileContent);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				logger.error("Exception while fetching data from DB :"+e.getMessage());
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -1487,7 +1493,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				orderRequest.put("receipt", updateOrderDetailsRequest.getRequest().getOrderId());
 				orderRequest.put("payment_capture", true);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				System.out.println(e);
 			} // amount in the smallest currency unit
 			 Order order = razorpay.Orders.create(orderRequest);
@@ -1500,7 +1505,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			 orderDetailsList.add(orderDetails);
 			 orderDetailsBOResponse.setOrderDetails(orderDetailsList);
 		} catch (RazorpayException e) {
-			logger.error("Exception while fetching getRazorPayOrder data from DB :"+e.getMessage());	
 			System.out.println(e);
 		}
 		return orderDetailsBOResponse;
@@ -1534,7 +1538,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			payment = razorpay.Payments.fetch(paymentId);
 			paymentDetails = new JSONObject(payment);
 		} catch (RazorpayException e1) {
-			logger.error("Exception while fetching data from DB :"+e1.getMessage());		}
+		}
 		System.out.print(payment);
 		return paymentDetails;
 	}
@@ -1668,9 +1672,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				/*Update the Status As close in Order Table*/
 				orderDetails = orderServiceDAO.closeOrder(OrderId);
 				Response = "Order Id "+OrderId+" Has Been Closed Successfully";
-				
-				//To generate Order Invoice for Customer(from LLP to Customer), when Main order is Closed 
-				generateOrderInvoicePdf(OrderId,orderDetails.getCustomerId());
 				
 				//Send Notification to Distributor for Order close
 				try {
@@ -1974,38 +1975,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-		}
-	}
-
-	@Transactional
-	@Override
-	public String generateOrderInvoicePdf(String orderId,String customerId) {
-		try {
-			List<OrderDetails> orderList = orderServiceDAO.getOrderDetailsForOrderId(orderId);
-//			List<UserDetails> custDetails = userServiceDAO.getUserIdUsers(customerId);
-			List<List<String>> distDetails = getDistributorForOrderInvoice(orderId);
-			List<List<String>> orderDetails = getOrderDetailsForInvoice(orderId);
-			
-			//To generate order Invoice pdf
-			byte[] pdfPath = InvoicePdf.generateOrderInvoiceCopy(orderList, distDetails, orderDetails);
-			
-			//To convert pdfPath(String) to byte[]
-//			byte[] encodedBytes = Base64.getEncoder().encode(pdfPath.getBytes());
-			
-			//To encode byte[] to String
-//			String encodedString = Base64.getEncoder().encodeToString(encodedBytes);
-			String encodedString = Base64.getEncoder().encodeToString(pdfPath);
-			System.out.println(encodedString);
-			//To add encoded Invoice path into order table(DB)
-			String addInvoice = orderServiceDAO.addCustomerOrderInvoiceToDB(orderId,encodedString);
-			
-			return addInvoice;
-		}catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 	
@@ -3218,6 +3187,125 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			
 			return response;
 		}catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public List<List<String>> getDistributorPaymentDetailsForProformaInvoice(String distributorId) {
+	    try {
+	        Map<String, Object> queryParameter = new HashMap<>();
+	        queryParameter.put("distributor_id", UUID.fromString(distributorId));
+
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	                .withFunctionName("get_distributor_payment_for_proforma_invoice")
+	                .withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("distributor_id", Types.OTHER));
+
+	        Map<String, Object> result = simpleJdbcCall.execute(queryParameter);
+	        List<Map<String, String>> paymentDetails = (List<Map<String, String>>) result.get("#result-set-1");
+
+	        // Add Sl.No at beginning for readability
+	        int sl = 1;
+	        for (Map<String, String> map : paymentDetails) {
+	            Map<String, String> mapCopy = new LinkedHashMap<>(map);
+	            map.clear();
+	            map.put("Sl.no", String.valueOf(sl++));
+	            map.putAll(mapCopy);
+	        }
+
+	        // Convert List<Map<String,String>> to List<List<String>>
+	        List<List<String>> finalResult = new ArrayList<>();
+	        for (Map<String, String> row : paymentDetails) {
+	            List<String> values = new ArrayList<>(row.values());
+	            finalResult.add(values);
+	        }
+
+	        return finalResult;
+
+	    } catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<List<String>> getOrderDetailsForProformaInvoice(String orderId) {
+		try {
+			Map<String, Object> queryParameter = new HashMap<String, Object>();
+			queryParameter.put("order_id", UUID.fromString(orderId));
+			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	        		.withFunctionName("get_order_details_for_proforma_invoice")
+	        		.withSchemaName("public")
+	                .withoutProcedureColumnMetaDataAccess();
+			simpleJdbcCall.addDeclaredParameter(new SqlParameter("order_id", Types.OTHER));
+			
+			Map<String, Object> result = simpleJdbcCall.execute(queryParameter);
+			List<Map<String, String>> orderDetails = (List<Map<String, String>>) result.get("#result-set-1");
+	
+			//To Add Sl.no at beginning of the map as Key Value pair to existing map & adding numbers incrementing from 1
+			int sl = 1;
+			for(Map<String,String> map : orderDetails) {
+			    Map<String,String> mapcopy = new LinkedHashMap<String,String>(map);
+			    map.clear();
+			    map.put("Sl.no",String.valueOf(sl++));
+			    map.putAll(mapcopy);
+			}
+		
+			//Converting List<Map<String, String>> into List<List<String>> List of values
+			List<String> valueList = null;
+			List<List<String>> order = new ArrayList<>();
+			for(int index = 0 ; index < orderDetails.size() ; index++){
+				Map<String, String> listItem = orderDetails.get(index);
+				for(int j=0; j<listItem.size();j++) {
+				    valueList = new ArrayList<String>(listItem.values());
+				}
+				System.out.println("valueList = "+valueList);
+				order.add(valueList);
+			} 
+			return order;
+		}catch(Exception e){
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}	
+	}
+	
+	@Transactional
+	@Override
+	public String generateProformaOrderInvoicePdf(String orderId,String distributorId) {
+		try {			
+			// To Fetch order details which includes order product details 
+			OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderId); 
+		
+			// To Fetch distributor payment details 
+			List<List<String>> distPaymentDetails = getDistributorPaymentDetailsForProformaInvoice(distributorId);
+			
+			// Fetch Main Table Data including price calculations
+			List<List<String>> orderList = getOrderDetailsForProformaInvoice(orderId);
+			
+			//To generate proforma order Invoice pdf
+			byte[] pdfPath = ProformaPdf.generateProformaOrderInvoiceCopy(orderDetails, distPaymentDetails, orderList);
+			String encodedString = Base64.getEncoder().encodeToString(pdfPath);
+			System.out.println(encodedString);
+			
+			//To add encoded Invoice path into order table(DB)
+			String addInvoice = orderServiceDAO.addProformaInvoiceToDB(orderId,encodedString);
+		
+			return encodedString;
+			
+		}catch (BusinessException e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {

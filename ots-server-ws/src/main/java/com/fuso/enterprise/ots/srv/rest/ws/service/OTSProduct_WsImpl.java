@@ -4,16 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fuso.enterprise.ots.srv.api.model.domain.AttributeKey;
 import com.fuso.enterprise.ots.srv.api.model.domain.AttributeValue;
@@ -31,12 +27,13 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductAttributeMappin
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSimilarProductRequest;
@@ -78,11 +75,6 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
         return Response.ok(wrapper).build();
     }
     
-//    private HttpServletRequest getCurrentHttpRequest() {
-//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        return attributes != null ? attributes.getRequest() : null;
-//    }
-
     @Override
     public Response addProductStock(AddProductStockBORequest addStockProductBORequest) {
         Response response = null;
@@ -192,8 +184,6 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 		}
 	}
 
-   
-	
 	 /***************shreekant rathod************/
 	@Override
 	public Response getAllProductDetails() {
@@ -305,22 +295,36 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 	}
 	
 	@Override
-	public Response getProductsByDistributerPagination(GetProductsByDistributerPaginationRequest getProductsByDistributerPagination) 
-	{
+	public Response getProductsByDistributorPagination(GetProductsByDistributorPaginationRequest getProductsByDistributorPagination) {
 		Response response = null;
-		ProductDetailsBOResponse ProductDetailsBOResponse = new ProductDetailsBOResponse();
-		try
-		{
-			if(getProductsByDistributerPagination.getRequest().getDistributerId()==null || getProductsByDistributerPagination.getRequest().getDistributerId().equals("")
-					|| getProductsByDistributerPagination.getRequest().getPageNumber() == null || getProductsByDistributerPagination.getRequest().getPageNumber().equals("")
-					|| getProductsByDistributerPagination.getRequest().getDataSize() == null || getProductsByDistributerPagination.getRequest().getDataSize().equals("")) {
+		try{
+			if(getProductsByDistributorPagination.getRequest().getSearchKey()==null || getProductsByDistributorPagination.getRequest().getSearchKey().equals("")
+					|| getProductsByDistributorPagination.getRequest().getSearchValue()==null || getProductsByDistributorPagination.getRequest().getSearchValue().equals("")
+					|| getProductsByDistributorPagination.getRequest().getDistributorId()==null || getProductsByDistributorPagination.getRequest().getDistributorId().equals("")
+					|| getProductsByDistributorPagination.getRequest().getPageNumber() == null || getProductsByDistributorPagination.getRequest().getPageNumber().equals("")
+					|| getProductsByDistributorPagination.getRequest().getDataSize() == null || getProductsByDistributorPagination.getRequest().getDataSize().equals("")
+					|| getProductsByDistributorPagination.getRequest().getProductCountryCode()==null || getProductsByDistributorPagination.getRequest().getProductCountryCode().equals("")) {
 				return response = buildResponse(400,"Please Enter Required Inputs");
 			}
-			ProductDetailsBOResponse = otsProductService.getProductsByDistributerPagination(getProductsByDistributerPagination);
-			if(ProductDetailsBOResponse.getProductDetails().size() == 0) {			
-				response = responseWrapper.buildResponse(404,"No Products Available For This Distributor");
+			
+			//Predefined user status
+			String[] VALID_STATUSES = {"all","category", "subcategory"};
+
+		    // Validate input user status
+		    String searchKey = getProductsByDistributorPagination.getRequest().getSearchKey();
+		    boolean isValidStatus = Arrays.stream(VALID_STATUSES)
+		                                  .anyMatch(status -> status.equalsIgnoreCase(searchKey));
+
+		    //If input status not matching predefined status
+		    if (!isValidStatus) {
+		        return response = responseWrapper.buildResponse(400, "Invalid SearchKey");
+		    } 
+		    
+			ProductDetailsBOResponse productDetailsBOResponse = otsProductService.getProductsByDistributorPagination(getProductsByDistributorPagination);
+			if(productDetailsBOResponse.getProductDetails().size() == 0) {			
+				response = responseWrapper.buildResponse(404,"No Products Available");
 			}else {
-				response = responseWrapper.buildResponse(ProductDetailsBOResponse,"Successful");
+				response = responseWrapper.buildResponse(productDetailsBOResponse,"Successful");
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
@@ -367,10 +371,25 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 		try {
 			if (getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey() == null || getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey().equals("")
 					|| getCategorySubCategoryByDistributorRequest.getRequest().getSearchValue() == null || getCategorySubCategoryByDistributorRequest.getRequest().getSearchValue().equals("")
-					|| getCategorySubCategoryByDistributorRequest.getRequest().getDistributorId() == null || getCategorySubCategoryByDistributorRequest.getRequest().getDistributorId().equals("") ) {
+					|| getCategorySubCategoryByDistributorRequest.getRequest().getDistributorId() == null || getCategorySubCategoryByDistributorRequest.getRequest().getDistributorId().equals("") 
+					|| getCategorySubCategoryByDistributorRequest.getRequest().getCountryCode() == null || getCategorySubCategoryByDistributorRequest.getRequest().getCountryCode().equals("")) {
 				return response = buildResponse(400, "Please Enter Required Inputs");
 			}
-			   ProductDetailsBOResponse = otsProductService.getCategoryAndSubCategoryByDistributor(getCategorySubCategoryByDistributorRequest);
+			
+			//Predefined user status
+			String[] VALID_STATUSES = {"category", "subcategory"};
+
+		    // Validate input user status
+		    String SearchKey = getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey();
+		    boolean isValidStatus = Arrays.stream(VALID_STATUSES)
+		                                  .anyMatch(status -> status.equalsIgnoreCase(SearchKey));
+
+		    //If input status not matching predefined status
+		    if (!isValidStatus) {
+		        return response = responseWrapper.buildResponse(400, "Invalid SearchKey");
+		    } 
+			   
+			ProductDetailsBOResponse = otsProductService.getCategoryAndSubCategoryByDistributor(getCategorySubCategoryByDistributorRequest);
 			if (ProductDetailsBOResponse.getProductDetails().size() == 0) {
 				response = responseWrapper.buildResponse(404, "No Data Available");
 			} else {
@@ -570,13 +589,20 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 	@Override
 	public Response addAttributeKey(AddAttributeKeyRequest addAttributeKeyRequest) {
 		Response response = null;
-		try {
-			if(addAttributeKeyRequest.getRequest().getAttributeKeyName() == null || addAttributeKeyRequest.getRequest().getAttributeKeyName() .equals("")
-			  || addAttributeKeyRequest.getRequest().getAttributeKeyDiscription() == null || addAttributeKeyRequest.getRequest().getAttributeKeyDiscription().equals("")
-			  || addAttributeKeyRequest.getRequest().getAttributeKeyName().size() != addAttributeKeyRequest.getRequest().getAttributeKeyDiscription().size()) 
-			{
-				return response = buildResponse(400, "Please Enter Required Inputs");
+		try {		
+			//Added request validation to check empty string in list
+			List<String> names = addAttributeKeyRequest.getRequest().getAttributeKeyName();
+			List<String> descriptions = addAttributeKeyRequest.getRequest().getAttributeKeyDiscription();
+
+			if (names == null || descriptions == null ||
+			    names.isEmpty() || descriptions.isEmpty() ||
+			    names.size() != descriptions.size() ||
+			    names.stream().anyMatch(s -> s == null || s.trim().isEmpty()) ||
+			    descriptions.stream().anyMatch(s -> s == null || s.trim().isEmpty())) {
+
+			    return buildResponse(400, "Please Enter Required Inputs");
 			}
+
 			List<AttributeKey> attributeKey = otsProductService.addAttributeKey(addAttributeKeyRequest);
 			if (attributeKey.size() == 0) {
 			    response = responseWrapper.buildResponse(404,"Unable to Add Data");
@@ -1317,67 +1343,6 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 		}
 	}
 
-
-//	@Override
-//	public Response addOrUpdateCategoryAndSubcategory(AddOrUpdateCategoryRequest addOrUpdateCategoryRequest) {
-//		Response response = null;
-//		try {
-//			if(addOrUpdateCategoryRequest.getRequest().getProductId() == null || addOrUpdateCategoryRequest.getRequest().getProductId().isEmpty()) {
-//				if (addOrUpdateCategoryRequest.getRequest().getProductName() == null || addOrUpdateCategoryRequest.getRequest().getProductName().equalsIgnoreCase("")
-//					|| addOrUpdateCategoryRequest.getRequest().getProductLevelId() == null  || addOrUpdateCategoryRequest.getRequest().getProductLevelId().equals("")
-//					|| addOrUpdateCategoryRequest.getRequest().getCreatedUser() == null || addOrUpdateCategoryRequest.getRequest().getCreatedUser().equalsIgnoreCase("")
-//					|| addOrUpdateCategoryRequest.getRequest().getProductImage() == null || addOrUpdateCategoryRequest.getRequest().getProductImage().equalsIgnoreCase("")) {
-//					return response = buildResponse(400, "Please Enter Required Inputs");
-//				}	
-//				
-//				//Need to provide Category Id while Adding SubCategory
-//				if(addOrUpdateCategoryRequest.getRequest().getProductLevelId().equalsIgnoreCase("2")) {
-//					if(addOrUpdateCategoryRequest.getRequest().getCategoryId() == null || addOrUpdateCategoryRequest.getRequest().getCategoryId().isEmpty()){
-//						return response = buildResponse(400, "Please Provide Category ID");
-//					}
-//				}
-//			}else {
-//				if (addOrUpdateCategoryRequest.getRequest().getProductName() == null || addOrUpdateCategoryRequest.getRequest().getProductName().equalsIgnoreCase("")
-//					|| addOrUpdateCategoryRequest.getRequest().getProductImage() == null || addOrUpdateCategoryRequest.getRequest().getProductImage().equalsIgnoreCase("")) {
-//					return response = buildResponse(400, "Please Enter Required Inputs");
-//				}
-//			}
-//			
-//			//Request validation for adding Nutritional flag only for Category
-//			if(addOrUpdateCategoryRequest.getRequest().getProductLevelId().equalsIgnoreCase("1")) {
-//				//Predefined Nutritional Flag vlaues
-//				String[] VALID_FLAG = {"true", "false", "1","0",};
-//
-//			    // Validate input Flag
-//			    String nutritionalFlag = addOrUpdateCategoryRequest.getRequest().getNutritionalFlag();
-//			    boolean isValidnutritionalFlag= Arrays.stream(VALID_FLAG).anyMatch(flag -> flag.equalsIgnoreCase(nutritionalFlag));
-//
-//			    //If input status not matching predefined status
-//			    if (!isValidnutritionalFlag) {
-//			        return response = responseWrapper.buildResponse(400, "Invalid Input");
-//			    } 
-//			}
-//			
-//			String addOrUpdateCategoryAndSubcategory = otsProductService.addOrUpdateCategoryAndSubcategory(addOrUpdateCategoryRequest);
-//			if (addOrUpdateCategoryAndSubcategory == null) {
-//				response = responseWrapper.buildResponse(404, "Data Not Updated");
-//			}else if(addOrUpdateCategoryAndSubcategory.equalsIgnoreCase("Invalid Admin Id")){
-//				response = responseWrapper.buildResponse(400, "Invalid Admin Id");
-//			}else {
-//				response = responseWrapper.buildResponse(200, addOrUpdateCategoryAndSubcategory, "Successful");
-//			}
-//		} catch (Exception e) {
-//			logger.error("Exception while inserting data into DB :" + e.getMessage());
-//			e.printStackTrace();
-//			return response = buildResponse(500, "Something Went Wrong");
-//		} catch (Throwable e) {
-//			logger.error("Exception while inserting data into DB :" + e.getMessage());
-//			e.printStackTrace();
-//			return response = buildResponse(500, "Something Went Wrong");
-//		}
-//		return response;
-//	}
-//	
 	@Override
 	public Response searchProductByNamePagination(SearchProductByNamePaginationRequest searchProductRequest) {
 		Response response = null;
@@ -1504,12 +1469,14 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 	public Response addOrUpdateProductManufacturerDetails(AddProductManufacturerRequest addProductManufacturerRequest) {
 		Response response = null;
 		try {
-			if(addProductManufacturerRequest.getRequest().getManufacturerName() == null || addProductManufacturerRequest.getRequest().getManufacturerName() .equals("")){
+			if(addProductManufacturerRequest.getRequest().getManufacturerName() == null || addProductManufacturerRequest.getRequest().getManufacturerName().equals("")){
 				return response = responseWrapper.buildResponse(400,"Please Enter Manufacturer Name");
 			}
 			String responseValue = otsProductService.addOrUpdateProductManufacturerDetails(addProductManufacturerRequest);
 			if(responseValue==null) {
 				response = responseWrapper.buildResponse(404,"Not Inserted");
+			}else if(responseValue.equalsIgnoreCase("Manufacturer Name Already Exists")){
+				response = responseWrapper.buildResponse(404,"Manufacturer Name Already Exists");
 			}else {
 				response = responseWrapper.buildResponse(200,responseValue,"Successful");
 			}
@@ -1560,6 +1527,44 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB  :"+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
+		}
+		return response;
+	}
+	
+	@Override
+	public Response addVariantProduct(AddVariantProductRequest addVariantProductRequest) {
+		Response response = null;
+		try {
+			if (addVariantProductRequest.getRequest().getProductId() == null || addVariantProductRequest.getRequest().getProductId().equals("")
+					|| addVariantProductRequest.getRequest().getProductStockQuantity() == null || addVariantProductRequest.getRequest().getProductStockQuantity().equals("")
+					|| addVariantProductRequest.getRequest().getProductName() == null || addVariantProductRequest.getRequest().getProductName().equals("")
+					|| addVariantProductRequest.getRequest().getProductBasePrice() == null || addVariantProductRequest.getRequest().getProductBasePrice().equals("")
+					|| addVariantProductRequest.getRequest().getProductSellerPrice() == null || addVariantProductRequest.getRequest().getProductSellerPrice().equals("")					
+					|| addVariantProductRequest.getRequest().getProductDiscountPercentage() == null || addVariantProductRequest.getRequest().getProductDiscountPercentage().equals("")
+					|| addVariantProductRequest.getRequest().getProductDiscountPrice()== null || addVariantProductRequest.getRequest().getProductDiscountPrice().equals("")
+					|| addVariantProductRequest.getRequest().getProductImage() == null || addVariantProductRequest.getRequest().getProductImage().equals("")
+					|| addVariantProductRequest.getRequest().getProductPrice()== null || addVariantProductRequest.getRequest().getProductPrice().equals("")
+					|| addVariantProductRequest.getRequest().getGst()== null || addVariantProductRequest.getRequest().getGst().equals("")
+					|| addVariantProductRequest.getRequest().getGstPrice() == null || addVariantProductRequest.getRequest().getGstPrice().equals("")
+					|| addVariantProductRequest.getRequest().getProductPercentagePrice()== null || addVariantProductRequest.getRequest().getProductPercentagePrice().equals("")					
+				    || addVariantProductRequest.getRequest().getProductFinalPriceWithGst() == null || addVariantProductRequest.getRequest().getProductFinalPriceWithGst().equals("") 				
+				    || addVariantProductRequest.getRequest().getProductDeliveryCharge()== null || addVariantProductRequest.getRequest().getProductDeliveryCharge().equals("")		
+					|| addVariantProductRequest.getRequest().getProductReturnDeliveryCharge()== null || addVariantProductRequest.getRequest().getProductReturnDeliveryCharge().equals("")) {
+						
+				return response = buildResponse(400, "Please Enter Required Inputs");
+			}
+			String variantId = otsProductService.addVarientProduct(addVariantProductRequest);
+			if (variantId == null) {
+				response = responseWrapper.buildResponse(404, "Variant Product Not Added");
+			} else {
+				response = responseWrapper.buildResponse(200, variantId, "Successful");
+			}
+		} catch (Exception e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			return response = buildResponse(500, "Something Went Wrong");
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			return response = buildResponse(500, "Something Went Wrong");
 		}
 		return response;
 	}

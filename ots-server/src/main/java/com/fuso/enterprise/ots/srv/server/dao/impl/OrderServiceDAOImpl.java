@@ -125,13 +125,13 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 		orderDetails.setPaymentId(otsOrder.getOtsOrderPaymentId()==null?"":otsOrder.getOtsOrderPaymentId());
 		orderDetails.setPaymentDate(otsOrder.getOtsOrderPaymentDate()==null?"":otsOrder.getOtsOrderPaymentDate().toString());	
 		orderDetails.setCustomerChangeAddressId((otsOrder.getOtsCustomerChangeAddressId()==null)?"":otsOrder.getOtsCustomerChangeAddressId());
-		orderDetails.setCustomerOrderInvoice((otsOrder.getOtsOrderCustomerInvoice()==null)?"":otsOrder.getOtsOrderCustomerInvoice());
 		orderDetails.setCustomerId(otsOrder.getOtsCustomerId()==null?"":otsOrder.getOtsCustomerId().getOtsUsersId().toString());
 		orderDetails.setCustomerName(otsOrder.getOtsCustomerName()==null?"":otsOrder.getOtsCustomerName().toString());	
 		orderDetails.setCustomerContactNo(otsOrder.getOtsCustomerContactNo()==null?"":otsOrder.getOtsCustomerContactNo().toString());
-		orderDetails.setCustomerEmailId(otsOrder.getOtsCustomerId().getOtsUsersEmailid()==null?"":otsOrder.getOtsCustomerId().getOtsUsersEmailid());
+		orderDetails.setCustomerEmailId(otsOrder.getOtsCustomerId()==null?"":otsOrder.getOtsCustomerId().getOtsUsersEmailid());
 		orderDetails.setOrderState(otsOrder.getOtsOrderState()==null?"":otsOrder.getOtsOrderState());
 		orderDetails.setOrderDistrict(otsOrder.getOtsOrderDistrict()==null?"":otsOrder.getOtsOrderDistrict());
+		orderDetails.setOrderProformaInvoice(otsOrder.getOtsOrderProformaInvoice()==null?"":otsOrder.getOtsOrderProformaInvoice().toString());	
 		
 		return orderDetails;
 	}
@@ -224,9 +224,11 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			return orderDetails;
 		}catch(Exception e){
 			logger.error("Error in inserting order in order table"+e.getMessage());
+			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
 			logger.error("Error in inserting order in order table"+e.getMessage());
+			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
@@ -445,13 +447,13 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 		orderDetails.setPaymentId(otsOrder.getOtsOrderPaymentId()==null?"":otsOrder.getOtsOrderPaymentId());
 		orderDetails.setPaymentDate(otsOrder.getOtsOrderPaymentDate()==null?"":otsOrder.getOtsOrderPaymentDate().toString());	
 		orderDetails.setCustomerChangeAddressId((otsOrder.getOtsCustomerChangeAddressId()==null)?"":otsOrder.getOtsCustomerChangeAddressId());
-		orderDetails.setCustomerOrderInvoice((otsOrder.getOtsOrderCustomerInvoice()==null)?"":otsOrder.getOtsOrderCustomerInvoice());
 		orderDetails.setCustomerId(otsOrder.getOtsCustomerId()==null?"":otsOrder.getOtsCustomerId().getOtsUsersId().toString());
 		orderDetails.setCustomerName(otsOrder.getOtsCustomerName()==null?"":otsOrder.getOtsCustomerName().toString());	
 		orderDetails.setCustomerContactNo(otsOrder.getOtsCustomerContactNo()==null?"":otsOrder.getOtsCustomerContactNo().toString());
 		orderDetails.setOrderState(otsOrder.getOtsOrderState()==null?"":otsOrder.getOtsOrderState());
 		orderDetails.setOrderDistrict(otsOrder.getOtsOrderDistrict()==null?"":otsOrder.getOtsOrderDistrict());
 		orderDetails.setCustomerContactNo(otsOrder.getOtsCustomerContactNo()==null?"":otsOrder.getOtsCustomerContactNo().toString());	
+		orderDetails.setOrderProformaInvoice(otsOrder.getOtsOrderProformaInvoice()==null?"":otsOrder.getOtsOrderProformaInvoice().toString());	
 		
 		return orderDetails;
 	}
@@ -687,26 +689,6 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 	}
 	
 	@Override
-	public String addCustomerOrderInvoiceToDB(String orderId,String invoice) {
-		OtsOrder otsOrder = new OtsOrder();
-		try {
-			Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("otsOrderId",UUID.fromString(orderId));
-			otsOrder = super.getResultByNamedQuery("OtsOrder.findByOtsOrderId", queryParameter);
-			
-			otsOrder.setOtsOrderCustomerInvoice(invoice);
-			super.getEntityManager().merge(otsOrder);
-		}catch(Exception e){
-			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
-		catch (Throwable e) {
-			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
-			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
-		}
-		return "Invoice Added";
-	}
-	
-	@Override
 	public List<OrderDetails> checkForFirstOrderByCustomer(String CustomerId) {
 		List<OrderDetails> otsOrderDetails = new ArrayList<OrderDetails>();
 		List<OtsOrder> otsOrder = new ArrayList<OtsOrder>();
@@ -744,26 +726,6 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
-	}
-	
-	@Override
-	public String UpdateOrderCostWhenSubOrderCancelled(String orderId,String orderProductCost) {
-		OtsOrder otsOrder = new OtsOrder();
-		try {
-			Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("otsOrderId",UUID.fromString(orderId));
-			otsOrder = super.getResultByNamedQuery("OtsOrder.findByOtsOrderId", queryParameter);
-			
-			Double minusOrderCost = Double.parseDouble(otsOrder.getOtsOrderCost().toString()) - Double.parseDouble(orderProductCost);
-			BigDecimal finalOrderCost = new BigDecimal(minusOrderCost);
-			otsOrder.setOtsOrderCost(finalOrderCost);
-			super.getEntityManager().merge(otsOrder);
-		}catch(Exception e){
-			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
-		} catch (Throwable e) {
-			throw new BusinessException(e, ErrorEnumeration.FAILURE_ORDER_GET);
-		}
-		return "updated";
 	}
 	
 	@Override
@@ -862,14 +824,39 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			otsOrder = super.getResultListByNamedQuery("OtsOrder.findByOtsOrderTransactionId", queryParameter);
 			orderDetails =  otsOrder.stream().map(OtsOrder -> convertOrderDetailsFromEntityToDomain(OtsOrder)).collect(Collectors.toList());
 			return orderDetails;
-		}
-		catch(Exception e){
+		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
+	}
+	
+	@Transactional
+	@Override
+	public String addProformaInvoiceToDB(String orderId,String invoice) {
+		try {
+			OtsOrder otsOrder = new OtsOrder();
+			Map<String, Object> queryParameter = new HashMap<>();
+			queryParameter.put("otsOrderId",UUID.fromString(orderId));
+			try {
+				otsOrder = super.getResultByNamedQuery("OtsOrder.findByOtsOrderId", queryParameter);
+			}catch(NoResultException e) {
+				return null;
+			}
+			otsOrder.setOtsOrderProformaInvoice(invoice);
+			
+			save(otsOrder);
+		}catch(Exception e){
+			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
+			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
+		catch (Throwable e) {
+			e.printStackTrace();
+			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
+			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
+		}
+		return "Invoice Added";
 	}
 
 }

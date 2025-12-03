@@ -160,7 +160,7 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 		orderDetails.setProductPriceWithoutGst(otsOrderProduct.getOtsProductPriceWithoutGst()==null?"":otsOrderProduct.getOtsProductPriceWithoutGst().toString());
 		orderDetails.setCustomerId(otsOrderProduct.getOtsOrderId().getOtsCustomerId()==null?null:otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersId().toString());
 		orderDetails.setCustomerName(otsOrderProduct.getOtsOrderId().getOtsCustomerName()==null?"":otsOrderProduct.getOtsOrderId().getOtsCustomerName());
-		orderDetails.setCustomerEmailId(otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersEmailid()==null?"":otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersEmailid());
+		orderDetails.setCustomerEmailId(otsOrderProduct.getOtsOrderId().getOtsCustomerId()==null?"":otsOrderProduct.getOtsOrderId().getOtsCustomerId().getOtsUsersEmailid());
 		orderDetails.setDeliveryAddress((otsOrderProduct.getOtsOrderId().getOtsHouseNo()==null?"":otsOrderProduct.getOtsOrderId().getOtsHouseNo())
 				+" "+(otsOrderProduct.getOtsOrderId().getOtsBuildingName()==null?"":otsOrderProduct.getOtsOrderId().getOtsBuildingName())
 				+" "+(otsOrderProduct.getOtsOrderId().getOtsStreetName()==null?"":otsOrderProduct.getOtsOrderId().getOtsStreetName())
@@ -991,5 +991,6 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 		}
 		return closeOrderResponse;
 	}
+
 
 }

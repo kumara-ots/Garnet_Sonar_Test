@@ -176,6 +176,8 @@ public class ProductDetails {
     private String otsNutritionalOtherFSSAILicenseNo;
 
     private String otsNutritionalImporterFSSAILicenseNo;
+    
+    private String otsProductSellerType;
 
 	public String getProductId() {
 		return productId;
@@ -863,6 +865,14 @@ public class ProductDetails {
 
 	public void setOtsNutritionalImporterFSSAILicenseNo(String otsNutritionalImporterFSSAILicenseNo) {
 		this.otsNutritionalImporterFSSAILicenseNo = otsNutritionalImporterFSSAILicenseNo;
+	}
+
+	public String getOtsProductSellerType() {
+		return otsProductSellerType;
+	}
+
+	public void setOtsProductSellerType(String otsProductSellerType) {
+		this.otsProductSellerType = otsProductSellerType;
 	}
 
 }

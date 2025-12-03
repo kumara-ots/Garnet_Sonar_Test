@@ -13,10 +13,11 @@ import com.fuso.enterprise.ots.srv.api.model.domain.ProductPricingDetails;
 import com.fuso.enterprise.ots.srv.api.model.domain.SubCategoryDetails;
 import com.fuso.enterprise.ots.srv.api.service.request.AddOrUpdateCategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductByCountryRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
-import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributerPaginationRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetProductsByDistributorPaginationRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductsBySubCategoryAndDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSiblingVariantProductsByAttributeRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetSimilarProductRequest;
@@ -59,7 +60,7 @@ public interface ProductServiceDAO {
 	
 	ProductDetailsBOResponse getProductsForSubCategory(String subCategoryId);
 	
-	ProductDetailsBOResponse getProductsByDistributerPagination(GetProductsByDistributerPaginationRequest getProductsByDistributerPagination);
+	ProductDetailsBOResponse getProductsByDistributorPagination(GetProductsByDistributorPaginationRequest getProductsByDistributorPagination);
 	
 	SubCategoryDetails getSubCategoryForProductId(String productId);
 	
@@ -118,5 +119,7 @@ public interface ProductServiceDAO {
 	List<ProductDetails> getCategoryAndSubCategoryWithAttribute(GetCatgeorySubcategoryRequest getCatgeorySubcategoryRequest);
 
 	List<ProductDetails> getSimilarProducts(GetSimilarProductRequest getSimilarProductRequest);
+
+	ProductDetails addVarientProduct(AddVariantProductRequest addVariantProductRequest);
 
 }
