@@ -224,11 +224,9 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			return orderDetails;
 		}catch(Exception e){
 			logger.error("Error in inserting order in order table"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
 			logger.error("Error in inserting order in order table"+e.getMessage());
-			e.printStackTrace();
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
@@ -852,7 +850,6 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
 		catch (Throwable e) {
-			e.printStackTrace();
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
 		}

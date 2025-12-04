@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fuso.enterprise.ots.srv.api.model.domain.DistributorCompanyDetails;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -31,6 +34,8 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class DistributorRegisterInvoicePdf {
 	
+	private static final Logger logger = LoggerFactory.getLogger(DistributorRegisterInvoicePdf.class);
+	
 	//To Generate PDf & file will not be save in local system.
 	public static byte[] generateRegistrationInvoiceCopy(List<DistributorCompanyDetails> distDetails,String registrationPaymentId){
     	String distributorId = distDetails.get(0).getDistributorId();
@@ -51,7 +56,7 @@ public class DistributorRegisterInvoicePdf {
 			System.out.println("Pdf created successfully.");
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception while fetching data from DB :"+e.getMessage());
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -292,7 +297,7 @@ public class DistributorRegisterInvoicePdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	logger.error("Exception while fetching data from DB :"+e.getMessage());
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+totalAmount, font);

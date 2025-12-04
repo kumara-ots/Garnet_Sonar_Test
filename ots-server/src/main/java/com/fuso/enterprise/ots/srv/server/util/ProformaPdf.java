@@ -57,7 +57,7 @@ public class ProformaPdf {
 			System.out.println("Pdf created successfully.");
 			
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Exception while fetching data from DB :"+e.getMessage());
         }
         return byteArrayOutputStream.toByteArray(); // Return byte[]
     }
@@ -338,7 +338,7 @@ public class ProformaPdf {
 		try {
 			document.add(table);
 		} catch (DocumentException e) {
-			e.printStackTrace();
+        	logger.error("Exception while fetching data from DB :"+e.getMessage());
 		}
 	}
 	
@@ -361,7 +361,7 @@ public class ProformaPdf {
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	logger.error("Exception while fetching data from DB :"+e.getMessage());
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+decfor.format(sum), font);
