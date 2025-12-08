@@ -19,7 +19,7 @@ public class GeoLocationUtil {
 	private static final Logger logger = LoggerFactory.getLogger(GeoLocationUtil.class);
 
     // Cache expiration time: 6 hours (in milliseconds)
-    private static final long CACHE_TTL_MILLIS = 6 * 60 * 60 * 1000;
+	private static final long CACHE_TTL_MILLIS = 6L * 60 * 60 * 1000;
 
     // In-memory cache to store IP → countryCode mappings with timestamps
     private final Map<String, CachedGeoInfo> geoCache = new ConcurrentHashMap<>();

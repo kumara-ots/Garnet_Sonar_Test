@@ -211,7 +211,7 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			otsProductStock.setOtsProductId (otsProduct);
 			super.getEntityManager().merge(otsProductStock);
 		}catch (Exception e) {
-	    	throw new BusinessException(e, ErrorEnumeration.User_Not_exists);
+	    	throw new BusinessException(e, ErrorEnumeration.USER_NOT_EXISTS1);
 		}
 		logger.info("Inside Event=1014,Class:OTSProduct_WsImpl,Method:removeProductStock");
 		return "Stock Updated Scuccessfully";
@@ -265,7 +265,7 @@ public class ProductStockDaoImpl extends AbstractIptDao<OtsProductStock, String>
 			super.getEntityManager().merge(otsProductStock);
 		}catch (Exception e) {
 			System.out.print(e);
-	    	throw new BusinessException(e, ErrorEnumeration.User_Not_exists);
+	    	throw new BusinessException(e, ErrorEnumeration.USER_NOT_EXISTS1);
 		}
 		logger.info("Inside Event=1014,Class:OTSProduct_WsImpl,Method:ProductStockDaoImpl ");
 		return "Stock Updated Scuccessfully";

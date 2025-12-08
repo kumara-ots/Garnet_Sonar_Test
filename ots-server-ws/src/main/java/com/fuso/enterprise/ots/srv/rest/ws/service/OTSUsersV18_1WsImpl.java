@@ -753,36 +753,43 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 
 	@Override
 	public Response addReviewAndRating(AddReviewAndRatingRequest addReviewAndRatingRequest) {
-		Response response = null;
-		try {
-			if(addReviewAndRatingRequest.getRequestData().getCustomerId()==null || addReviewAndRatingRequest.getRequestData().getCustomerId().equals("")
-					|| addReviewAndRatingRequest.getRequestData().getProductId()==null || addReviewAndRatingRequest.getRequestData().getProductId().equals("")
-					|| addReviewAndRatingRequest.getRequestData().getOrderId()==null || addReviewAndRatingRequest.getRequestData().getOrderId().equals("")
-					|| addReviewAndRatingRequest.getRequestData().getOtsRatingReviewTitle()==null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewTitle().equals("")
-					|| addReviewAndRatingRequest.getRequestData().getOtsRatingReviewComment()==null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewComment().equals("")
-					|| addReviewAndRatingRequest.getRequestData().getOtsRatingReviewRating()==null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewRating().equals("")) 
-			{
-				return response = buildResponse(400,"Please Enter required inputs");
-			}	
-			String ResponseValue = otsUserService.addReviewAndRating(addReviewAndRatingRequest);
-			if(ResponseValue == "Review Rating Already Added") {
-				response = buildResponse(206,"Review Rating Already Added");
-			}
-			else if(ResponseValue == "Inserted") {
-				response = buildResponse(200,ResponseValue,"Successful");
-			}
-			else  {
-				response = buildResponse(404,ResponseValue,"Not Inserted");
-			}
-		}catch(Exception e){
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
-		} catch (Throwable e) {
-			logger.error("Exception while Inserting data to DB  :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
-		}
-		return response;
+	    Response response = null;
+
+	    try {
+	        // Validate required fields
+	        if (addReviewAndRatingRequest.getRequestData().getCustomerId() == null || addReviewAndRatingRequest.getRequestData().getCustomerId().isEmpty()
+	                || addReviewAndRatingRequest.getRequestData().getProductId() == null || addReviewAndRatingRequest.getRequestData().getProductId().isEmpty()
+	                || addReviewAndRatingRequest.getRequestData().getOrderId() == null || addReviewAndRatingRequest.getRequestData().getOrderId().isEmpty()
+	                || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewTitle() == null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewTitle().isEmpty()
+	                || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewComment() == null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewComment().isEmpty()
+	                || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewRating() == null || addReviewAndRatingRequest.getRequestData().getOtsRatingReviewRating().isEmpty()) {
+
+	            return buildResponse(400, "Please Enter required inputs");
+	        }
+
+	        String responseValue = otsUserService.addReviewAndRating(addReviewAndRatingRequest);
+
+	        // FIXED: Use equals() to compare strings
+	        if ("Review Rating Already Added".equals(responseValue)) {
+	            response = buildResponse(206, "Review Rating Already Added");
+	        } else if ("Inserted".equals(responseValue)) {
+	            response = buildResponse(200, responseValue, "Successful");
+	        } else {
+	            response = buildResponse(404, responseValue, "Not Inserted");
+	        }
+
+	    } catch (Exception e) {
+	        logger.error("Exception while Inserting data to DB: " + e.getMessage());
+	        return buildResponse(500, "Something Went Wrong");
+
+	    } catch (Throwable t) {
+	        logger.error("Unexpected Error while Inserting data to DB: " + t.getMessage());
+	        return buildResponse(500, "Something Went Wrong");
+	    }
+
+	    return response;
 	}
+
 
 	@Override
 	public Response getReviewAndRating(GetReviewRatingRequest getReviewRatingRequest) {
@@ -1326,7 +1333,7 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			String responseValue = otsUserService.addDistributorCompanyDetails(addDistributorCompanyDetailsRequest);
 			if(responseValue==null) {
 				response = responseWrapper.buildResponse(404,"Not Inserted");
-			}else if(responseValue == "Company Details Already Registered For This User") {
+			}else if("Company Details Already Registered For This User".equals(responseValue)) {
 				response = responseWrapper.buildResponse(404,"Company Details Already Registered For This User");
 			}else {
 				response = responseWrapper.buildResponse(200,responseValue,"Successful");
@@ -1407,7 +1414,7 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 			if(registrationInvoice == null) {
 				response = responseWrapper.buildResponse(404, "Invoice Not Generated");
 			}
-			else if(registrationInvoice == "Distributor Not Added Company Details") {
+			else if("Distributor Not Added Company Details".equals(registrationInvoice)) {
 				response = responseWrapper.buildResponse(404, "Distributor Not Added Company Details");
 			}
 			else {

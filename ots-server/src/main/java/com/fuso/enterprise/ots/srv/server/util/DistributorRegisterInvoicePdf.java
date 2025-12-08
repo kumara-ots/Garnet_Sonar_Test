@@ -324,7 +324,7 @@ public class DistributorRegisterInvoicePdf {
 		document.add(Chunk.NEWLINE);
 		
 		//To convert total cost from Number into Words
-		Paragraph sig = new Paragraph("Total Amount (in Words):  "+EnglishNumberToWords.convert(Double.valueOf(totalAmount).longValue())+ " Rupees Only",fontBold);
+		Paragraph sig = new Paragraph("Total Amount (in Words):  "+EnglishNumberToWords.convert((long)totalAmount)+ " Rupees Only",fontBold);
 		document.add(sig);
 		
 	}

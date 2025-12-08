@@ -3,6 +3,7 @@ package com.fuso.enterprise.ots.srv.rest.ws.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -195,32 +196,41 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	public Response insertOrder(InsertOrderRequest insertOrderRequest) {
 	    Response response = null;
 	    ExecutorService executor = Executors.newCachedThreadPool();
+
 	    try {
-	        // To Validate request
-	        if (insertOrderRequest.getRequest().getCustomerChangeAddressId() == null || insertOrderRequest.getRequest().getCustomerChangeAddressId().equals("")
-	                || insertOrderRequest.getRequest().getCustomerId() == null || insertOrderRequest.getRequest().getCustomerId().equals("")) {
+
+	        // Validate request
+	        if (insertOrderRequest.getRequest().getCustomerChangeAddressId() == null
+	                || insertOrderRequest.getRequest().getCustomerChangeAddressId().isEmpty()
+	                || insertOrderRequest.getRequest().getCustomerId() == null
+	                || insertOrderRequest.getRequest().getCustomerId().isEmpty()) {
 	            return buildResponse(400, "Please Enter Required Input");
 	        }
 
-	        // Validate Customer
-	        UserDataBOResponse customerDetails = oTSUserService.getUserIDUsers(insertOrderRequest.getRequest().getCustomerId());
+	        // Validate customer
+	        UserDataBOResponse customerDetails =
+	                oTSUserService.getUserIDUsers(insertOrderRequest.getRequest().getCustomerId());
 	        if (customerDetails.getUserDetails().isEmpty()) {
 	            return buildResponse(401, "Invalid Customer ID");
 	        }
 
-	        // Validate Customer Change Address
-	        Future<List<CustomerChangeAddress>> addressFuture = executor.submit(() -> oTSUserService.getCustomerChangeAddressById(insertOrderRequest.getRequest().getCustomerChangeAddressId()));
-	    
-	        // Check if Input Transaction Id is already present in DB
+	        // Future tasks
+	        Future<List<CustomerChangeAddress>> addressFuture =
+	                executor.submit(() -> oTSUserService.getCustomerChangeAddressById(
+	                        insertOrderRequest.getRequest().getCustomerChangeAddressId()));
+
 	        Future<List<OrderDetails>> transactionFuture = null;
 	        if (insertOrderRequest.getRequest().getOrderTransactionId() != null) {
-	            transactionFuture = executor.submit(() -> oTSOrderService.getOrderByOrderTransactionId(insertOrderRequest.getRequest().getOrderTransactionId()));
+	            transactionFuture =
+	                    executor.submit(() -> oTSOrderService.getOrderByOrderTransactionId(
+	                            insertOrderRequest.getRequest().getOrderTransactionId()));
 	        }
-	        
-	        // Get results of futures
+
+	        // Get results
 	        List<CustomerChangeAddress> customerChangeAddress = addressFuture.get();
-	        List<OrderDetails> checkTransactionId = (transactionFuture != null) ? transactionFuture.get() : Collections.emptyList();
-	        
+	        List<OrderDetails> checkTransactionId =
+	                (transactionFuture != null) ? transactionFuture.get() : Collections.emptyList();
+
 	        if (customerChangeAddress.isEmpty()) {
 	            return buildResponse(401, "Invalid Customer Address ID");
 	        }
@@ -228,9 +238,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	        if (!checkTransactionId.isEmpty()) {
 	            return buildResponse(401, "Duplicate Transaction ID");
 	        }
-	        
-        	// Insert Order
-	        Future<OrderProductBOResponse> insertOrderFuture = executor.submit(() -> oTSOrderService.insertOrder(insertOrderRequest));
+
+	        // Insert order
+	        Future<OrderProductBOResponse> insertOrderFuture =
+	                executor.submit(() -> oTSOrderService.insertOrder(insertOrderRequest));
 
 	        OrderProductBOResponse responseValue = insertOrderFuture.get();
 	        if (responseValue == null) {
@@ -238,14 +249,28 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	        } else {
 	            response = buildResponse(responseValue, "Inserted Order");
 	        }
+
+	    } catch (InterruptedException e) {
+	        // ✔ Sonar fix: restore interrupt state
+	        Thread.currentThread().interrupt();
+	        logger.error("Thread was interrupted: " + e.getMessage());
+	        return buildResponse(500, "Request Interrupted");
+
+	    } catch (ExecutionException e) {
+	        logger.error("Execution error while processing request: " + e.getMessage());
+	        return buildResponse(500, "Something Went Wrong");
+
 	    } catch (Exception e) {
 	        logger.error("Exception while fetching data from DB: " + e.getMessage());
 	        return buildResponse(500, "Something Went Wrong");
+
 	    } finally {
 	        executor.shutdown();
 	    }
-		return response;
+
+	    return response;
 	}
+
 
 	@Override
 	public Response getCustomerOrderStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {

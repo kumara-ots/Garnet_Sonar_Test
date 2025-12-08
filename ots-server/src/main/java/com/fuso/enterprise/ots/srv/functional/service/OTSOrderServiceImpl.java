@@ -1275,7 +1275,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        if (cancelOrderRequest.getRequest().getProductId() == null) {
 	            // Update order status to Cancel for main Order in ots_order table
 	            String cancelMainOrder = cancelMainOrder(cancelOrderRequest.getRequest().getOrderId(),cancelOrderRequest.getRequest().getCancelReason(),cancelOrderRequest.getRequest().getCancelledBy());
-	            if(cancelMainOrder == "Not Updated") {
+	            if("Not Updated".equals(cancelMainOrder)) {
 	            	return null;
 	            }
 	            
@@ -1296,7 +1296,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	        	// Check and update main order status
 	            // To check whether any one of the order is Assigned or Not, if its Assigned then main order status will be set to Assigned
 	        	String cancelSubOrder = cancelSubOrder(cancelOrderRequest.getRequest().getOrderId(),cancelOrderRequest.getRequest().getProductId(),cancelOrderRequest.getRequest().getCancelReason(),cancelOrderRequest.getRequest().getCancelledBy());
-	        	if(cancelSubOrder == "Not Updated") {
+	        	if("Not Updated".equals(cancelSubOrder)) {
 	            	return null;
 	            }
 	        	
@@ -2019,7 +2019,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		
 			//to update RRCOrderStatus
 			Response = orderProductDao.updateRRCOrderStatus(updateRRCStatusRequest);
-			if(Response == "Not Updated") {
+			if("Not Updated".equals(Response)) {
 				return Response;
 			}
 			

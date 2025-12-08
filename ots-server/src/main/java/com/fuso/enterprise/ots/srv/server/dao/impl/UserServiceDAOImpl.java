@@ -1013,45 +1013,55 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 	
 	@Override
 	public String deleteDistributor(String distributorId) {
-		String SellerResponse = null;
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("ots_distributor_id",UUID.fromString(distributorId));
-			
-			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-	        		.withFunctionName("delete_distributor")
-	        		.withSchemaName("public")
+	    String SellerResponse = null;
+	    try {
+
+	        Map<String, Object> queryParameters = new HashMap<>();
+	        queryParameters.put("ots_distributor_id", UUID.fromString(distributorId));
+
+	        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+	                .withFunctionName("delete_distributor")
+	                .withSchemaName("public")
 	                .withoutProcedureColumnMetaDataAccess();
-			simpleJdbcCall.addDeclaredParameter(new SqlParameter("ots_distributor_id", Types.OTHER));
-			
-			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
-			List<Map<String, Object>> outputResult = (List<Map<String, Object>>) queryResult.get("#result-set-1");
-			//converting output of procedure to String
-			String response = outputResult.get(0).values().toString();
-			
-			//comparing response of procedure & handling response
-			if(response.equalsIgnoreCase("[No User Found]")) {
-				SellerResponse = "No User Found";
-			}
-			else if(response.equalsIgnoreCase("[Pending Orders Or Products]")){
-				SellerResponse = "Pending Orders Or Products";
-			}
-			else if(response.equalsIgnoreCase("[Unable To Delete]")){
-				SellerResponse = "Unable To Delete";
-			}
-			else {
-				response.equalsIgnoreCase("[Deleted Successfully]");
-				SellerResponse  ="Deleted Successfully";
-			}
-		}catch(Exception e){
-			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while Inserting data into DB :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		}
-		return SellerResponse;
+
+	        simpleJdbcCall.addDeclaredParameter(new SqlParameter("ots_distributor_id", Types.OTHER));
+
+	        Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
+	        List<Map<String, Object>> outputResult =
+	                (List<Map<String, Object>>) queryResult.get("#result-set-1");
+
+	        // converting output of procedure to String
+	        String response = outputResult.get(0).values().toString();
+
+	        // comparing response of procedure & handling response
+	        if (response.equalsIgnoreCase("[No User Found]")) {
+	            SellerResponse = "No User Found";
+	        } 
+	        else if (response.equalsIgnoreCase("[Pending Orders Or Products]")) {
+	            SellerResponse = "Pending Orders Or Products";
+	        } 
+	        else if (response.equalsIgnoreCase("[Unable To Delete]")) {
+	            SellerResponse = "Unable To Delete";
+	        } 
+	        else if (response.equalsIgnoreCase("[Deleted Successfully]")) {   // ✔ FIXED
+	            SellerResponse = "Deleted Successfully";
+	        } 
+	        else {
+	            SellerResponse = "Unknown Response";
+	        }
+
+	    } catch (Exception e) {
+	        logger.error("Exception while Inserting data into DB :" + e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+
+	    } catch (Throwable e) {
+	        logger.error("Exception while Inserting data into DB :" + e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+	    }
+
+	    return SellerResponse;
 	}
+
 	
 	@Override
 	public List<UserDetails> getIncompleteSellerRegistrations() {

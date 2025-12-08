@@ -46,7 +46,6 @@ public class ResponseWrapper_old implements Serializable {
 	 */
 	public ResponseWrapper_old(int code, String error) {
 		this.code = code;
-		this.message = message;
 	}
 
 

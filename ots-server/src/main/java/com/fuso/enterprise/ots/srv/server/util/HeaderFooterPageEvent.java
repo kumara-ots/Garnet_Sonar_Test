@@ -54,7 +54,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
         // Header
         Image img = null;
         float headerYPosition = 0;
-        float headerXPosition = 36 + 28; 	// Adjusting the image position to the right by 1 cm (28 points)
+        float headerXPosition = 36f + 28; 	// Adjusting the image position to the right by 1 cm (28 points)
 
         //Condition to check page orientation & decide portrait or landscape
         if (document.getPageSize().getWidth() > document.getPageSize().getHeight()) {

@@ -18,7 +18,7 @@ import com.fuso.enterprise.ots.srv.functional.service.OTSUserServiceImpl;
 import com.fuso.enterprise.ots.srv.server.dao.impl.UserServiceDAOImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class userDetailsTest {
+public class UserDetailsTest {
 	
 	@InjectMocks
 	OTSUserServiceImpl otsUserServiceImpl;

@@ -307,7 +307,7 @@ public class BillOfSupplyPdf {
 		document.add(Chunk.NEWLINE);
 		
 		//To convert total cost from Number into Words
-		Paragraph sig = new Paragraph("Total Amount (in Words):  "+EnglishNumberToWords.convert(Double.valueOf(sum).longValue())+ " Rupees Only",fontBold);
+		Paragraph sig = new Paragraph("Total Amount (in Words):  "+EnglishNumberToWords.convert((long)sum)+ " Rupees Only",fontBold);
 		document.add(sig);
 		
 	}

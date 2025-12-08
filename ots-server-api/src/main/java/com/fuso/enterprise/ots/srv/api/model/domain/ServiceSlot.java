@@ -1,8 +1,5 @@
 package com.fuso.enterprise.ots.srv.api.model.domain;
 
-import java.util.List;
-import java.util.Map;
-
 public class ServiceSlot {
 
 	private String otsServiceId;
@@ -10,9 +7,6 @@ public class ServiceSlot {
 	private String otsServiceStatus;
 	private Object otsServiceSlot;
 
-	//private Map<String, List<Slot>> otsServiceSlot;
-
-	
 	public String getOtsServiceId() {
 		return otsServiceId;
 	}
@@ -36,14 +30,4 @@ public class ServiceSlot {
 	public void setOtsServiceStatus(String otsServiceStatus) {
 		this.otsServiceStatus = otsServiceStatus;
 	}
-
-	
-//	public Map<String, List<Slot>> getOtsServiceSlot() {
-//		return otsServiceSlot;
-//	}
-//
-//	public void setOtsServiceSlot(Map<String, List<Slot>> otsServiceSlot) {
-//		this.otsServiceSlot = otsServiceSlot;
-//	}
-
 }
