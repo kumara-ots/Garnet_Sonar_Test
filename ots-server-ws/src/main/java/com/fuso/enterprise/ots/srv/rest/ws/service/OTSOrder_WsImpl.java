@@ -58,6 +58,8 @@ import com.fuso.enterprise.ots.srv.server.util.ResponseWrapper;
 @EnableScheduling
 public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	
+    final String DB_ERROR_MSG = "Exception while fetching data from DB";
+	
 	@Inject
 	OTSOrderService oTSOrderService;
 	
@@ -98,10 +100,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderDetailsBOResponse,"Successful");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG +e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -124,10 +126,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -150,10 +152,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -182,10 +184,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(ResponseValue,"Inserted Order");
 			}
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
             return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
             return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -285,10 +287,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successfull");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -310,10 +312,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successfull");
 			}
 		} catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -335,10 +337,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getListOfOrderByDateBOResponse,"Successful");
 			}
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -363,10 +365,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}	
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -399,10 +401,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"Data Not Found");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -426,10 +428,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderDetails,"Successful");
 			}
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -446,10 +448,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(200,ResponseDate);
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -481,10 +483,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				}
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -492,7 +494,6 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	
 	@Override
 	public Response assignOrderToEmployee(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest) {
-		Response response = null;
 		try {
 			if(assignOrderToEmployeeRequest.getRequest().getOrderId() == null || assignOrderToEmployeeRequest.getRequest().getOrderId().equals("")
 					|| assignOrderToEmployeeRequest.getRequest().getCustomerId() == null || assignOrderToEmployeeRequest.getRequest().getCustomerId().equals("")
@@ -501,41 +502,39 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 					|| assignOrderToEmployeeRequest.getRequest().getProductId() == null || assignOrderToEmployeeRequest.getRequest().getProductId().equals("")
 					|| assignOrderToEmployeeRequest.getRequest().getDistributorId() == null || assignOrderToEmployeeRequest.getRequest().getDistributorId().equals("")
 					|| assignOrderToEmployeeRequest.getRequest().getExpectedDeliveryDate() == null || assignOrderToEmployeeRequest.getRequest().getExpectedDeliveryDate().equals("")) {
-				return response = buildResponse(400,"Please Enter Required Inputs");
+				return buildResponse(400,"Please Enter Required Inputs");
 			}
 			if(!assignOrderToEmployeeRequest.getRequest().getOrderStatus().equalsIgnoreCase("Assigned")) {
-				return response = buildResponse(400,"Order Status Should Be Assigned");
+				return buildResponse(400,"Order Status Should Be Assigned");
 			}
 
 			String responseValue = oTSOrderService.assignOrderToEmployee(assignOrderToEmployeeRequest);
 			if(responseValue == null || responseValue.equalsIgnoreCase("Not Updated")) {
-				response = buildResponse(404,"Order Has Not Been Assigned");
+				return buildResponse(404,"Order Has Not Been Assigned");
 			}else if(responseValue.equalsIgnoreCase("Order Has Been Assigned Successfully")) {
-				response = buildResponse(200,"Order Has Been Assigned Successfully");
+				return buildResponse(200,"Order Has Been Assigned Successfully");
 			}else if(responseValue.equalsIgnoreCase("Insufficient Stock")){
-				response = buildResponse(404,"Insufficient Stock. Add Stock Before Assigning Order");
+				return buildResponse(404,"Insufficient Stock. Add Stock Before Assigning Order");
 			}else {
-				response = buildResponse(404,"Order Has Not Been Assigned");
+				return buildResponse(404,"Order Has Not Been Assigned");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+			return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+			return  buildResponse(500,"Something Went Wrong");
 		}
-		 return response;
 	}
 	
 	@Override
 	public Response cancelMainAndSubOrder(CancelOrderRequest cancelOrderRequest) {
-		Response response = null;
 		try {
 			if(cancelOrderRequest.getRequest().getOrderId() == null || cancelOrderRequest.getRequest().getOrderId().equals("")
 					|| cancelOrderRequest.getRequest().getCustomerId() == null || cancelOrderRequest.getRequest().getCustomerId().equals("")
 					|| cancelOrderRequest.getRequest().getCancelReason() == null
 					|| cancelOrderRequest.getRequest().getCancelledBy() == null || cancelOrderRequest.getRequest().getCancelledBy().equals("")) {
-				return response = buildResponse(400,"Please Enter Required Inputs");
+				return  buildResponse(400,"Please Enter Required Inputs");
 			}
 			
 			String cancelledBy = cancelOrderRequest.getRequest().getCancelledBy();
@@ -544,73 +543,66 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
             } 
             
             if(cancelledBy.equalsIgnoreCase("Seller") && cancelOrderRequest.getRequest().getCancelReason().trim().isEmpty()) {
-            	return response = buildResponse(400,"Please Enter Required Inputs");
+            	return  buildResponse(400,"Please Enter Required Inputs");
             }
             
-			String ResponseDate = oTSOrderService.cancelMainAndSubOrder(cancelOrderRequest);
-			if(ResponseDate == null) {
-				response = buildResponse(404,"Order Has Not Been Cancelled");
+			String responseDate = oTSOrderService.cancelMainAndSubOrder(cancelOrderRequest);
+			if(responseDate == null) {
+				return buildResponse(404,"Order Has Not Been Cancelled");
 			}
 			else {
-				response = buildResponse(200,ResponseDate);
+				return buildResponse(200,responseDate);
 			}
-			return response;
 		}catch(Exception e){
-			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	        return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+	        return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data to DB  :"+e.getMessage());
-	        return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+	        return  buildResponse(500,"Something Went Wrong");
 		}
 	}
 	
 	@Override
 	public Response autoCancelOrderByDistributor() {
-		Response response = null;
 		try {
 			String responseDate = oTSOrderService.autoCancelOrderByDistributor();
-			if(responseDate.equalsIgnoreCase("Updated")) {
-				response = buildResponse("Order Cancelled Successfully","Successful");
+			if (responseDate.equalsIgnoreCase("Updated")) {
+				return buildResponse("Order Cancelled Successfully", "Successful");
+			} else if (responseDate.equalsIgnoreCase("No Orders Found")) {
+				return buildResponse(404, "No Orders Found");
+			} else {
+				return buildResponse(404, "Order Not Cancelled");
 			}
-			else if(responseDate.equalsIgnoreCase("No Orders Found")) {
-				response = buildResponse(404,"No Orders Found");
-			}
-			else {
-				response = buildResponse(404,"Order Not Cancelled");
-			}
-			return response;
-		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+		} catch (Exception e) {
+			logger.error(DB_ERROR_MSG + e.getMessage());
+			return buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG + e.getMessage());
+			return buildResponse(500, "Something Went Wrong");
 		}
 	}
 
 	@Override
 	public Response addPaymentDetailsForOrder(AddOrderPaymentDetailsRequest addOrderPaymentDetailsRequest) {
-		Response response = null;
 		OrderDetails otsOrderDetails = new OrderDetails();
 		try {	
 			if(addOrderPaymentDetailsRequest.getRequest().getOrderTransactionId() == null || addOrderPaymentDetailsRequest.getRequest().getOrderTransactionId().equals("")
 					|| addOrderPaymentDetailsRequest.getRequest().getPaymentId() == null || addOrderPaymentDetailsRequest.getRequest().getPaymentId().equals("")) {
-				return response = buildResponse(400,"Please Enter required inputs");
+				return buildResponse(400,"Please Enter required inputs");
 			}
 			otsOrderDetails = oTSOrderService.addPaymentDetailsForOrder(addOrderPaymentDetailsRequest);
 			if(otsOrderDetails == null) {
-				response = responseWrapper.buildResponse(404,"Payment Details Not Added");
+				return responseWrapper.buildResponse(404,"Payment Details Not Added");
 			}else {
-				response = responseWrapper.buildResponse(otsOrderDetails,"Successful");
+				return responseWrapper.buildResponse(otsOrderDetails,"Successful");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+			return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			return response = buildResponse(500,"Something Went Wrong");
+			logger.error(DB_ERROR_MSG+e.getMessage());
+			return  buildResponse(500,"Something Went Wrong");
 		}
-		 return response;
 	}
 	
 	@Override
@@ -624,10 +616,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderDetails,"Successfull");
 			}
 		} catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -646,10 +638,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Orders Available");
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -667,10 +659,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProductDetails,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -692,10 +684,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue,"Successful");
 			}
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -728,10 +720,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -749,10 +741,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -776,10 +768,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -797,10 +789,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -818,10 +810,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -844,10 +836,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -865,10 +857,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -890,10 +882,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue,"Successful");
 			}
 		}catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -910,10 +902,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(generatedDeliveryNoteresponse, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -930,10 +922,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProduct, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -956,10 +948,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -982,10 +974,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProductBOResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1003,10 +995,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1024,10 +1016,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1045,10 +1037,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1071,10 +1063,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 			return response;
 		}catch (BusinessException e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1090,10 +1082,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(200,"Distributor Has Pending Orders", "Successful");
 			}	
 		}catch (Exception e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :" + e.getMessage());
+			logger.error(DB_ERROR_MSG + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1112,10 +1104,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 			return response;
 		}catch(Exception e){
-			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 	        return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -1136,10 +1128,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 			return response;
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
