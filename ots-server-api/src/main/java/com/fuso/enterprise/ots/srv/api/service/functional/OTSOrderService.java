@@ -45,7 +45,7 @@ public interface OTSOrderService {
 	OrderDetailsBOResponse getRazorPayOrder(UpdateOrderDetailsRequest updateOrderDetailsRequest) throws JSONException;
 	JSONObject fetchPaymentDetailsByPaymetId(String paymentId);
 	OrderProductBOResponse getOrderDetailsForOrderId(String OrderId);
-	String closeMainOrder(String OrderId);
+	String closeMainOrder(String orderId);
 	String closeEmployeeOrder(CloseEmployeeOrderRequest  closeEmployeeOrderRequest);
 	String assignOrderToEmployee(AssignOrderToEmployeeRequest assignOrderToEmployeeRequest);
 	boolean checkForOrderAssigned(String orderId);

@@ -58,7 +58,7 @@ import com.fuso.enterprise.ots.srv.server.util.ResponseWrapper;
 @EnableScheduling
 public class OTSOrder_WsImpl implements OTSOrder_Ws{
 	
-    final String DB_ERROR_MSG = "Exception while fetching data from DB";
+    private static final String dbErrorMsg = "Exception while fetching data from DB";
 	
 	@Inject
 	OTSOrderService oTSOrderService;
@@ -100,10 +100,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderDetailsBOResponse,"Successful");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG +e.getMessage());
+			logger.error(dbErrorMsg +e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -126,10 +126,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -152,10 +152,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -184,10 +184,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(ResponseValue,"Inserted Order");
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
             return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
             return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -287,10 +287,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successfull");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -312,10 +312,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successfull");
 			}
 		} catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -337,10 +337,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getListOfOrderByDateBOResponse,"Successful");
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -365,10 +365,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}	
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -401,10 +401,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"Data Not Found");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -428,10 +428,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderDetails,"Successful");
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -448,10 +448,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(200,ResponseDate);
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -483,10 +483,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				}
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -519,10 +519,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				return buildResponse(404,"Order Has Not Been Assigned");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return  buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -554,10 +554,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				return buildResponse(200,responseDate);
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        return  buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -574,10 +574,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				return buildResponse(404, "Order Not Cancelled");
 			}
 		} catch (Exception e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return buildResponse(500, "Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return buildResponse(500, "Something Went Wrong");
 		}
 	}
@@ -597,10 +597,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				return responseWrapper.buildResponse(otsOrderDetails,"Successful");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return  buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return  buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -616,10 +616,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderDetails,"Successfull");
 			}
 		} catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -638,10 +638,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Orders Available");
 			}
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -659,10 +659,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProductDetails,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -684,10 +684,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue,"Successful");
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -720,10 +720,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -741,10 +741,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -768,10 +768,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(getDistributorSettlementResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -789,10 +789,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -810,10 +810,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -836,10 +836,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -857,10 +857,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(404,"No Order For You");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -882,10 +882,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue,"Successful");
 			}
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		 return response;
@@ -902,10 +902,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(generatedDeliveryNoteresponse, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -922,10 +922,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProduct, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -948,10 +948,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(ResponseValue, "Successful");
 			}
 		} catch (Exception e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -974,10 +974,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(orderProductBOResponse,"Successful");
 			}	
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -995,10 +995,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1016,10 +1016,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1037,10 +1037,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = buildResponse(orderProductBOResponse,"Successful");
 			}
 		} catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1063,10 +1063,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}	
 			return response;
 		}catch (BusinessException e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1082,10 +1082,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 				response = responseWrapper.buildResponse(200,"Distributor Has Pending Orders", "Successful");
 			}	
 		}catch (Exception e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG + e.getMessage());
+			logger.error(dbErrorMsg + e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 		return response;
@@ -1104,10 +1104,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 			return response;
 		}catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        return response = buildResponse(500,"Something Went Wrong");
 		}
 	}
@@ -1128,10 +1128,10 @@ public class OTSOrder_WsImpl implements OTSOrder_Ws{
 			}
 			return response;
 		} catch(Exception e){
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		} catch (Throwable e) {
-			logger.error(DB_ERROR_MSG+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			return response = buildResponse(500,"Something Went Wrong");
 		}
 	}

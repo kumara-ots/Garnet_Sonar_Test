@@ -99,7 +99,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	}
 	
 	private Boolean getBooleanOrNull(String value) {
-	    return (value == null || value.equals("")) ? null : new Boolean(value);
+	    return (value == null || value.isEmpty()) ? null : Boolean.valueOf(value);
 	}
 	
 	private boolean convertToBoolean(String value) {
@@ -108,7 +108,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public ProductDetailsBOResponse getProductList(ProductDetailsBORequest productDetailsBORequest) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		String searchKey=productDetailsBORequest.getRequestData().getSearchKey();
 		String seachValue=productDetailsBORequest.getRequestData().getSearchvalue();
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
@@ -274,7 +274,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	public ProductDetails getProductDetails(String productId) {
 		ProductDetails productDetails = new ProductDetails();
 		try {
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductId", UUID.fromString(productId));
 			try {
@@ -295,7 +295,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override //getting product list for mapped distributor id
 	public List<ProductDetails> getProductDetailswithStock(String  distributorIdValue) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
 			OtsUsers distributorId = new OtsUsers();
 			distributorId.setOtsUsersId(UUID.fromString(distributorIdValue));
@@ -314,7 +314,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	public ProductDetails updateProductStatus(String productId, String productStatus) {
 		try {
 			Map<String, Object> queryParameter = new HashMap<>();
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			queryParameter.put("otsProductId",UUID.fromString(productId));
 			otsProduct  = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
 			otsProduct.setOtsProductStatus(productStatus);
@@ -331,7 +331,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	@Override   // getting the product category and sub category and product list by level id of the product
 	public ProductDetailsBOResponse getProductByLevelId(String levelId) {
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		Map<String, Object> queryParameter = new HashMap<>();
 		List<OtsProduct> productList = null;
 		OtsProductLevel productLevel = new OtsProductLevel();
@@ -354,16 +354,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	@Override //get product by it's name
 	public List<ProductDetails> getProductDetailsByName(String productName) {
 		try {
-			List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
-			List<OtsProduct> productList = new ArrayList<OtsProduct>();
+			List<ProductDetails> productDetails = new ArrayList<>();
+			List<OtsProduct> productList = new ArrayList<>();
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductName",productName);
 			productList = super.getResultListByNamedQuery("OtsProduct.findByOtsProductName", queryParameter);
-			productDetails =  productList.stream().map(OtsProduct -> convertProductDetailsFromEntityToDomain(OtsProduct)).collect(Collectors.toList());	
-			System.out.println(productDetails.get(0).getProductId());
+			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());	
 			return productDetails;
 		}catch(Exception e) {
-			System.out.print(e);
 		}
 		return null;
 	}
@@ -411,7 +409,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
-	        System.out.println("Parsed JSON Response: " + jsonResponse);
 
 	        // Parse JSON
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -443,9 +440,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	//shreekant
 	@Override
 	public List<ProductDetails> getAllProductDetails() {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
-			List<OtsProduct> productList = new ArrayList<OtsProduct>();
+			List<OtsProduct> productList = new ArrayList<>();
 			Map<String, Object> queryParameter = new HashMap<>();
 			OtsProductLevel productLevelId = new OtsProductLevel();
 			productLevelId.setOtsProductLevelId(3);
@@ -453,7 +450,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			queryParameter.put("otsProductLevelId", productLevelId);
 			productList = super.getResultListByNamedQuery("OtsProduct.findAllProduct", queryParameter);
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
-			System.out.println(productDetails);
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
@@ -470,7 +466,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		String deliveryCharge = null;
 		try {
 			Map<String, Object> queryParameter = new HashMap<>();
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			queryParameter.put("otsProductId", UUID.fromString(productId));
 			otsProduct  = super.getResultByNamedQuery("OtsProduct.findByOtsProductId", queryParameter);
 			deliveryCharge = otsProduct.getOtsProductDeliveryCharge();
@@ -487,11 +483,11 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	{
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
 		try {
-			OtsUsers DistributorId = new OtsUsers();
-			DistributorId.setOtsUsersId(UUID.fromString(distributerId));
+			OtsUsers distributorId = new OtsUsers();
+			distributorId.setOtsUsersId(UUID.fromString(distributerId));
 			
 			Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("distributorId", DistributorId);
+			queryParameter.put("distributorId", distributorId);
 			List<OtsProduct> productList  = super.getResultListByNamedQuery("OtsProduct.getProductListbyDistributor", queryParameter);
 					
 			List<ProductDetails> productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
@@ -507,8 +503,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	public CategoryDetails getCategoryForProductId(String productId) {
 		CategoryDetails categoryDetails = new CategoryDetails();
 		try {
-			System.out.println("productId = "+productId);
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("product_id",UUID.fromString(productId));
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_category_for_product_id")
@@ -519,7 +514,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
 			
 			List<Map<String, Object>> productDetails = (List<Map<String, Object>>) queryResult.get("#result-set-1");
-			System.out.println("productDetails size = "+productDetails.size());
 			if(productDetails.size() == 0) {
 				return null;
 			}else {
@@ -540,7 +534,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	public SubCategoryDetails getSubCategoryForProductId(String productId) {
 		SubCategoryDetails subcategoryDetails = new SubCategoryDetails();
 		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("product_id",UUID.fromString(productId));
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_sub_category_for_product_id")
@@ -551,7 +545,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			Map<String, Object> queryResult = simpleJdbcCall.execute(queryParameters);
 			
 			List<Map<String, Object>> productDetails = (List<Map<String, Object>>) queryResult.get("#result-set-1");
-			if(productDetails.size() == 0) {
+			if(productDetails.isEmpty()) {
 				return null;
 			}else {
 				subcategoryDetails.setSubCategoryId((productDetails.get(0).get("subCategory_id").toString()));
@@ -569,14 +563,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getActiveProductListByDistributor(String distributorId) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		Map<String, Object> queryParameter = new HashMap<>();
 		List<OtsProduct> productList = null;
 		try {
-			OtsUsers DistrubutorId = new OtsUsers();
-			DistrubutorId.setOtsUsersId(UUID.fromString(distributorId));
+			OtsUsers distrubutorId = new OtsUsers();
+			distrubutorId.setOtsUsersId(UUID.fromString(distributorId));
 			
-			queryParameter.put("otsDistributorId", DistrubutorId);
+			queryParameter.put("otsDistributorId", distrubutorId);
 			productList  = super.getResultListByNamedQuery("OtsProduct.getActiveProductListByDistributor", queryParameter);
 			
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
@@ -589,9 +583,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getAllProductsWithDiscount() {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
-			List<OtsProduct> otsProductList = new ArrayList<OtsProduct>();
+			List<OtsProduct> otsProductList = new ArrayList<>();
 			Map<String, Object> queryParameter = new HashMap<>();
 			otsProductList = super.getResultListByNamedQuery("OtsProduct.getAllProductsWithDiscount", queryParameter);
 			productDetails = otsProductList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
@@ -607,14 +601,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getProductsByDistributorWithReviewAndRating(String distributorId) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		Map<String, Object> queryParameter = new HashMap<>();
 		List<OtsProduct> productList = null;
 		try {
-			OtsUsers DistrubutorId = new OtsUsers();
-			DistrubutorId.setOtsUsersId(UUID.fromString(distributorId));
+			OtsUsers distrubutorId = new OtsUsers();
+			distrubutorId.setOtsUsersId(UUID.fromString(distributorId));
 			
-			queryParameter.put("otsDistributorId", DistrubutorId);
+			queryParameter.put("otsDistributorId", distrubutorId);
 			productList  = super.getResultListByNamedQuery("OtsProduct.getProductsByDistributorWithReviewAndRating", queryParameter);
 			
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
@@ -627,15 +621,15 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public ProductDetailsBOResponse getProductsForSubCategory(String subCategoryId) {		
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
 		Map<String, Object> queryParameter = new HashMap<>();
 		List<OtsProduct> productList = null;
 		try {
-			OtsProduct OtsProduct = new OtsProduct();
-			OtsProduct.setOtsProductId(UUID.fromString(subCategoryId));
+			OtsProduct otsProduct = new OtsProduct();
+			otsProduct.setOtsProductId(UUID.fromString(subCategoryId));
 			
-			queryParameter.put("otsProductCategoryId", OtsProduct);
+			queryParameter.put("otsProductCategoryId", otsProduct);
 			productList  = super.getResultListByNamedQuery("OtsProduct.getProductsForSubCategory", queryParameter);
 					
 			productDetails =  productList.stream().map(product -> convertProductDetailsFromEntityToDomain(product)).collect(Collectors.toList());
@@ -692,7 +686,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
-	        System.out.println("Parsed JSON Response: " + jsonResponse);
 
 	        // Parse JSON
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -723,14 +716,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override  
 	public List<ProductDetails> getProductBySubCategory(String subCategoryId) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		Map<String, Object> queryParameter = new HashMap<>();
-		List<OtsProduct> productList = new ArrayList<OtsProduct>();
+		List<OtsProduct> productList = new ArrayList<>();
 		try {
-			OtsProduct OtsProduct = new OtsProduct();
-			OtsProduct.setOtsProductId(UUID.fromString(subCategoryId));
+			OtsProduct otsProductId = new OtsProduct();
+			otsProductId.setOtsProductId(UUID.fromString(subCategoryId));
 			
-			queryParameter.put("otsProductCategoryId",OtsProduct);
+			queryParameter.put("otsProductCategoryId",otsProductId);
 			productList  = super.getResultListByNamedQuery("OtsProduct.getProductBySubCategory", queryParameter);
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch(Exception e){
@@ -1078,14 +1071,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getCategoryAndSubCategoryByDistributor(GetCategorySubCategoryByDistributorRequest getCategorySubCategoryByDistributorRequest) {
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
 			//To set default value as "1" for key "category"
 			if(getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey().equalsIgnoreCase("category")) {
 				getCategorySubCategoryByDistributorRequest.getRequest().setSearchValue("1");
 			}
 			
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("search_key", getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey());
 			inParamMap.put("search_value", getCategorySubCategoryByDistributorRequest.getRequest().getSearchValue());
@@ -1124,14 +1117,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getCategoryAndSubCategory(GetCatgeorySubcategoryRequest getCatgeorySubcategoryRequest) {
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
 			//To set default value as "1" for key "category"
 			if(getCatgeorySubcategoryRequest.getRequest().getSearchKey().equalsIgnoreCase("category")) {
 				getCatgeorySubcategoryRequest.getRequest().setSearchValue("1");
 			}
 			
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("search_key", getCatgeorySubcategoryRequest.getRequest().getSearchKey());
 			inParamMap.put("search_value", getCatgeorySubcategoryRequest.getRequest().getSearchValue());
@@ -1168,9 +1161,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getParentAndVariantSiblingProducts(String variantProductId) {		
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("variant_product_id", UUID.fromString(variantProductId));
 
@@ -1211,7 +1204,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	                .withoutProcedureColumnMetaDataAccess();
 			simpleJdbcCall.addDeclaredParameter(new SqlParameter("product_id", Types.OTHER));
 			
-			Map<String, Object> productInfo=new HashMap<String, Object>();
+			Map<String, Object> productInfo=new HashMap<>();
 			productInfo.put("product_id",UUID.fromString(productId));
 			Map<String, Object> simpleJdbcCallResultForProductData = simpleJdbcCall.execute(productInfo);
 
@@ -1279,11 +1272,11 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	{
 		ProductDetailsBOResponse productDetailsBOResponse = new ProductDetailsBOResponse();
 		try {
-			OtsUsers DistributorId = new OtsUsers();
-			DistributorId.setOtsUsersId(UUID.fromString(distributerId));
+			OtsUsers distributorId = new OtsUsers();
+			distributorId.setOtsUsersId(UUID.fromString(distributerId));
 			
 			Map<String, Object> queryParameter = new HashMap<>();
-			queryParameter.put("distributorId", DistributorId);
+			queryParameter.put("distributorId", distributorId);
 			List<OtsProduct> productList  = super.getResultListByNamedQuery("OtsProduct.getParentProductListByDistributor", queryParameter);
 					
 			List<ProductDetails> productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
@@ -1297,10 +1290,10 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getRecentlyAddedProductList(String levelId,String productCountryCode){
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try 
 		{
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("level_id", Integer.parseInt(levelId));
 			inParamMap.put("product_country_code",productCountryCode);
@@ -1334,7 +1327,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getProductAndVarientsByStatus(String status) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("status", status);
@@ -1352,9 +1345,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getSiblingVariantProductsByPrimaryKey(GetSiblingVariantProductsByAttributeRequest getSiblingVariantProductsByAttributeRequest) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();
+			Map<String, Object> inParamMap = new HashMap<>();
 			inParamMap.put("product_id", getSiblingVariantProductsByAttributeRequest.getRequest().getProductId());
 			inParamMap.put("primary_attribute_key", getSiblingVariantProductsByAttributeRequest.getRequest().getPrimaryAttributeKey());
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
@@ -1372,7 +1365,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
-	        System.out.println("Parsed JSON Response: " + jsonResponse);
 
 	        // Parse JSON
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -1398,9 +1390,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 
 	@Override
 	public List<ProductDetails> getSiblingVariantProductsBySecondaryKey(GetSiblingVariantProductsByAttributeRequest getSiblingVariantProductsByAttributeRequest) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();
+			Map<String, Object> inParamMap = new HashMap<>();
 			inParamMap.put("product_id", getSiblingVariantProductsByAttributeRequest.getRequest().getProductId());
 			inParamMap.put("primary_attribute_key", getSiblingVariantProductsByAttributeRequest.getRequest().getPrimaryAttributeKey());
 			inParamMap.put("primary_attribute_value", getSiblingVariantProductsByAttributeRequest.getRequest().getPrimaryAttributeValue());
@@ -1422,7 +1414,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	        }
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
-	        System.out.println("Parsed JSON Response: " + jsonResponse);
 
 	        // Parse JSON
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -1448,10 +1439,10 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> filterProductsByGeneralProperties(FilterProductsByGeneralPropertiesRequest filterProductsByGeneralPropertiesRequest) {
-		List<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
 		
-			Map<String, Object> inParamMapForDynamicProductAttribute = new HashMap<String, Object>();
+			Map<String, Object> inParamMapForDynamicProductAttribute = new HashMap<>();
 			inParamMapForDynamicProductAttribute.put("price_min", filterProductsByGeneralPropertiesRequest.getRequest().getPricemin()==""?null:filterProductsByGeneralPropertiesRequest.getRequest().getPricemin());
 			inParamMapForDynamicProductAttribute.put("price_max", filterProductsByGeneralPropertiesRequest.getRequest().getPricemax()==""? null:filterProductsByGeneralPropertiesRequest.getRequest().getPricemax());
 			inParamMapForDynamicProductAttribute.put("discount_min", filterProductsByGeneralPropertiesRequest.getRequest().getDiscountmin()==""?null:filterProductsByGeneralPropertiesRequest.getRequest().getDiscountmin());
@@ -1476,7 +1467,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			Map<String, Object> simpleJdbcCallResultForProductAttribute = simpleJdbcCall.execute(inParamMapForDynamicProductAttribute);
 			
 			List<Map<String, Object>> result = (List<Map<String, Object>>) simpleJdbcCallResultForProductAttribute.get("#result-set-1");
-			System.out.println("am printing my output  ="+result);
 			 for(int i=0; i<result.size(); i++) {
 		        	productDetails.add(convertProductDetailsFromProcedureToDomain(result.get(i)));
 			}
@@ -1493,9 +1483,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getProductsBySubCategoryAndDistributor(GetProductsBySubCategoryAndDistributorRequest getProductsBySubCategoryAndDistributorRequest) {		
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("sub_category_id", UUID.fromString(getProductsBySubCategoryAndDistributorRequest.getRequest().getSubcategoryId()));
 			inParamMap.put("distributor_id", UUID.fromString(getProductsBySubCategoryAndDistributorRequest.getRequest().getDistributorId()));
@@ -1512,7 +1502,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			//calling stored procedure and getting response
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(inParamMap);
 			List<Map<String, Object>> out = (List<Map<String, Object>>) simpleJdbcCallResult.get("#result-set-1");
-			System.out.println("am printing ="+out.size());
 			
 			//to convert procedure output into product details object
 			for(int i=0; i<out.size(); i++) {
@@ -1530,9 +1519,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getVariantsByProductId(String productId) {		
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			inParamMap.put("product_id",UUID.fromString(productId)); 
 
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
@@ -1545,7 +1534,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			//calling stored procedure and getting response
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(inParamMap);
 			List<Map<String, Object>> out = (List<Map<String, Object>>) simpleJdbcCallResult.get("#result-set-1");
-			System.out.println("am printing ="+out.size());
 			
 			//to convert procedure output into product details object
 			for(int i=0; i<out.size(); i++) {
@@ -1564,9 +1552,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getVariantsProductByDistributor(String distributorId) {		
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("distributor_id",UUID.fromString(distributorId)); 
 
@@ -1581,7 +1569,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			//calling stored procedure and getting response
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(inParamMap);
 			List<Map<String, Object>> out = (List<Map<String, Object>>) simpleJdbcCallResult.get("#result-set-1");
-			System.out.println("am printing ="+out.size());
 			
 			//to convert procedure output into product details object
 			for(int i=0; i<out.size(); i++) {
@@ -1661,7 +1648,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				getCatgeorySubcategoryRequest.getRequest().setSearchValue("1");
 			}
 			
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("search_key", getCatgeorySubcategoryRequest.getRequest().getSearchKey());
 			inParamMap.put("search_value", getCatgeorySubcategoryRequest.getRequest().getSearchValue());
@@ -1765,17 +1752,17 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			newProduct.setOtsProductCurrency(addProductByCountryRequest.getRequest().getOtsProductCurrency());
 			newProduct.setOtsProductCurrencySymbol(addProductByCountryRequest.getRequest().getOtsProductCurrencySymbol());
 			newProduct.setOtsProductDeliveryCharge(addProductByCountryRequest.getRequest().getProductDeliveryCharge());
-			newProduct.setOtsProductReturnDeliveryCharge(new Integer(addProductByCountryRequest.getRequest().getProductReturnDeliveryCharge()));
+			newProduct.setOtsProductReturnDeliveryCharge(Integer.valueOf(addProductByCountryRequest.getRequest().getProductReturnDeliveryCharge()));
 			newProduct.setCreatedUser(oldProduct.getCreatedUser());
 			newProduct.setOtsProductBulkEligible(oldProduct.getOtsProductBulkEligible());
 			newProduct.setOtsProductBulkMinQty(oldProduct.getOtsProductBulkMinQty());
 			newProduct.setOtsProductDeliveryPolicy(addProductByCountryRequest.getRequest().getProductDeliveryPolicy());
-			newProduct.setOtsProductCancellationAvailability(new Boolean(addProductByCountryRequest.getRequest().getProductCancellationAvailability()));
+			newProduct.setOtsProductCancellationAvailability(Boolean.valueOf(addProductByCountryRequest.getRequest().getProductCancellationAvailability()));
 			newProduct.setOtsProductCancellationPolicy(addProductByCountryRequest.getRequest().getProductCancellationPolicy());
-			newProduct.setOtsProductReplacementAvailability(new Boolean(addProductByCountryRequest.getRequest().getProductReplacementAvailability()));
+			newProduct.setOtsProductReplacementAvailability(Boolean.valueOf(addProductByCountryRequest.getRequest().getProductReplacementAvailability()));
 			newProduct.setOtsProductReplacementPolicy(addProductByCountryRequest.getRequest().getProductReplacementPolicy());
 			newProduct.setOtsProductReplacementDays(addProductByCountryRequest.getRequest().getProductReplacementDays().equalsIgnoreCase("")?"0":addProductByCountryRequest.getRequest().getProductReplacementDays());
-			newProduct.setOtsProductReturnAvailability(new Boolean(addProductByCountryRequest.getRequest().getProductReturnAvailability()));
+			newProduct.setOtsProductReturnAvailability(Boolean.valueOf(addProductByCountryRequest.getRequest().getProductReturnAvailability()));
 			newProduct.setOtsProductReturnPolicy(addProductByCountryRequest.getRequest().getProductReturnPolicy());
 			newProduct.setOtsProductReturnDays(addProductByCountryRequest.getRequest().getProductReturnDays().equalsIgnoreCase("")?"0":addProductByCountryRequest.getRequest().getProductReturnDays());
 			newProduct.setUnitOfMeasurement(oldProduct.getUnitOfMeasurement());
@@ -1879,13 +1866,12 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				otsProduct.setOtsProductSellerType(getValueOrNull(addProductDetails.getOtsProductSellerType()));
 				
 				save(otsProduct);
-				System.out.println(otsProduct);
 				super.getEntityManager().flush();
 				return otsProduct.getOtsProductId().toString();
 			}
 			else {
 				//To Update Existing Product
-				OtsProduct otsProduct = new OtsProduct();
+				OtsProduct otsProduct;
 				Map<String, Object> queryParameter = new HashMap<>();
 				queryParameter.put("otsProductId", UUID.fromString(addProductDetails.getProductId()));
 				
@@ -1894,7 +1880,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 				}catch (NoResultException e) {
 					return null;
 				}
-				System.out.println("old status = "+otsProduct.getOtsProductStatus());
 				//If Product status = Active then set Active else check if the Request Status is > Previous Status else set the Request Status
 				if(addProductDetails.getProductStatus().equalsIgnoreCase("active")) {
 					otsProduct.setOtsProductStatus(addProductDetails.getProductStatus());
@@ -1940,7 +1925,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	@Override 
 	public String addProductPricingDetails(ProductPricingDetails productPricingDetails){
 		try {
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductId",UUID.fromString(productPricingDetails.getProductId()));
 			try {
@@ -1983,7 +1968,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	@Override 	
 	public String addProductPolicyDetails(ProductPolicy productPolicy){
 	    try {
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductId", UUID.fromString(productPolicy.getProductId()));
 			try {
@@ -2029,7 +2014,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	@Override 	
 	public String addProductManufactureDetails(ProductManufactureDetails productManufactureDetails){
 		try {
-			OtsProduct otsProduct = new OtsProduct();
+			OtsProduct otsProduct;
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsProductId", UUID.fromString(productManufactureDetails.getProductId()));
 			try {
@@ -2171,7 +2156,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	    ProductSearchResponse response = new ProductSearchResponse();
 	    try {
 	    	// Step 1: Prepare input parameters
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			inParamMap.put("page_number", searchProductRequest.getRequest().getPageNumber());
 			inParamMap.put("data_size", searchProductRequest.getRequest().getDataSize());
 			inParamMap.put("search_term", searchProductRequest.getRequest().getProductName());
@@ -2252,9 +2237,9 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getProductsBySubCategoryWithIntermediateStatus(String subcategoryId) {		
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("sub_category_id", UUID.fromString(subcategoryId));
 
@@ -2269,7 +2254,6 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			//calling stored procedure and getting response
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(inParamMap);
 			List<Map<String, Object>> out = (List<Map<String, Object>>) simpleJdbcCallResult.get("#result-set-1");
-			System.out.println("am printing ="+out.size());
 			
 			//to convert procedure output into product details object
 			for(int i=0; i<out.size(); i++) {
@@ -2287,14 +2271,14 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	
 	@Override
 	public List<ProductDetails> getCategoryAndSubCategoryWithAttribute(GetCatgeorySubcategoryRequest getCatgeorySubcategoryRequest) {
-		List<ProductDetails> productList = new ArrayList<ProductDetails>();
+		List<ProductDetails> productList = new ArrayList<>();
 		try {
 			//To set default value as "1" for key "category"
 			if(getCatgeorySubcategoryRequest.getRequest().getSearchKey().equalsIgnoreCase("category")) {
 				getCatgeorySubcategoryRequest.getRequest().setSearchValue("1");
 			}
 			
-			Map<String, Object> inParamMap = new HashMap<String, Object>();				
+			Map<String, Object> inParamMap = new HashMap<>();				
 			//setting up parameter for the pagination variable
 			inParamMap.put("search_key", getCatgeorySubcategoryRequest.getRequest().getSearchKey());
 			inParamMap.put("search_value", getCatgeorySubcategoryRequest.getRequest().getSearchValue());
@@ -2430,12 +2414,12 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			newProduct.setOtsProductBulkEligible(oldProduct.getOtsProductBulkEligible());
 			newProduct.setOtsProductBulkMinQty(oldProduct.getOtsProductBulkMinQty());
 			newProduct.setOtsProductDeliveryPolicy(oldProduct.getOtsProductDeliveryPolicy());
-			newProduct.setOtsProductCancellationAvailability(new Boolean(oldProduct.getOtsProductCancellationAvailability()));
+			newProduct.setOtsProductCancellationAvailability(Boolean.valueOf(oldProduct.getOtsProductCancellationAvailability()));
 			newProduct.setOtsProductCancellationPolicy(oldProduct.getOtsProductCancellationPolicy());
-			newProduct.setOtsProductReplacementAvailability(new Boolean(oldProduct.getOtsProductReplacementAvailability()));
+			newProduct.setOtsProductReplacementAvailability(Boolean.valueOf(oldProduct.getOtsProductReplacementAvailability()));
 			newProduct.setOtsProductReplacementPolicy(oldProduct.getOtsProductReplacementPolicy());
 			newProduct.setOtsProductReplacementDays(oldProduct.getOtsProductReplacementDays());
-			newProduct.setOtsProductReturnAvailability(new Boolean(oldProduct.getOtsProductReturnAvailability()));
+			newProduct.setOtsProductReturnAvailability(Boolean.valueOf(oldProduct.getOtsProductReturnAvailability()));
 			newProduct.setOtsProductReturnPolicy(oldProduct.getOtsProductReturnPolicy());
 			newProduct.setOtsProductReturnDays(oldProduct.getOtsProductReturnDays());
 			newProduct.setBulkAvailability(oldProduct.getBulkAvailability());

@@ -54,7 +54,6 @@ public class ProformaPdf {
 			addProformaThankYouNoteAtTheEndOfPage(document,writer);
 			//Close document and outputStream.
 			document.close();
-			System.out.println("Pdf created successfully.");
 			
         } catch (Exception e) {
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -74,7 +73,7 @@ public class ProformaPdf {
  	}
     
     private static void proformaInvoiceTitle(Document document)
-	        throws MalformedURLException, IOException, DocumentException {
+	        throws  IOException, DocumentException {
 
 	    try {
 	        // Better minimal margins
@@ -162,7 +161,6 @@ public class ProformaPdf {
 	
 	    // Generate invoice number and current date
 	    String invoiceNumber = generateInvoiceNumber();
-	    System.out.println("invoiceNumber = "+invoiceNumber);
 	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    String now = LocalDateTime.now().format(dtf);
 	
@@ -306,7 +304,6 @@ public class ProformaPdf {
 	
 	private static void addOrderDetails(Document document,List<List<String>> orderDetails) throws DocumentException {
 		Font fontBold = FontFactory.getFont(FontFactory.TIMES_BOLD,12,BaseColor.BLACK);
-		Font fontLight = FontFactory.getFont(FontFactory.TIMES,11,BaseColor.BLACK);
 		
 		PdfPTable table = new PdfPTable(8);
 		//to set the table width
@@ -330,7 +327,6 @@ public class ProformaPdf {
 				cell1.setBorderWidth(2f);
 	            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
 	            table.addCell(cell1);
-	            System.out.println("orderDetails row: " + orderDetails.get(i));
 
 			}
 		}	
@@ -350,7 +346,6 @@ public class ProformaPdf {
 		DecimalFormat decfor = new DecimalFormat("0.00");  //To format decimal number to 2 digits "decfor.format(sum)"
 		for(int i=0;i<orderDetails.size();i++)
 		{
-			System.out.println("price = "+String.valueOf(orderDetails.get(i).get(orderDetails.get(i).size()-1)));
 			sum = sum + Double.parseDouble(String.valueOf((orderDetails.get(i).get(orderDetails.get(i).size()-1))));
 		}
 		 
@@ -360,7 +355,6 @@ public class ProformaPdf {
 			bf = BaseFont.createFont("c:/windows/fonts/arial.ttf",
 			                    BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
         	logger.error("Exception while fetching data from DB :"+e.getMessage());
 		}
 		Font font = new Font(bf, 12);
@@ -400,10 +394,6 @@ public class ProformaPdf {
 	    PdfPTable table = new PdfPTable(2);
 	    table.setWidthPercentage(100);
 	    table.setWidths(new int[]{200, 500});
-
-	    // Expected columns order:
-	    // [Sl.no, payment_details_name, payment_details_account_number, payment_details_ifse_code,
-	    //  payment_details_bankname, payment_details_address]
 
 	    for (int i = 0; i < distDetails.size(); i++) {
 	        List<String> row = distDetails.get(i);

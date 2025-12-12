@@ -105,7 +105,6 @@ import com.fuso.enterprise.ots.srv.server.dao.impl.UserServiceDAOImpl;
 import com.fuso.enterprise.ots.srv.server.util.DeliveryNote;
 import com.fuso.enterprise.ots.srv.server.util.EmailUtil;
 import com.fuso.enterprise.ots.srv.server.util.ExcelGenerator;
-import com.fuso.enterprise.ots.srv.server.util.FcmPushNotification;
 import com.fuso.enterprise.ots.srv.server.util.InvoicePdf;
 import com.fuso.enterprise.ots.srv.server.util.OTSUtil;
 import com.fuso.enterprise.ots.srv.server.util.ProformaPdf;
@@ -125,12 +124,12 @@ public class OTSOrderServiceImpl implements OTSOrderService {
     private EmailUtil emailUtil;
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private static final java.sql.Date Date = null;
+	private static final String dbErrorMsg = "Exception while fetching data from DB :";
+	
 	private OrderServiceDAO orderServiceDAO;
 	private OrderProductDAO orderProductDao;
 	private ProductStockDao productStockDao;
 	private UserServiceDAO userServiceDAO;
-	private FcmPushNotification fcmPushNotification;
 	private ProductServiceDAO productServiceDAO;
 	private CouponOrderDAO couponOrderDAO;
 	private CouponDAO couponDAO;
@@ -222,34 +221,33 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	
 	@Override
 	public OrderProductBOResponse getOrderByStatusAndDistributor(GetOrderByStatusRequest getOrderByStatusRequest) {
+
 		try {
 			OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-			// getting order details by passing the distributor id
-			List<OrderDetails> OrderDetails = orderServiceDAO.getOrderByDistributorOrderProductStatus(getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
-			System.out.println("order list size = "+OrderDetails.size());
-			if(OrderDetails.size() == 0) {
+			// Get order details
+			List<OrderDetails> orderDetails = orderServiceDAO.getOrderByDistributorOrderProductStatus(getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
+
+			if (orderDetails.isEmpty()) {
 				return null;
-			}else {
-				List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
-				//getting order product details
-				for (int i = 0; i <OrderDetails.size() ; i++)
-				{
-					System.out.println("order id"+OrderDetails.get(i).getOrderId());
-					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(OrderDetails.get(i).getOrderId(),getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
-					System.out.println("orderProduct size = "+orderProductDetailsList.size());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(OrderDetails.get(i),orderProductDetailsList));
-				}
-				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
-				return orderProductBOResponse;
 			}
-		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			// Use diamond operator <>
+			List<OrderDetailsAndProductDetails> detailsList = new ArrayList<>();
+
+			// Loop through order details
+			for (OrderDetails order : orderDetails) {
+
+				List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(order.getOrderId(), getOrderByStatusRequest.getRequest().getDistrubitorId(),getOrderByStatusRequest.getRequest().getStatus());
+				detailsList.add(addProductAndOrderDetailsIntoResponse(order, orderProductDetailsList));
+			}
+			orderProductBOResponse.setOrderList(detailsList);
+			return orderProductBOResponse;
+
+		} catch (Exception e) {
+			logger.error(dbErrorMsg + e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
+
 	
 	@Override
 	public OrderProductAndOrderResponse getOrderByDistributorIdAndSubOrderStatus(GetOrderByStatusRequest getOrderByStatusRequest) {
@@ -260,27 +258,27 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order details for the order product
 				
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					OrderDetails OrderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(OrderDetails,orderProductDetailsList.get(i)));
+					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
+					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 
-	private OrderDetailsAndProductDetails AddProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,List<OrderProductDetails> OrderProductDetails)
+	private OrderDetailsAndProductDetails addProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,List<OrderProductDetails> orderProductDetails)
 	{
 		OrderDetailsAndProductDetails orderDetailsAndProductDetails = new OrderDetailsAndProductDetails();
 		orderDetailsAndProductDetails.setOrderId(orderDetails.getOrderId());
@@ -290,7 +288,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setOrderStatus(orderDetails.getOrderStatus());
 		orderDetailsAndProductDetails.setOrderdeliveryCharge(orderDetails.getOrderDeliveryCharge());
 		
-		orderDetailsAndProductDetails.setOrderdProducts(OrderProductDetails);
+		orderDetailsAndProductDetails.setOrderdProducts(orderProductDetails);
 		orderDetailsAndProductDetails.setDelivaryDate(orderDetails.getOrderDeliveryDate());
 		orderDetailsAndProductDetails.setOrderDate(orderDetails.getOrderDate());
 		orderDetailsAndProductDetails.setDelivaredDate(orderDetails.getOrderDeliverdDate());
@@ -309,7 +307,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		return orderDetailsAndProductDetails;
 	}
 
-	private OrderDetailsAndProductDetails GetProductAndOrderDetails(OrderDetails orderDetails,List<OrderProductDetails> OrderProductDetails)
+	private OrderDetailsAndProductDetails getProductAndOrderDetails(OrderDetails orderDetails,List<OrderProductDetails> orderProductDetails)
 	{
 		OrderDetailsAndProductDetails orderDetailsAndProductDetails = new OrderDetailsAndProductDetails();
 		orderDetailsAndProductDetails.setOrderId(orderDetails.getOrderId());
@@ -318,7 +316,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setOrderCost(orderDetails.getOrderCost());
 		orderDetailsAndProductDetails.setOrderStatus(orderDetails.getOrderStatus());
 		orderDetailsAndProductDetails.setOrderDate(orderDetails.getOrderDate());
-		orderDetailsAndProductDetails.setOrderdProducts(OrderProductDetails);
+		orderDetailsAndProductDetails.setOrderdProducts(orderProductDetails);
 		orderDetailsAndProductDetails.setDelivaryDate(orderDetails.getOrderDeliveryDate());
 		orderDetailsAndProductDetails.setOrderDate(orderDetails.getOrderDate());
 		orderDetailsAndProductDetails.setDelivaredDate(orderDetails.getOrderDeliverdDate());
@@ -333,22 +331,22 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderDetailsAndProductDetails.setDeliveryState(orderDetails.getOrderState());
 		orderDetailsAndProductDetails.setDeliveryDistrict(orderDetails.getOrderDistrict());
 		
-		for(int i=0 ; i<OrderProductDetails.size() ; i++) {
-			if(OrderProductDetails.get(i).getAssignedId()!= null) {
-				orderDetailsAndProductDetails.setEmployeeDetails(userServiceDAO.getUserDetails(OrderProductDetails.get(i).getAssignedId()));
+		for(int i=0 ; i<orderProductDetails.size() ; i++) {
+			if(orderProductDetails.get(i).getAssignedId()!= null) {
+				orderDetailsAndProductDetails.setEmployeeDetails(userServiceDAO.getUserDetails(orderProductDetails.get(i).getAssignedId()));
 			}
-			if(OrderProductDetails.get(i).getDistributorId()!= null) {
-				orderDetailsAndProductDetails.setDistributorDetails(userServiceDAO.getUserDetails(OrderProductDetails.get(0).getDistributorId()));
+			if(orderProductDetails.get(i).getDistributorId()!= null) {
+				orderDetailsAndProductDetails.setDistributorDetails(userServiceDAO.getUserDetails(orderProductDetails.get(0).getDistributorId()));
 			}
 				
-			if(OrderProductDetails.get(i).getOtsOrderProductStatus().equalsIgnoreCase("cancel"))
+			if(orderProductDetails.get(i).getOtsOrderProductStatus().equalsIgnoreCase("cancel"))
 			{
 				orderDetailsAndProductDetails.getOrderdProducts().get(i).setSubOrderDeliveredDate("----------");
 			}
-			else if(OrderProductDetails.get(i).getSubOrderDeliveredDate() == null || OrderProductDetails.get(i).getSubOrderDeliveredDate().equals("")) {
+			else if(orderProductDetails.get(i).getSubOrderDeliveredDate() == null || orderProductDetails.get(i).getSubOrderDeliveredDate().equals("")) {
 				orderDetailsAndProductDetails.getOrderdProducts().get(i).setSubOrderDeliveredDate("Yet To Be Delivered");
 			}else {		
-				orderDetailsAndProductDetails.getOrderdProducts().get(i).setSubOrderDeliveredDate(OrderProductDetails.get(i).getSubOrderDeliveredDate());
+				orderDetailsAndProductDetails.getOrderdProducts().get(i).setSubOrderDeliveredDate(orderProductDetails.get(i).getSubOrderDeliveredDate());
 			}
 		}
 		orderDetailsAndProductDetails.setCustomerDetails(userServiceDAO.getUserDetails(orderDetails.getCustomerId()));
@@ -360,25 +358,18 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	public OrderProductBOResponse insertOrderAndProduct(AddOrUpdateOrderProductBOrequest addOrUpdateOrderProductBOrequest) 
 	{
 		// commented code from 288 to 299 will check for the near place order distributor code
-		OrderDetails otsOrderDetails = new OrderDetails();
-		OrderProductDetails orderProductDetails = new OrderProductDetails();
-		OrderProductBOResponse Response = new OrderProductBOResponse();
-		RequestBOUserBySearch requestBOUserBySearch = new RequestBOUserBySearch();	
-		GetUserDetailsBORequest userDetailsBORequest = new GetUserDetailsBORequest();
+		OrderDetails otsOrderDetails;
+		OrderProductDetails orderProductDetails;
+		OrderProductBOResponse Response;
 		UserDetails distributer=new UserDetails();
 		ProductDetails productDetails=new ProductDetails();
 	
-		userDetailsBORequest.setUserLat(addOrUpdateOrderProductBOrequest.getRequest().getUserLat());
-		userDetailsBORequest.setUserLong(addOrUpdateOrderProductBOrequest.getRequest().getUserLong());
-						
-		requestBOUserBySearch.setRequestData(userDetailsBORequest);
-
 		//getting customer details for order
-		UserDetails Customer = new UserDetails();
-		Customer = userServiceDAO.getUserDetails(addOrUpdateOrderProductBOrequest.getRequest().getCustomerId());
+		UserDetails customer = new UserDetails();
+		customer = userServiceDAO.getUserDetails(addOrUpdateOrderProductBOrequest.getRequest().getCustomerId());
 		
 		//To set delivery address for Order, if the customer has entered change address or else default address
-		List<CustomerChangeAddress> customerSecondaryAddress = new ArrayList<CustomerChangeAddress>();
+		List<CustomerChangeAddress> customerSecondaryAddress = new ArrayList<>();
 		
 		//getting Secondary Address Details 
 		customerSecondaryAddress = customerChangeAddressDAO.getCustomerChangeAddressById(addOrUpdateOrderProductBOrequest.getRequest().getCustomerChangeAddressId());
@@ -458,7 +449,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					
 					//Creating message content
 					String distMsg="<p>Hi,<br><br>" + 
-							"You have received a New Order placed by Customer" + Customer.getFirstName()+" "+Customer.getLastName()+"<br>"+
+							"You have received a New Order placed by Customer" + customer.getFirstName()+" "+customer.getLastName()+"<br>"+
 							"Please Approve Order No: "+otsOrderDetails.getOrderNumber()+" with Sub OrderId: "+orderProductDetails.getOtsSubOrderId()+"<br>" +
 							"Please Login to know the Order details. Click here to "+distPageLink+"</br><br>"+
 							"Thanks And Regards,<br>" + 
@@ -514,7 +505,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					String custPageLink = "<a href= '"+customerPageLoginLink+"'>Login</a> </p>";
 					
 					//Creating message content
-					String custMsg="<p>Hi "+Customer.getFirstName()+" "+Customer.getLastName()+", <br><br>" + 
+					String custMsg="<p>Hi "+customer.getFirstName()+" "+customer.getLastName()+", <br><br>" + 
 							"Order Successfully Placed.<br>"+
 							"We are pleased to confirm your Order No: "+otsOrderDetails.getOrderNumber()+"<br>" +
 							"Please Login to know the Order details. Click here to "+custPageLink+"</br>"+
@@ -522,11 +513,11 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 							"Thanks And Regards,<br>" + 
 							companyName+" Support Team</p>";
 					//sending mail for Customer for inserting order
-					emailUtil.sendCustomermail(Customer.getEmailId(), "", "Order Confirmation", custMsg);
+					emailUtil.sendCustomermail(customer.getEmailId(), "", "Order Confirmation", custMsg);
 				    
 				    //Creating message content
 					String adminMsg="<p>Hi,<br>" + 
-							"Order Id: "+otsOrderDetails.getOrderId()+" placed by Customer Id: "+Customer.getUserId()+" , "+Customer.getFirstName()+" "+Customer.getLastName()+
+							"Order Id: "+otsOrderDetails.getOrderId()+" placed by Customer Id: "+customer.getUserId()+" , "+customer.getFirstName()+" "+customer.getLastName()+
 							" with order Amount Rs."+otsOrderDetails.getOrderCost()+"<br>"+
 							"Order Details are mentioned below. <br>"+table+"<br><br>"+
 							"Thanks And Regards,<br>" + 
@@ -691,7 +682,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
         	
         	//To generate response data after inserting order in DB
 			List<OrderDetailsAndProductDetails> orderDetailsAndProductDetails = new ArrayList<>();
-			orderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(otsOrderDetails,orderProductList)); 
+			orderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(otsOrderDetails,orderProductList)); 
 			response.setOrderList(orderDetailsAndProductDetails);
 		
 			//Notify Customer & Admin for Successful Order Placed only for COD Orders
@@ -744,10 +735,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return response;
 
 		}catch(Exception e){
-			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error("Exception while Inserting data into DB  :"+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -827,7 +818,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		UserDetails distributer=new UserDetails();
 		ProductDetails productDetails=new ProductDetails();
 	
-		String Response;
+		String response;
 		try {
 			otsOrderDetails = orderServiceDAO.insertOrderAndGetOrderId(addOrUpdateOrderProductBOrequest);
 			try {
@@ -837,8 +828,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					distributer  =userServiceDAO.getUserDetails(productDetails.getDistributorId());	
 					orderProductDao.insertOrdrerProductByOrderId(otsOrderDetails.getOrderId(),distributer.getUserId(), addOrUpdateOrderProductBOrequest.getRequest().getProductList().get(i));
 				}
-				Response = "Order Placed and OrderId Is "+otsOrderDetails.getOrderId();
-				return Response;
+				response = "Order Placed and OrderId Is "+otsOrderDetails.getOrderId();
+				return response;
 			}catch(Exception e){
 				throw new BusinessException(e, ErrorEnumeration.INPUT_PARAMETER_INCORRECT);
 			} catch (Throwable e) {
@@ -911,7 +902,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getCustomerOrderStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			//get customer order details
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getCustomerOrderStatus(getCustomerOrderByStatusBOrequest);
@@ -922,7 +913,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				{
 					//get product details for customer's order 
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);	
 			}
@@ -940,7 +931,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderDetailsByDate(GetOrderBORequest getOrderBORequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderBydate(getOrderBORequest);
 			if(orderDetailsList.size() == 0) {
@@ -950,7 +941,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
@@ -1012,7 +1003,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse orderReportByDate(GetOrderBORequest getOrderBORequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();	
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();	
 		try {	
 			//To get order details based on distributor, customer & product (if required)
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderReportByDistributorAndCustomer(getOrderBORequest);
@@ -1025,14 +1016,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					for (int i = 0; i <orderDetailsList.size(); i++)
 					{
 						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderByDistributorIdAndStatus(orderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getDistributorsId(),getOrderBORequest.getRequest().getStatus());
-						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
+						getOrderDetailsAndProductDetails.add(getProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
 				    }
 				}else {
 					//To get order product details based on orderId, productId & orderProductStatus (if required)
 					for (int i = 0; i <orderDetailsList.size(); i++)
 					{
 						List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdProductIdOPStatus(orderDetailsList.get(i).getOrderId(),getOrderBORequest.getRequest().getProductId(),getOrderBORequest.getRequest().getStatus());
-						getOrderDetailsAndProductDetails.add(GetProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
+						getOrderDetailsAndProductDetails.add(getProductAndOrderDetails(orderDetailsList.get(i),orderProductDetailsList));     
 				    }
 				}
 				
@@ -1090,10 +1081,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					if(productList.get(i).getOtsOrderProductStatus().equalsIgnoreCase("Cancel")) {
 						count++;
 					}
-					System.out.println("Cancel count = "+count);
 				}
 			}
-			System.out.println("Poduct list count = "+productList.size());
 			//When addition of both the count's of Assigned & Cancel is equal to Total order product list count, then the function return true else false
 			return productList.size() == count;
 		}catch(Exception e){
@@ -1102,51 +1091,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
 	}
-	
-	//Alternate codes for Optimizing Api 
-//	@Override // To Check all the sub orders are not in New state
-//	public boolean checkForOrderAssigned(String orderId) {
-//	    try {
-//	        // Get sub order details in an Order
-//	        List<OrderProductDetails> productList = orderProductDao.getProductListByOrderId(orderId);
-//	        // Check if all sub orders are not in "New" state
-//	        long count = productList.stream()
-//                    .filter(product -> !product.getOtsOrderProductStatus().equalsIgnoreCase("New"))
-//                    .count();
-//	        
-//	        return productList.size() == count;
-////	        return productList.stream().allMatch(product -> !product.getOtsOrderProductStatus().equalsIgnoreCase("New"));
-//	    } catch (Exception e) {
-//	        e.printStackTrace();
-//	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-//	    } catch (Throwable e) {
-//	        e.printStackTrace();
-//	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-//	    }
-//	}
-	
-//	@Override // To Check all the sub orders are not in New state & if any one sub order product is Assigned, then main order should be set to Assigned
-//	public boolean checkForOrderCancel(String orderId) {
-//	    try {
-//	        // Get sub order details in an Order
-//	        List<OrderProductDetails> productList = orderProductDao.getProductListByOrderId(orderId);
-//	        
-//	        long cancelCount = productList.stream()
-//	                                      .filter(product -> !product.getOtsOrderProductStatus().equalsIgnoreCase("New"))
-//	                                      .filter(product -> product.getOtsOrderProductStatus().equalsIgnoreCase("Cancel"))
-//	                                      .count();
-//
-//	        System.out.println("cancelCount = "+cancelCount);
-//	        // When the count of Cancelled products is equal to the total product list size, return true, else false
-//	        return productList.size() == cancelCount;
-//	    } catch (Exception e) {
-//	        e.printStackTrace();
-//	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-//	    } catch (Throwable e) {
-//	        e.printStackTrace();
-//	        throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
-//	    }
-//	}
 	
 	@Override	//To Check all the sub orders status are Closed 
 	public boolean checkForOrderClosed(String orderId) {
@@ -1161,11 +1105,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					if(productList.get(i).getOtsOrderProductStatus().equalsIgnoreCase("Close")) {
 						closeCount++;
 					}
-					System.out.println("Close count = "+closeCount);
 					if(productList.get(i).getOtsOrderProductStatus().equalsIgnoreCase("Cancel")) {
 						cancelCount++;
 					}
-					System.out.println("Cancel count = "+cancelCount);
 				}
 			}
 			//When count of Not New is equal to Total order product list count, then the function return True or else False
@@ -1205,7 +1147,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			
 			//converting output of procedure to String
 			String response = outputResult.get(0).values().toString();	
-			System.out.println("response = "+response);
 			
 			//comparing response of procedure & handling response
 			if(response.equalsIgnoreCase("[Updated]")) {
@@ -1216,10 +1157,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				return "Unexpected Response";
 			}
 	    }catch (BusinessException e){
-			logger.error("Exception while fetching data from DB:"+e.getMessage());
+			logger.error(dbErrorMsg+e.getMessage());
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
-	    	logger.error("Exception while fetching data from DB:"+e.getMessage());
+	    	logger.error(dbErrorMsg+e.getMessage());
         	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -1248,8 +1189,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			
 			//converting output of procedure to String
 			String response = outputResult.get(0).values().toString();	
-			System.out.println("response = "+response);
-			
+
 			//comparing response of procedure & handling response
 			if(response.equalsIgnoreCase("[Updated]")) {
 				return "Updated";
@@ -1311,7 +1251,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 								"Thanks And Regards,<br>" + 
 								companyName+" Support Team </p>";
 		                emailUtil.sendCustomermail(orderProductDetails.getCustomerEmailId(), "", "Order Cancellation", custNotification);
-		                System.out.println("mail sent to cust");
 	            	}            
 	            });
 
@@ -1469,20 +1408,15 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 
 	@Override
 	public OrderDetailsBOResponse getRazorPayOrder(UpdateOrderDetailsRequest updateOrderDetailsRequest) throws JSONException {
-		// TODO Auto-generated method stub
 		OrderDetailsBOResponse orderDetailsBOResponse = new OrderDetailsBOResponse();
 		try {
 			RazorpayClient razorpay = null;
 			if(updateOrderDetailsRequest.getRequest().getPaymentFlowStatus().equalsIgnoreCase("gift")) {
-				System.out.println("key "+donationRazorpayKey+"donationRazorpaySignature "+donationRazorpaySignature);
 				razorpay = new RazorpayClient(donationRazorpayKey,donationRazorpaySignature);
 				orderDetailsBOResponse.setRazorPayKey(donationRazorpayKey);
-				//	orderDetails.setRazorPayKey();
 			}else {
 				//ots account
-				System.out.println("key "+donationRazorpayKey+"donationRazorpaySignature "+donationRazorpaySignature);
 				razorpay = new RazorpayClient(donationRazorpayKey,donationRazorpaySignature);
-			//	orderDetails.setRazorPayKey();
 				orderDetailsBOResponse.setRazorPayKey(donationRazorpayKey);
 			}
 			
@@ -1493,11 +1427,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				orderRequest.put("receipt", updateOrderDetailsRequest.getRequest().getOrderId());
 				orderRequest.put("payment_capture", true);
 			} catch (JSONException e) {
-				System.out.println(e);
 			} // amount in the smallest currency unit
 			 Order order = razorpay.Orders.create(orderRequest);
-			 System.out.println(order);
-			 System.out.println(order.toJson().get("amount"));
 			 OrderDetails orderDetails = new OrderDetails();
 			 orderDetails.setOrderId(order.toJson().get("id").toString());
 			 orderDetails.setReceipt(order.toJson().get("receipt").toString());
@@ -1505,7 +1436,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			 orderDetailsList.add(orderDetails);
 			 orderDetailsBOResponse.setOrderDetails(orderDetailsList);
 		} catch (RazorpayException e) {
-			System.out.println(e);
 		}
 		return orderDetailsBOResponse;
 	}
@@ -1514,7 +1444,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	public CcAvenueOrderDetailsResponse getCCAvenueCredentials() {
 		CcAvenueOrderDetailsResponse ccAvenueOrderDetailsResponse = new CcAvenueOrderDetailsResponse();
 		try {
-			System.out.println("merchantId "+ccAvenueMerchantId+" accessCode "+ccAvenueAccessCode+" workingKey "+ccAvenueWorkingKey);
 			ccAvenueOrderDetailsResponse.setCcAvenueMerchantId(ccAvenueMerchantId);
 			ccAvenueOrderDetailsResponse.setCcAvenueAccessCode(ccAvenueAccessCode);
 			ccAvenueOrderDetailsResponse.setCcAvenueWorkingKey(ccAvenueWorkingKey);
@@ -1539,14 +1468,13 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			paymentDetails = new JSONObject(payment);
 		} catch (RazorpayException e1) {
 		}
-		System.out.print(payment);
 		return paymentDetails;
 	}
 
 	@Override
 	public OrderProductBOResponse getOrderDetailsForOrderId(String OrderId) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderDetailsForOrderId(OrderId);
 			if(orderDetailsList.size() == 0) {
@@ -1555,8 +1483,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			else {
 				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					GetOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
 			}
@@ -1573,7 +1501,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public List<List<String>> getOrderDetailsForInvoice(String orderId) {
 		try {
-			Map<String, Object> queryParameter = new HashMap<String, Object>();
+			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("order_id", UUID.fromString(orderId));
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_order_details_for_invoice")
@@ -1599,9 +1527,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			for(int index = 0 ; index < orderDetails.size() ; index++){
 				Map<String, String> listItem = orderDetails.get(index);
 				for(int j=0; j<listItem.size();j++) {
-				    valueList = new ArrayList<String>(listItem.values());
+				    valueList = new ArrayList<>(listItem.values());
 				}
-				System.out.println("valueList = "+valueList);
 				order.add(valueList);
 			} 
 			return order;
@@ -1617,7 +1544,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public List<List<String>> getDistributorForOrderInvoice(String orderId) {
 		try {
-			Map<String, Object> queryParameter = new HashMap<String, Object>();
+			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("order_id",UUID.fromString(orderId));
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_distributor_for_order_invoice")
@@ -1643,9 +1570,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			for(int index = 0 ; index < orderDetails.size() ; index++){
 				Map<String, String> listItem = orderDetails.get(index);
 				for(int j=0; j<listItem.size();j++) {
-				    valueList = new ArrayList<String>(listItem.values());
+				    valueList = new ArrayList<>(listItem.values());
 				}
-				System.out.println("valueList = "+valueList);
 				order.add(valueList);
 			} 
 			
@@ -1660,18 +1586,18 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	}
 
 	@Override
-	public String closeMainOrder(String OrderId) {
+	public String closeMainOrder(String orderId) {
 		OrderDetails orderDetails = new OrderDetails();
-		String Response;
+		String response;
 		boolean subOrder;
 		//To get the order list for requested orderId
 		try {
-			subOrder = checkForOrderClosed(OrderId);
+			subOrder = checkForOrderClosed(orderId);
 			if(subOrder == true)
 			{
 				/*Update the Status As close in Order Table*/
-				orderDetails = orderServiceDAO.closeOrder(OrderId);
-				Response = "Order Id "+OrderId+" Has Been Closed Successfully";
+				orderDetails = orderServiceDAO.closeOrder(orderId);
+				response = "Order Id "+orderId+" Has Been Closed Successfully";
 				
 				//Send Notification to Distributor for Order close
 				try {
@@ -1684,18 +1610,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 							"Thanks And Regards,<br>" + 
 							companyName+" Support Team </p>";
 					emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Order Delivered",custNotification);
-
-					//Add below code for sending Push Notification to Customer when DeviceId is available in otsUser table
-//						fcmPushNotification.sendPushNotification(customer.getDeviceId(),"etaarana app" , custNotification);
-//						System.out.println("order delivered date = "+otsOrderDetails.getOrderDeliverdDate());
 						
 				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 				}
 			}
 			else {
-				Response = null;
+				response = null;
 			}
-			return Response;
+			return response;
 		}
 		catch(Exception e){
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);}
@@ -1708,12 +1630,12 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	//Update Order Product Status to Close & if all the SubOrders are Closed then, Update main Order to Close
 	@Override
 	public String closeEmployeeOrder(CloseEmployeeOrderRequest closeEmployeeOrderRequest) {
-		String Response = null;
+		String response = null;
 		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			String closeOrder = orderProductDao.closeEmployeeOrder(closeEmployeeOrderRequest);
 			if(closeOrder.equalsIgnoreCase("Updated")) {
-				Response = "Order Id "+ closeEmployeeOrderRequest.getRequest().getOrderId() +" Has Beed Closed Successfully";
+				response = "Order Id "+ closeEmployeeOrderRequest.getRequest().getOrderId() +" Has Beed Closed Successfully";
 			}else {
 				return null;
 			}
@@ -1743,14 +1665,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					emailUtil.sendCustomermail(productDetails.getCustomerEmailId(), "", "Regarding Order Update",custNotification);		
 				});
 			}catch(Exception e) {
-				return Response;
+				return response;
 			}
 		}catch(Exception e){
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		} catch (Throwable e) {
 			throw new BusinessException(e, ErrorEnumeration.ERROR_IN_ORDER_INSERTION);
 		}
-		return Response;
+		return response;
 	}
 	
 	@Override
@@ -1812,8 +1734,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//Procedure to Fetch Orders that are in New Status till current date & Cancel those Order, Update Stocks for Product, Update Main Order Status to Cancel if needed.
 			String sql = "SELECT public.auto_cancel_order_by_distributor()";
 			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
-			
-			System.out.println("response = "+response);
 			
 			return response;
 		}catch(Exception e){
@@ -1960,13 +1880,12 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderDetailsList.size() ==0) {
 				return null;
 			}else {
-				List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+				List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order product details
 				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
-					System.out.println("order id"+orderDetailsList.get(i).getOrderId());
-					List<OrderProductDetails> OrderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),OrderProductDetailsList));
+					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
+					GetOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
 				return orderProductBOResponse;
@@ -1979,10 +1898,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	}
 	
 	@Override	//To get order product details in Assigned status for Gst unavailable distributors
-	public List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String SubOrderStatus) {
+	public List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String subOrderStatus) {
 		try {
-			List<OrderProductDetails> orderProductDetails = new ArrayList<OrderProductDetails>();
-			List<OrderProductDetails> orderProductDetailsList = new ArrayList<OrderProductDetails>();
+			List<OrderProductDetails> orderProductDetails = new ArrayList<>();
+			List<OrderProductDetails> orderProductDetailsList = new ArrayList<>();
 			// getting order details by passing the distributor id
 			List<DistributorCompanyDetails> distributorDetails = distributorCompanyDetailsDAO.getGSTUnRegisteredDistributor();
 			if(distributorDetails.size() == 0) {
@@ -1991,8 +1910,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				//getting order product details
 				for (int i = 0; i <distributorDetails.size() ; i++)
 				{
-					System.out.println("distributor id"+distributorDetails.get(i).getDistributorId());
-					orderProductDetails = orderProductDao.getOrderForDistributorAndStatus(distributorDetails.get(i).getDistributorId(),SubOrderStatus);
+					orderProductDetails = orderProductDao.getOrderForDistributorAndStatus(distributorDetails.get(i).getDistributorId(),subOrderStatus);
 					//To add data from one list to previous list
 					if(orderProductDetails.size() != 0 ) {
 						orderProductDetailsList.addAll(orderProductDetails);
@@ -2009,7 +1927,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	
 	@Override 
 	public String updateRRCOrderStatus(UpdateRRCStatusRequest updateRRCStatusRequest) {
-		String Response;
+		String response;
 		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			//To get Order Details 
@@ -2018,9 +1936,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			Future<OrderProductDetails> orderProductDetails = executor.submit(() -> orderProductDao.getOrderProductByOrderIdProductId(updateRRCStatusRequest.getRequest().getOrderId(),updateRRCStatusRequest.getRequest().getProductId()));
 		
 			//to update RRCOrderStatus
-			Response = orderProductDao.updateRRCOrderStatus(updateRRCStatusRequest);
-			if("Not Updated".equals(Response)) {
-				return Response;
+			response = orderProductDao.updateRRCOrderStatus(updateRRCStatusRequest);
+			if("Not Updated".equals(response)) {
+				return response;
 			}
 			
 			//To fetch data from executer
@@ -2046,7 +1964,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 									companyName+" Support Team </p>";
 							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Order Initiated For Return",distNotification);
 						});
-						return Response;
+						return response;
 					}
 					
 					//Message content for Replacement
@@ -2064,7 +1982,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 									companyName+" Support Team </p>";
 							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Order Initiated For Replacement",distNotification);
 						});
-						return Response;
+						return response;
 					}
 					
 					//Message content for Replace Close
@@ -2082,7 +2000,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 									companyName+" Support Team </p>";
 							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Replacement Order Closed",distNotification);
 						});
-						return Response;
+						return response;
 					}
 					
 					//Message content for Return Close
@@ -2100,11 +2018,11 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 									companyName+" Support Team </p>";
 							emailUtil.sendDistributermail(orderProductList.getDistributorEmailId(), "", "Return Order Closed",distNotification);
 						});
-						return Response;
+						return response;
 					}
 				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 				}
-				return Response;
+				return response;
 			});
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -2113,7 +2031,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
-		return Response;
+		return response;
 	}
 	
 	@Override	//To get settlement details for Distributor based on weeks
@@ -2165,64 +2083,48 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					//calculating Total Settlement Amount
 					for (int i = 0; i <orderProductDetailsList.size() ; i++)
 					{
-						System.out.println("product price without gst = "+orderProductDetailsList.get(i).getProductPriceWithoutGst());
 						//Calculating 10% transaction on product price (order product price without GST)
 						Double tenPercTranscation = Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductSellerPrice()) * (10/100.0)) * Math.pow(10, 3))/ Math.pow(10, 3);
 						orderProductDetailsList.get(i).setTenPercTranscation(tenPercTranscation);
-						System.out.println("10% trans = "+tenPercTranscation);
 						
 						//Calculating 18% GST on 10% transaction amount
 						Double EighteenPercGstOnTenPercTranscation = Math.round((tenPercTranscation * (18/100.0)) * Math.pow(10, 3))/ Math.pow(10, 3);
 						orderProductDetailsList.get(i).setEighteenPercGstOnTenPercTranscation(EighteenPercGstOnTenPercTranscation);
-						System.out.println("18% on 10% trans = "+EighteenPercGstOnTenPercTranscation);
 						
 						//Calculating 1% TDS on product price (order product price without GST)
 						Double onePercTdsOnProductPrice = Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductSellerPrice()) * (1/100.0)) * Math.pow(10, 3))/ Math.pow(10, 3);
 						orderProductDetailsList.get(i).setOnePerTdsOnProductPrice(onePercTdsOnProductPrice);
-						System.out.println("1% Tds on product price = "+onePercTdsOnProductPrice);
 						
 						//Subtracting 10% transaction amount from order product cost
 						Double minusTenPercTrans =  Math.round((Double.parseDouble(orderProductDetailsList.get(i).getOtsOrderProductCost()) - tenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("minus 10% trans = "+minusTenPercTrans);
 						
 						//Subtracting 18% GST amount from above calculated price
 						Double minusEighteenPercGst = Math.round((minusTenPercTrans - EighteenPercGstOnTenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("minus 18% Gst = "+minusEighteenPercGst);
 						
 						//Subtracting 1% TDS amount from above calculated price
 						Double minusOnePercTds =  Math.round((minusEighteenPercGst - onePercTdsOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("minus 1% Tds = "+minusOnePercTds);
 						
 						Double distributorPayablePrice = minusOnePercTds;
-						System.out.println("distributor payable price = "+distributorPayablePrice);
 						
 						//Calculating Pvt Ltd Payable price by adding 10% transaction, 18% on 10% trns, 1% TDS on product price
 						Double pvtPayablePrice = Math.round((tenPercTranscation + EighteenPercGstOnTenPercTranscation + onePercTdsOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("pvtPayablePrice = "+pvtPayablePrice);
 					
 						//Summing total distributorPayablePrice
 						totalSettlemetAmount = Math.round((totalSettlemetAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total settlement amount = "+totalSettlemetAmount);
 						
 						//Summing total PvtPayablePrice
 						totalPvtPayablePrice = Math.round((totalPvtPayablePrice + pvtPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total PvtPayablePrice = "+totalPvtPayablePrice);
 						
 						//Summing total tenPercTranscation
 						totalTenPercTrans = Math.round((totalTenPercTrans + tenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total tenPercTranscation = "+totalTenPercTrans);
 						
 						//Summing total EighteenPercGstOnTenPercTranscation
 						totalEighteenPercGstOnTenPercTrans = Math.round((totalEighteenPercGstOnTenPercTrans + EighteenPercGstOnTenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total EighteenPercGstOnTenPercTranscation = "+totalEighteenPercGstOnTenPercTrans);
 						
 						//Summing total onePercTdsOnProductPrice
 						totalOnePercTdsOnProductPrice = Math.round((totalOnePercTdsOnProductPrice + onePercTdsOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total onePercTdsOnProductPrice = "+totalOnePercTdsOnProductPrice);
 						
-						System.out.println("i value = "+i);
 						registeredDistWeeklySettlementDetailsForExcel.get(i).setSlno(String.valueOf(i+1));
-						System.out.println("order number "+orderProductDetailsList.get(i).getOtsOrderNumber());
 						registeredDistWeeklySettlementDetailsForExcel.get(i).setOrderNumber(orderProductDetailsList.get(i).getOtsOrderNumber());
 						registeredDistWeeklySettlementDetailsForExcel.get(i).setSubOrderNumber(orderProductDetailsList.get(i).getOtsSubOrderId());
 						registeredDistWeeklySettlementDetailsForExcel.get(i).setDistributorName(orderProductDetailsList.get(i).getDistributorFirstName()+" "+orderProductDetailsList.get(i).getDistributorLastName());
@@ -2243,23 +2145,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 						if(orderProductDetailsList.get(i).getOtsSettlementStatus().equalsIgnoreCase("Pending")) {
 							//Summing total distributorPayablePrice only for Pending status
 							totalPendingAmount = Math.round((totalPendingAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-							System.out.println("total pending amount = "+totalPendingAmount);
 						}
 						getDetailsForExcelRequest.setRegisteredDist(registeredDistWeeklySettlementDetailsForExcel);
-						System.out.println("after set response = "+getDetailsForExcelRequest);
 					}
 					
-					System.out.println("final settlement amount = "+totalSettlemetAmount);
-					System.out.println("final pending amount = "+totalPendingAmount);
 					getDistributorSettlementResponse.setOrderProductDetails(orderProductDetailsList);
 					getDistributorSettlementResponse.setTotalOrderCount(orderProductDetailsList.size());
 					getDistributorSettlementResponse.setTotalSettlementAmount(totalSettlemetAmount);
 					getDistributorSettlementResponse.setTotalPendingAmount(totalPendingAmount);
-//					getDistributorSettlementResponse.setTotalTenPercTrans(totalTenPercTrans);
-//					getDistributorSettlementResponse.setTotalOnePercTdsOnProductPrice(totalOnePercTdsOnProductPrice);
-//					getDistributorSettlementResponse.setTotalEighteenPercGstOnTenPercTrans(totalEighteenPercGstOnTenPercTrans);
-//					getDistributorSettlementResponse.setTotalPvtPayablePrice(totalPvtPayablePrice);
-//					getDistributorSettlementResponse.setTotalOnePercTds(totalOnePercTds);
 
 					getDetailsForExcelRequest.setTotalPendingAmount(totalPendingAmount);
 					getDetailsForExcelRequest.setTotalTenPercTrans(totalTenPercTrans);
@@ -2290,69 +2183,51 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					//calculating Total Settlement Amount
 					for (int i = 0; i <orderProductDetailsList.size() ; i++)
 					{
-						System.out.println("product price without gst = "+orderProductDetailsList.get(i).getProductPriceWithoutGst());
 						//Calculating 3% profit for Pvt Ltd on product price (order product price without GST)
 						Double threePercProfit = Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (3/100.0)) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("3% profit = "+threePercProfit);
 						
 						//Calculating 18% GST on product price (order product price without GST)
 						Double EighteenPercGstOnProductPrice = Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (18/100.0)) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("18% on product price = "+EighteenPercGstOnProductPrice);
 						
 						//Subtracting 3% profit from product price (order product price without GST)
 						Double minusThreePercProfit =  Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) - threePercProfit) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("minus 10% trans = "+minusThreePercProfit);
 						
 						//Calculating 1% TDS on product price (order product price without GST)
 						Double onePercTds = minusThreePercProfit * (1/100.0);
-						System.out.println("1% Tds on product price = "+onePercTds);
 						
 						//Subtracting 1% TDS amount from above calculated price
 						Double minusOnePercTds =  Math.round((minusThreePercProfit - onePercTds) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("minus 1% Tds = "+minusOnePercTds);
 						
 						//Adding 18% GST amount for above calculated price
 						Double addEighteenPercGst = Math.round((minusOnePercTds + EighteenPercGstOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("add 18% Gst = "+addEighteenPercGst);
 						
 						Double llpPayablePrice = addEighteenPercGst;
-						System.out.println("llp payable price = "+llpPayablePrice);
 						
 						//Calculating Distributor payable price by subtracting LLP Payable price from Order Cost
 						Double distributorPayablePrice = Math.round((Double.parseDouble(orderProductDetailsList.get(i).getProductSellerPrice())) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("distributorPayablePrice = "+distributorPayablePrice);
 						
 						//Calculating Pvt Ltd Payable price by adding 3% profit amount and 1% TDS
 						Double pvtPayablePrice = threePercProfit + onePercTds;
-						System.out.println("pvtPayablePrice = "+pvtPayablePrice);
 					
 						//Summing total settlement Amount
 						totalSettlemetAmount = Math.round((totalSettlemetAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total settlement amount = "+totalSettlemetAmount);
 						
 						//Summing total LLPPayablePrice
 						totalLLPPayablePrice = Math.round((totalLLPPayablePrice + llpPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total LLP Payable Price = "+totalLLPPayablePrice);
 						
 						//Summing total threePercProfit
 						totalThreePercProfitPvt = Math.round((totalThreePercProfitPvt + threePercProfit) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total ThreePercProfitPvt = "+totalThreePercProfitPvt);
 						
 						//Summing total onePercTds
 						totalOnePercTds = Math.round((totalOnePercTds + onePercTds) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total 1% Tds = "+totalOnePercTds);
 						
 						//Summing total PvtPayablePrice
 						totalPvtPayablePrice = Math.round((totalPvtPayablePrice + pvtPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total PvtPayablePrice = "+totalPvtPayablePrice);
 						
 						//Summing total EighteenPercGstOnProductPrice
 						totalEighteenPercGstOnProductPrice = Math.round((totalEighteenPercGstOnProductPrice + EighteenPercGstOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total EighteenPercGstOnProductPrice = "+totalEighteenPercGstOnProductPrice);
 
-						System.out.println("i value = "+i);
 						unRegisteredDistWeeklySettlementDetailsForExcel.get(i).setSlno(String.valueOf(i+1));
-						System.out.println("order number "+orderProductDetailsList.get(i).getOtsOrderNumber());
 						unRegisteredDistWeeklySettlementDetailsForExcel.get(i).setOrderNumber(orderProductDetailsList.get(i).getOtsOrderNumber());
 						unRegisteredDistWeeklySettlementDetailsForExcel.get(i).setSubOrderNumber(orderProductDetailsList.get(i).getOtsSubOrderId());
 						unRegisteredDistWeeklySettlementDetailsForExcel.get(i).setDistributorName(orderProductDetailsList.get(i).getDistributorFirstName()+" "+orderProductDetailsList.get(i).getDistributorLastName());
@@ -2374,24 +2249,15 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 						if(orderProductDetailsList.get(i).getOtsSettlementStatus().equalsIgnoreCase("Pending")) {
 							//Summing total distributorPayablePrice only for Pending status
 							totalPendingAmount = Math.round((totalPendingAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-							System.out.println("total pending amount = "+totalPendingAmount);
 						}
 					}
 					getDetailsForExcelRequest.setUnregisteredDist(unRegisteredDistWeeklySettlementDetailsForExcel);
-					System.out.println("after set response = "+getDetailsForExcelRequest);
 				}
 				
-				System.out.println("final settlement amount = "+totalSettlemetAmount);
-				System.out.println("final pending amount = "+totalPendingAmount);
 				getDistributorSettlementResponse.setOrderProductDetails(orderProductDetailsList);
 				getDistributorSettlementResponse.setTotalOrderCount(orderProductDetailsList.size());
 				getDistributorSettlementResponse.setTotalSettlementAmount(totalSettlemetAmount);
 				getDistributorSettlementResponse.setTotalPendingAmount(totalPendingAmount);
-//				getDistributorSettlementResponse.setTotalOnePercTdsOnProductPrice(totalOnePercTdsOnProductPrice);
-//				getDistributorSettlementResponse.setTotalLLPPayablePrice(totalLLPPayablePrice);
-//				getDistributorSettlementResponse.setTotalPvtPayablePrice(totalPvtPayablePrice);
-//				getDistributorSettlementResponse.setTotalEighteenPercGstOnProductPrice(totalEighteenPercGstOnProductPrice);
-//				getDistributorSettlementResponse.setTotalThreePercProfitPvt(totalThreePercProfitPvt);
 				
 				getDetailsForExcelRequest.setTotalPendingAmount(totalPendingAmount);
 				getDetailsForExcelRequest.setTotalOnePercTds(totalOnePercTds);
@@ -2400,7 +2266,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				getDetailsForExcelRequest.setTotalEighteenPercGstOnProductPrice(totalEighteenPercGstOnProductPrice);
 				getDetailsForExcelRequest.setTotalThreePercProfitPvt(totalThreePercProfitPvt);
 				
-//				getDistributorSettlementResponse.setGetDetailsForExcelRequest(getDetailsForExcelRequest);
 				
 				if(getDistributorSettlementRequest.getRequest(). getPdf().equalsIgnoreCase("YES") && orderProductDetailsList.size() != 0)
 				{
@@ -2437,40 +2302,30 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				//calculating Total Settlement Amount
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					System.out.println("product price without gst = "+orderProductDetailsList.get(i).getProductPriceWithoutGst());
 					//Calculating 10% transaction on product price (order product price without GST)
 					Double tenPercTranscation = Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (10/100.0);
-					System.out.println("10% trsc = "+tenPercTranscation);
 					
 					//Calculating 18% GST on 10% transaction amount
 					Double EighteenPercGstOnTenPercTranscation = tenPercTranscation * (18/100.0);
-					System.out.println("1% on 10% trsc = "+EighteenPercGstOnTenPercTranscation);
 					
 					//Calculating 1% TDS on product price (order product price without GST)
 					Double onePerTdsOnProductPrice = Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (1/100.0);
-					System.out.println("1% Tds on product price = "+onePerTdsOnProductPrice);
 					
 					//Subtracting 10% transaction amount from order product cost
 					Double minusTenPercTrans =  Math.round((Double.parseDouble(orderProductDetailsList.get(i).getOtsOrderProductCost()) - tenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 10% trans = "+minusTenPercTrans);
 					
 					//Subtracting 18% GST amount from above calculated price
 					Double minusEighteenPercGst = Math.round((minusTenPercTrans - EighteenPercGstOnTenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 18% Gst = "+minusEighteenPercGst);
 					
 					//Subtracting 1% TDS amount from above calculated price
 					Double minusOnePercTds =  Math.round((minusEighteenPercGst - onePerTdsOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 1% Tds = "+minusOnePercTds);
 					
 					Double distributorPayablePrice = minusOnePercTds;
-					System.out.println("distributor payable price = "+distributorPayablePrice);
 				
 					//Summing total distributorPayablePrice
 					totalSettlemetAmount = Math.round((totalSettlemetAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("total settlement amount = "+totalSettlemetAmount);
 			
 				}
-				System.out.println("final settlement amount = "+totalSettlemetAmount);
 				getDistributorSettlementResponse.setOrderProductDetails(orderProductDetailsList);
 				getDistributorSettlementResponse.setTotalOrderCount(orderProductDetailsList.size());
 				getDistributorSettlementResponse.setTotalSettlementAmount(totalSettlemetAmount);
@@ -2499,47 +2354,35 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				//calculating Total Settlement Amount
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
-					System.out.println("product price without gst = "+orderProductDetailsList.get(i).getProductPriceWithoutGst());
 					//Calculating 10% transaction on product price (order product price without GST)
 					Double tenPercTranscation = Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (10/100.0);
-					System.out.println("10% trsc = "+tenPercTranscation);
 					
 					//Calculating 18% GST on 10% transaction amount
 					Double EighteenPercGstOnTenPercTranscation = tenPercTranscation * (18/100.0);
-					System.out.println("1% on 10% trsc = "+EighteenPercGstOnTenPercTranscation);
 					
 					//Calculating 1% TDS on product price (order product price without GST)
 					Double onePerTdsOnProductPrice = Double.parseDouble(orderProductDetailsList.get(i).getProductPriceWithoutGst()) * (1/100.0);
-					System.out.println("1% Tds on product price = "+onePerTdsOnProductPrice);
 					
 					//Subtracting 10% transaction amount from order product cost
 					Double minusTenPercTrans =  Math.round((Double.parseDouble(orderProductDetailsList.get(i).getOtsOrderProductCost()) - tenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 10% trans = "+minusTenPercTrans);
 					
 					//Subtracting 18% GST amount from above calculated price
 					Double minusEighteenPercGst = Math.round((minusTenPercTrans - EighteenPercGstOnTenPercTranscation) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 18% Gst = "+minusEighteenPercGst);
 					
 					//Subtracting 1% TDS amount from above calculated price
 					Double minusOnePercTds =  Math.round((minusEighteenPercGst - onePerTdsOnProductPrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("minus 1% Tds = "+minusOnePercTds);
 					
 					Double distributorPayablePrice = minusOnePercTds;
-					System.out.println("distributor payable price = "+distributorPayablePrice);
 				
 					//Summing total distributorPayablePrice
 					totalSettlemetAmount = Math.round((totalSettlemetAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-					System.out.println("total settlement amount = "+totalSettlemetAmount);
 					
 					//To calculate pending amount if Payment Settlement Status is Pending
 					if(orderProductDetailsList.get(i).getOtsSettlementStatus().equalsIgnoreCase("Pending")) {
 						//Summing total distributorPayablePrice only for Pending status
 						totalPendingAmount = Math.round((totalPendingAmount + distributorPayablePrice) * Math.pow(10, 3))/ Math.pow(10, 3);
-						System.out.println("total pending amount = "+totalPendingAmount);
 					}
 				}
-				System.out.println("final settlement amount = "+totalSettlemetAmount);
-				System.out.println("final pending amount = "+totalPendingAmount);
 				getDistributorSettlementResponse.setOrderProductDetails(orderProductDetailsList);
 				getDistributorSettlementResponse.setTotalOrderCount(orderProductDetailsList.size());
 				getDistributorSettlementResponse.setTotalSettlementAmount(totalSettlemetAmount);
@@ -2616,9 +2459,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 
 		orderProductAndOrderDetails.setOrderDetails(orderDetails);
 		
-		System.out.println("customerChangeAddressId = "+orderDetails.getCustomerChangeAddressId());
 		//for adding Customers Secondary Address to Order Response if customerChangeAddressId is present
-		List<CustomerChangeAddress> customerSecondaryAddress = new ArrayList<CustomerChangeAddress>();
+		List<CustomerChangeAddress> customerSecondaryAddress = new ArrayList<>();
 		//getting Secondary Address Details 
 		customerSecondaryAddress = customerChangeAddressDAO.getCustomerChangeAddressById(orderDetails.getCustomerChangeAddressId());
 		if(customerSecondaryAddress.size() != 0) {
@@ -2642,7 +2484,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(distCancelledOrders.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order details for the order product
 				for (int i = 0; i <distCancelledOrders.size() ; i++)
 				{
@@ -2670,7 +2512,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order details for the order product
 				
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
@@ -2699,7 +2541,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order details for the order product
 				
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
@@ -2728,7 +2570,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderProductDetailsList.size() == 0) {
 				return null;
 			}else {
-				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderProductAndOrderDetails>();
+				List<OrderProductAndOrderDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order details for the order product
 				
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
@@ -2793,7 +2635,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	
 	@Override 
 	public List<OrderProductDetails> getSubOrderDetailsByOrderProductId(String orderProductId) {
-		List<OrderProductDetails> orderProduct = new ArrayList<OrderProductDetails>();
+		List<OrderProductDetails> orderProduct = new ArrayList<>();
 		try {
 			orderProduct = orderProductDao.getSubOrderDetailsByOrderProductId(orderProductId);
 		}catch(Exception e){
@@ -2810,7 +2652,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getRRCOrdersByCustomer(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			//get customer order details based on customerId & orderProductStatus
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getRRCOrdersByCustomer(getCustomerOrderByStatusBOrequest);
@@ -2821,7 +2663,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				{
 					//get order product details by orderId & orderProductStatus
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(orderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
@@ -2839,7 +2681,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getCustomerOrderByOrderProductStatus(GetCustomerOrderByStatusBOrequest getCustomerOrderByStatusBOrequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			//get customer order details based on customerId & orderProductStatus
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getCustomerOrderByOrderProductStatus(getCustomerOrderByStatusBOrequest);
@@ -2850,7 +2692,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				{
 					//get order product details by orderId & orderProductStatus
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(orderDetailsList.get(i).getOrderId(),getCustomerOrderByStatusBOrequest.getRequest().getStatus());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
@@ -2879,7 +2721,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				{
 					//get order product details by orderId & orderProductStatus
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
@@ -2908,7 +2750,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				{
 					//get order product details by orderId & orderProductStatus
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getOrderProductByOrderIdAndRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
-					getOrderDetailsAndProductDetails.add(AddProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
 				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 			}
@@ -3183,8 +3025,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			String sql = "SELECT public.auto_cancel_order_by_customer()";
 			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
 			
-			System.out.println("response = "+response);
-			
 			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -3241,7 +3081,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public List<List<String>> getOrderDetailsForProformaInvoice(String orderId) {
 		try {
-			Map<String, Object> queryParameter = new HashMap<String, Object>();
+			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("order_id", UUID.fromString(orderId));
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	        		.withFunctionName("get_order_details_for_proforma_invoice")
@@ -3255,7 +3095,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			//To Add Sl.no at beginning of the map as Key Value pair to existing map & adding numbers incrementing from 1
 			int sl = 1;
 			for(Map<String,String> map : orderDetails) {
-			    Map<String,String> mapcopy = new LinkedHashMap<String,String>(map);
+			    Map<String,String> mapcopy = new LinkedHashMap<>(map);
 			    map.clear();
 			    map.put("Sl.no",String.valueOf(sl++));
 			    map.putAll(mapcopy);
@@ -3267,7 +3107,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			for(int index = 0 ; index < orderDetails.size() ; index++){
 				Map<String, String> listItem = orderDetails.get(index);
 				for(int j=0; j<listItem.size();j++) {
-				    valueList = new ArrayList<String>(listItem.values());
+				    valueList = new ArrayList<>(listItem.values());
 				}
 				System.out.println("valueList = "+valueList);
 				order.add(valueList);
