@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.NoResultException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,4 +80,24 @@ public class ServiceCountryDAOImpl extends AbstractIptDao<OtsServiceCountry, Str
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public List<ServiceCountry> getCountriesWithActiveProducts() {
+		List<ServiceCountry> countryList;
+		Map<String, Object> queryParameter = new HashMap<>();
+		try {
+	        List<OtsServiceCountry> otsServiceCountryList = super.getResultListByNamedQuery("OtsServiceCountry.getCountriesWithActiveProducts",queryParameter);
+	        countryList =otsServiceCountryList.stream().map(serviceCountry -> convertCountryDetailsFromEntityToDomain(serviceCountry)).collect(Collectors.toList());
+	        return countryList;
+	    } catch (Exception e) {
+	        logger.error("Exception while fetching data from DB :" + e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+	    } catch (Throwable e) {
+	        logger.error("Exception while fetching data from DB :" + e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+	    }
+	    
+	}
+	
+	
 }

@@ -29,6 +29,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerReq
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetActiveCountryCodeProductsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
@@ -380,9 +381,9 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 			String[] VALID_STATUSES = {"category", "subcategory"};
 
 		    // Validate input user status
-		    String SearchKey = getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey();
+		    String searchKey = getCategorySubCategoryByDistributorRequest.getRequest().getSearchKey();
 		    boolean isValidStatus = Arrays.stream(VALID_STATUSES)
-		                                  .anyMatch(status -> status.equalsIgnoreCase(SearchKey));
+		                                  .anyMatch(status -> status.equalsIgnoreCase(searchKey));
 
 		    //If input status not matching predefined status
 		    if (!isValidStatus) {
@@ -1568,6 +1569,8 @@ public class OTSProduct_WsImpl implements OTSProduct_Ws {
 		}
 		return response;
 	}
+
+	
 	
 }
 

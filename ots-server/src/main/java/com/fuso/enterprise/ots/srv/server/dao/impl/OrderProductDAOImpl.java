@@ -494,7 +494,6 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 			super.getEntityManager().merge(otsOrderProduct);
 	
 		}catch(Exception e){
-			System.out.print(e);
 			return "Not Updated";
 		}
 		return "Updated";
@@ -675,7 +674,7 @@ public class OrderProductDAOImpl extends AbstractIptDao<OtsOrderProduct, String>
 				orderList.get(i).setOtsOrderProductStatus(subOrderStatus);
 				super.getEntityManager().merge(orderList.get(i));
 				
-				orderProductDetails = orderList.stream().map(OtsOrderProduct -> convertOrderDetailsFromEntityToDomain(OtsOrderProduct)).collect(Collectors.toList());
+				orderProductDetails = orderList.stream().map(otsOrderProduct -> convertOrderDetailsFromEntityToDomain(otsOrderProduct)).collect(Collectors.toList());
 			}
 			return orderProductDetails;
 		}catch(Exception e){

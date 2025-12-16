@@ -1013,7 +1013,7 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 	
 	@Override
 	public String deleteDistributor(String distributorId) {
-	    String SellerResponse = null;
+	    String sellerResponse = null;
 	    try {
 
 	        Map<String, Object> queryParameters = new HashMap<>();
@@ -1035,19 +1035,19 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 
 	        // comparing response of procedure & handling response
 	        if (response.equalsIgnoreCase("[No User Found]")) {
-	            SellerResponse = "No User Found";
+	            sellerResponse = "No User Found";
 	        } 
 	        else if (response.equalsIgnoreCase("[Pending Orders Or Products]")) {
-	            SellerResponse = "Pending Orders Or Products";
+	            sellerResponse = "Pending Orders Or Products";
 	        } 
 	        else if (response.equalsIgnoreCase("[Unable To Delete]")) {
-	            SellerResponse = "Unable To Delete";
+	            sellerResponse = "Unable To Delete";
 	        } 
 	        else if (response.equalsIgnoreCase("[Deleted Successfully]")) {   // ✔ FIXED
-	            SellerResponse = "Deleted Successfully";
+	            sellerResponse = "Deleted Successfully";
 	        } 
 	        else {
-	            SellerResponse = "Unknown Response";
+	            sellerResponse = "Unknown Response";
 	        }
 
 	    } catch (Exception e) {
@@ -1059,7 +1059,7 @@ public class UserServiceDAOImpl extends AbstractIptDao<OtsUsers, String> impleme
 	        throw new BusinessException(e.getMessage(), e);
 	    }
 
-	    return SellerResponse;
+	    return sellerResponse;
 	}
 
 	

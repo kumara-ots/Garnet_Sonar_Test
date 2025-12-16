@@ -36,6 +36,8 @@ public class ProformaPdf {
 	
 	private static final Logger logger = LoggerFactory.getLogger(InvoicePdf.class);
  
+	private ProformaPdf() {
+	}
 	//To Generate PDf & file will not be save in local system.
     public static byte[] generateProformaOrderInvoiceCopy(OrderDetails orderDetails, List<List<String>> distDetails,List<List<String>> orderList){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -359,7 +361,6 @@ public class ProformaPdf {
 		}
 		Font font = new Font(bf, 12);
 		Chunk chunkRupee = new Chunk(" \u20B9"+decfor.format(sum), font);
-		System.out.println("rupee "+chunkRupee);
 		
 		PdfPCell empty = new PdfPCell();
 		PdfPCell text = new PdfPCell(new Phrase("Final-Total",fontBold));

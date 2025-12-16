@@ -124,7 +124,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
     private EmailUtil emailUtil;
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private static final String dbErrorMsg = "Exception while fetching data from DB :";
+	private static final String DB_ERROR_MSG = "Exception while fetching data from DB :";
 	
 	private OrderServiceDAO orderServiceDAO;
 	private OrderProductDAO orderProductDao;
@@ -243,7 +243,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return orderProductBOResponse;
 
 		} catch (Exception e) {
-			logger.error(dbErrorMsg + e.getMessage(), e);
+			logger.error(DB_ERROR_MSG + e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -264,16 +264,16 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
 					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
+					getOrderDetailsAndProductDetails.add(addOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
 			}
 		} catch(Exception e){
-			logger.error(dbErrorMsg+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error(dbErrorMsg+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -360,7 +360,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		// commented code from 288 to 299 will check for the near place order distributor code
 		OrderDetails otsOrderDetails;
 		OrderProductDetails orderProductDetails;
-		OrderProductBOResponse Response;
+		OrderProductBOResponse response;
 		UserDetails distributer=new UserDetails();
 		ProductDetails productDetails=new ProductDetails();
 	
@@ -468,27 +468,27 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				table = table+"</table>";
 				
 				//To generate response data after inserting order in DB
-				Response = getOrderDetailsForOrderId(otsOrderDetails.getOrderId());
+				response = getOrderDetailsForOrderId(otsOrderDetails.getOrderId());
 				
 				try {
 					//for adding coupons to order
 					if(addOrUpdateOrderProductBOrequest.getCouponId().isEmpty() || addOrUpdateOrderProductBOrequest.getCouponId() == null) {
-						Response.setCouponStatus("Coupon not applied");	
+						response.setCouponStatus("Coupon not applied");	
 					}else {
 						//to validate coupon 
 						Coupon couponDetails = couponDAO.getCouponDetailsByStatus(addOrUpdateOrderProductBOrequest.getCouponId(),"active");
 						
 						if(couponDetails==null) {
-							Response.setCouponStatus("Invalid Coupon");
+							response.setCouponStatus("Invalid Coupon");
 						}else {
 							if(Integer.parseInt(couponDetails.getCouponUnit())==0) {
-								Response.setCouponStatus("Coupon unavailable");
+								response.setCouponStatus("Coupon unavailable");
 							}else {
 								//for inserting orderId & couponId into couponOrder table
 								couponOrderDAO.insertCouponToOrder((Integer.parseInt(addOrUpdateOrderProductBOrequest.getCouponId())),otsOrderDetails.getOrderId());
 								//to minus the coupon unit count to 1 when ever the coupon gets added to the order
 							    couponDAO.updateCouponCount(addOrUpdateOrderProductBOrequest.getCouponId());
-							    Response.setCouponStatus("Coupon is added");
+							    response.setCouponStatus("Coupon is added");
 							}
 						}	
 					}
@@ -538,7 +538,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 //				}catch (Throwable t) {		//added try catch block to pass the exception & continue processing
 //				}
 				
-				return Response;
+				return response;
 			}catch(Exception e){
 				throw new BusinessException(e,ErrorEnumeration.ERROR_IN_STOCK);
 			} catch (Throwable e) {
@@ -735,10 +735,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			return response;
 
 		}catch(Exception e){
-			logger.error(dbErrorMsg+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
 		} catch (Throwable e) {
-			logger.error(dbErrorMsg+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
 		}
 	}
@@ -1157,10 +1157,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				return "Unexpected Response";
 			}
 	    }catch (BusinessException e){
-			logger.error(dbErrorMsg+e.getMessage());
+			logger.error(DB_ERROR_MSG+e.getMessage());
         	throw new BusinessException(e.getMessage(), e);
 	    }catch (Throwable e) {
-	    	logger.error(dbErrorMsg+e.getMessage());
+	    	logger.error(DB_ERROR_MSG+e.getMessage());
         	throw new BusinessException(e.getMessage(), e);
 	    }
 	}
@@ -1395,6 +1395,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				fileContent = FileUtils.readFileToByteArray(new File(path));
 				encodedString = Base64.getEncoder().encodeToString(fileContent);
 			} catch (IOException e) {
+			    logger.error("Failed to read file from path: {}", path, e);
+			    throw new BusinessException("Unable to read file", e);
 			}
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
@@ -1426,8 +1428,10 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				orderRequest.put("currency", "INR");
 				orderRequest.put("receipt", updateOrderDetailsRequest.getRequest().getOrderId());
 				orderRequest.put("payment_capture", true);
-			} catch (JSONException e) {
-			} // amount in the smallest currency unit
+			  } catch (JSONException e) {
+				    logger.error("Error while creating Razorpay order request JSON", e);
+				    throw new BusinessException("Failed to create payment order", e);
+				} // amount in the smallest currency unit
 			 Order order = razorpay.Orders.create(orderRequest);
 			 OrderDetails orderDetails = new OrderDetails();
 			 orderDetails.setOrderId(order.toJson().get("id").toString());
@@ -1436,7 +1440,9 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			 orderDetailsList.add(orderDetails);
 			 orderDetailsBOResponse.setOrderDetails(orderDetailsList);
 		} catch (RazorpayException e) {
+		    throw new BusinessException("Payment gateway error occurred", e);
 		}
+
 		return orderDetailsBOResponse;
 	}
 	
@@ -1727,15 +1733,13 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					//To send Email to customer for Order Cancel
 					emailUtil.sendCustomermail(orderDetails.getCustomerEmailId(), "", "Regarding Order Cancellation", custMsg);
 					
-					System.out.println("subOrderId = "+subOrderId.get(i));
 				}
 			});
 			
 			//Procedure to Fetch Orders that are in New Status till current date & Cancel those Order, Update Stocks for Product, Update Main Order Status to Cancel if needed.
 			String sql = "SELECT public.auto_cancel_order_by_distributor()";
-			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
+			return jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
 			
-			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
@@ -1880,14 +1884,14 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			if(orderDetailsList.size() ==0) {
 				return null;
 			}else {
-				List<OrderDetailsAndProductDetails> GetOrderDetailsAndProductDetails = new ArrayList<>();
+				List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 				//getting order product details
 				for (int i = 0; i <orderDetailsList.size() ; i++)
 				{
 					List<OrderProductDetails> orderProductDetailsList = orderProductDao.getProductListByOrderId(orderDetailsList.get(i).getOrderId());
-					GetOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
+					getOrderDetailsAndProductDetails.add(addProductAndOrderDetailsIntoResponse(orderDetailsList.get(i),orderProductDetailsList));
 				}
-				orderProductBOResponse.setOrderList(GetOrderDetailsAndProductDetails);
+				orderProductBOResponse.setOrderList(getOrderDetailsAndProductDetails);
 				return orderProductBOResponse;
 			}
 		}catch(Exception e){
@@ -1900,7 +1904,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override	//To get order product details in Assigned status for Gst unavailable distributors
 	public List<OrderProductDetails> getOrderByStatusOfUnregisteredDistributors(String subOrderStatus) {
 		try {
-			List<OrderProductDetails> orderProductDetails = new ArrayList<>();
+			List<OrderProductDetails> orderProductDetails;
 			List<OrderProductDetails> orderProductDetailsList = new ArrayList<>();
 			// getting order details by passing the distributor id
 			List<DistributorCompanyDetails> distributorDetails = distributorCompanyDetailsDAO.getGSTUnRegisteredDistributor();
@@ -2398,7 +2402,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		}
 	}
 	
-	private OrderProductAndOrderDetails AddOrderProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,OrderProductDetails orderProductDetails)
+	private OrderProductAndOrderDetails addOrderProductAndOrderDetailsIntoResponse(OrderDetails orderDetails,OrderProductDetails orderProductDetails)
 	{
 		OrderProductAndOrderDetails orderProductAndOrderDetails = new OrderProductAndOrderDetails();
 		orderProductAndOrderDetails.setOtsOrderId(orderProductDetails.getOtsOrderId());
@@ -2460,7 +2464,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 		orderProductAndOrderDetails.setOrderDetails(orderDetails);
 		
 		//for adding Customers Secondary Address to Order Response if customerChangeAddressId is present
-		List<CustomerChangeAddress> customerSecondaryAddress = new ArrayList<>();
+		List<CustomerChangeAddress> customerSecondaryAddress;
 		//getting Secondary Address Details 
 		customerSecondaryAddress = customerChangeAddressDAO.getCustomerChangeAddressById(orderDetails.getCustomerChangeAddressId());
 		if(customerSecondaryAddress.size() != 0) {
@@ -2489,7 +2493,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <distCancelledOrders.size() ; i++)
 				{
 					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(distCancelledOrders.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,distCancelledOrders.get(i)));
+					getOrderDetailsAndProductDetails.add(addOrderProductAndOrderDetailsIntoResponse(orderDetails,distCancelledOrders.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
@@ -2518,7 +2522,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
 					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
+					getOrderDetailsAndProductDetails.add(addOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
@@ -2547,7 +2551,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
 					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
+					getOrderDetailsAndProductDetails.add(addOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
@@ -2576,7 +2580,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for (int i = 0; i <orderProductDetailsList.size() ; i++)
 				{
 					OrderDetails orderDetails = orderServiceDAO.getOrderDetailsByOrderId(orderProductDetailsList.get(i).getOtsOrderId());
-					getOrderDetailsAndProductDetails.add(AddOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
+					getOrderDetailsAndProductDetails.add(addOrderProductAndOrderDetailsIntoResponse(orderDetails,orderProductDetailsList.get(i)));
 				}
 				orderProductAndOrderResponse.setOrderProductList(getOrderDetailsAndProductDetails);
 				return orderProductAndOrderResponse;
@@ -2710,7 +2714,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderByOrderIdOrderProductStatus(GetOrderByOrderIdAndStatusRequest getOrderByOrderIdAndStatusRequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			//get order details based on orderId & orderProductStatus
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderByOrderIdOrderProductStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
@@ -2739,7 +2743,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 	@Override
 	public OrderProductBOResponse getOrderByOrderIdRRCOrderStatus(GetOrderByOrderIdAndStatusRequest getOrderByOrderIdAndStatusRequest) {
 		OrderProductBOResponse orderProductBOResponse = new OrderProductBOResponse();
-		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<OrderDetailsAndProductDetails>();
+		List<OrderDetailsAndProductDetails> getOrderDetailsAndProductDetails = new ArrayList<>();
 		try {
 			//get order details based on orderId & orderProductStatus
 			List<OrderDetails> orderDetailsList = orderServiceDAO.getOrderByOrderIdRRCOrderStatus(getOrderByOrderIdAndStatusRequest.getRequest().getOrderId(),getOrderByOrderIdAndStatusRequest.getRequest().getStatus());
@@ -2991,7 +2995,7 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			List<String> orderId = getPaymentPendingOrdersBeforeCurrentDate();
 			
 			//To notify Customer & Distributor about Order Cancellation for all the Cancelled Orders
-			if(orderId.size() == 0) {
+			if(orderId.isEmpty()) {
 				return "No Orders Found";
 			}
 			
@@ -3017,15 +3021,13 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 					//To send Email to customer for Order Cancel
 					emailUtil.sendCustomermail(orderDetails.getOrderList().get(0).getCustomerEmailId(), "", "Regarding Order Cancellation", custMsg);
 				
-					System.out.println("orderId = "+orderId.get(i));
 				}
 			});
 			
 			//Procedure to Fetch Orders that are in Pending Status & Payment Status in Pending till current date & Cancel those Order, Update Stocks for Product.
 			String sql = "SELECT public.auto_cancel_order_by_customer()";
-			String response = jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
+			return jdbcTemplate.queryForObject(sql, String.class); // Procedure response are "Updated" or "Not Updated" 
 			
-			return response;
 		}catch(Exception e){
 			logger.error("Exception while fetching data from DB :"+e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
@@ -3109,7 +3111,6 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 				for(int j=0; j<listItem.size();j++) {
 				    valueList = new ArrayList<>(listItem.values());
 				}
-				System.out.println("valueList = "+valueList);
 				order.add(valueList);
 			} 
 			return order;
@@ -3141,7 +3142,8 @@ public class OTSOrderServiceImpl implements OTSOrderService {
 			System.out.println(encodedString);
 			
 			//To add encoded Invoice path into order table(DB)
-			String addInvoice = orderServiceDAO.addProformaInvoiceToDB(orderId,encodedString);
+			orderServiceDAO.addProformaInvoiceToDB(orderId,encodedString);
+
 		
 			return encodedString;
 			

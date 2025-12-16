@@ -128,7 +128,8 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			DistributorId.setOtsUsersId(UUID.fromString(distributorId));
 			queryParameter.put("otsDistributorId", DistributorId);
 			detailsList = super.getResultListByNamedQuery("OtsDistributorCompanyDetails.getDistributorCompanyDetails", queryParameter);
-			companyDetails = detailsList.stream().map(Details -> convertDistributorCompanyDetailsFromEntityToDomain(Details)).collect(Collectors.toList());
+			companyDetails = detailsList.stream().map(this::convertDistributorCompanyDetailsFromEntityToDomain).collect(Collectors.toList());
+
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
@@ -148,7 +149,8 @@ public class DistributorCompanyDetailsDAOImpl extends AbstractIptDao<OtsDistribu
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsGstAvailability", gstAvailability);
 			detailsList = super.getResultListByNamedQuery("OtsDistributorCompanyDetails.getGSTUnRegisteredDistributor", queryParameter);
-			companyDetails = detailsList.stream().map(Details -> convertDistributorCompanyDetailsFromEntityToDomain(Details)).collect(Collectors.toList());
+			companyDetails = detailsList.stream().map(this::convertDistributorCompanyDetailsFromEntityToDomain).collect(Collectors.toList());
+		
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB :" + e.getMessage());
 			throw new BusinessException(e.getMessage(), e);

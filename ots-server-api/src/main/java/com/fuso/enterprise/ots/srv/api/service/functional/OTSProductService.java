@@ -20,6 +20,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerReq
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetActiveCountryCodeProductsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
@@ -162,5 +163,5 @@ public interface OTSProductService {
 	ProductManufacturersResponse getAllManufacturerDetails();
 
 	String addVarientProduct(AddVariantProductRequest addVariantProductRequest);
-
+	
 }

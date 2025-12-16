@@ -675,8 +675,7 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 			otsOrder.setOtsOrderPaymentStatus("Online Paid");
 			otsOrder.setOtsOrderPaymentDate(addOrderPaymentDetailsRequest.getRequest().getPaymentDate());
 			otsOrder.setOtsOrderStatus("New");
-			OrderDetails otsOrderDetails = convertOrderDetailsFromEntityToDomain(otsOrder);
-			return otsOrderDetails;
+			return convertOrderDetailsFromEntityToDomain(otsOrder);
 		}catch(Exception e){
 			logger.error("ERROR IN INSERTING DATA IN DB"+e.getMessage());
 			throw new BusinessException(e, ErrorEnumeration.ORDER_CLOSE);
@@ -835,7 +834,7 @@ public class OrderServiceDAOImpl extends AbstractIptDao<OtsOrder, String> implem
 	@Override
 	public String addProformaInvoiceToDB(String orderId,String invoice) {
 		try {
-			OtsOrder otsOrder = new OtsOrder();
+			OtsOrder otsOrder;
 			Map<String, Object> queryParameter = new HashMap<>();
 			queryParameter.put("otsOrderId",UUID.fromString(orderId));
 			try {

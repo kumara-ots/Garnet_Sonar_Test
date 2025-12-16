@@ -1908,6 +1908,22 @@
 		</query>
 	</named-query>
 	
+	<named-query name="OtsServiceCountry.getCountriesWithActiveProducts">
+    <query>
+        SELECT c
+        FROM 
+        	 OtsServiceCountry c
+        WHERE 
+        	 c.otsCountryCode 
+        IN   (SELECT DISTINCT p.otsProductCountryCode
+        FROM 
+        	 OtsProduct p
+        WHERE 
+        	 p.otsProductStatus = 'active')
+    </query>
+</named-query>
+
+	
 	<!-- Named Native Query should be always at End of all Named Queries -->
 	<named-native-query name="OtsServicePincode.getPincodebyDistrict" result-class="com.fuso.enterprise.ots.srv.server.model.entity.OtsServicePincode">
 	    <query>SELECT DISTINCT ON (ots_pincode) *

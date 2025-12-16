@@ -361,9 +361,13 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			productList = super.getResultListByNamedQuery("OtsProduct.findByOtsProductName", queryParameter);
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());	
 			return productDetails;
-		}catch(Exception e) {
+		}catch(Exception e){
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data to DB  :"+e.getMessage());
+	        throw new BusinessException(e.getMessage(), e);
 		}
-		return null;
 	}
 	
 	@Override 
@@ -442,13 +446,12 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 	public List<ProductDetails> getAllProductDetails() {
 		List<ProductDetails> productDetails = new ArrayList<>();
 		try {
-			List<OtsProduct> productList = new ArrayList<>();
 			Map<String, Object> queryParameter = new HashMap<>();
 			OtsProductLevel productLevelId = new OtsProductLevel();
 			productLevelId.setOtsProductLevelId(3);
 			queryParameter.put("status","active");
 			queryParameter.put("otsProductLevelId", productLevelId);
-			productList = super.getResultListByNamedQuery("OtsProduct.findAllProduct", queryParameter);
+			List<OtsProduct> productList = super.getResultListByNamedQuery("OtsProduct.findAllProduct", queryParameter);
 			productDetails =  productList.stream().map(otsProduct -> convertProductDetailsFromEntityToDomain(otsProduct)).collect(Collectors.toList());
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
@@ -901,8 +904,8 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			
 			//setting category Id and name  for product in domain
 			CategoryDetails category = getCategoryForProductId(productDetails.getProductId());
-			productDetails.setCategoryId(category == null?"":category.getCategoryId().toString());	
-			productDetails.setCategoryName(category == null?"":category.getCategoryName().toString());
+			productDetails.setCategoryId(category == null?"":category.getCategoryId());	
+			productDetails.setCategoryName(category == null?"":category.getCategoryName());
 			
 			//setting Sub-category Id and name  for product in domain
 			SubCategoryDetails subcategory = getSubCategoryForProductId(productDetails.getProductId());
@@ -2454,8 +2457,7 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 			newProduct.setOtsProductSellerType(oldProduct.getOtsProductSellerType());
 			
 			save(newProduct);
-			ProductDetails productDetails = convertProductDetailsFromEntityToDomain(newProduct);
-			return productDetails;
+			return convertProductDetailsFromEntityToDomain(newProduct);
 		}catch(Exception e){
 			logger.error("Exception while fetching data to DB  :"+e.getMessage());
 	        throw new BusinessException(e.getMessage(), e);
@@ -2465,4 +2467,5 @@ public class ProductServiceDAOImpl extends AbstractIptDao<OtsProduct, String> im
 		}
 	}
 
+	
 }

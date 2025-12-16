@@ -248,4 +248,6 @@ public interface OTSUserService {
 
 	List<UserDetails> sendIncompleteSellerRegistrationReminders();
 
+	ServiceCountryResponse getCountriesWithActiveProducts();
+
 }

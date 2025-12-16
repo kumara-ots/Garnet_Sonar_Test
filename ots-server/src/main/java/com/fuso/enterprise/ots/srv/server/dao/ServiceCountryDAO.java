@@ -9,5 +9,7 @@ public interface ServiceCountryDAO {
 	List<ServiceCountry> getAllCountry();
 
 	ServiceCountry getCountryByCountryCode(String countryCode);
+	
+	List<ServiceCountry> getCountriesWithActiveProducts();
 
 }

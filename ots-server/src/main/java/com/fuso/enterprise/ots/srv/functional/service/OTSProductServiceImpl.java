@@ -66,6 +66,7 @@ import com.fuso.enterprise.ots.srv.api.service.request.AddProductManufacturerReq
 import com.fuso.enterprise.ots.srv.api.service.request.AddProductStockBORequest;
 import com.fuso.enterprise.ots.srv.api.service.request.AddVariantProductRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.FilterProductsByGeneralPropertiesRequest;
+import com.fuso.enterprise.ots.srv.api.service.request.GetActiveCountryCodeProductsRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCategorySubCategoryByDistributorRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetCatgeorySubcategoryRequest;
 import com.fuso.enterprise.ots.srv.api.service.request.GetProductStockListRequest;
@@ -354,6 +355,8 @@ public class OTSProductServiceImpl implements OTSProductService {
 			fileContent = FileUtils.readFileToByteArray(new File(path));
 			encodedString = Base64.encodeBase64String(fileContent);
 		} catch (IOException e) {
+		    logger.error("Error while reading file from path: {}", path, e);
+		    throw new BusinessException("Failed to read file", e);
 		}
 		return encodedString;	
 	}
@@ -1729,5 +1732,5 @@ public class OTSProductServiceImpl implements OTSProductService {
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
-	
+
 }

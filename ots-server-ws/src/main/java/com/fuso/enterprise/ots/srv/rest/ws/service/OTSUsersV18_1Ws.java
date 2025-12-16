@@ -596,4 +596,10 @@ public interface OTSUsersV18_1Ws {
 	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
 	Response sendIncompleteSellerRegistrationReminders();
 	
+	@GET 
+	@Path("/getCountriesWithActiveProducts")
+	@ApiOperation(value = "getCountriesWithActiveProducts", notes = "This API is to get list of Countries with active products", response = Response.class)
+	@ApiResponses(value = { @ApiResponse(code = 0, message = "SUCCESS") })
+	Response getCountriesWithActiveProducts();
+	
 }

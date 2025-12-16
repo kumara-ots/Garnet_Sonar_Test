@@ -2024,7 +2024,6 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	        }
 
 	        String jsonResponse = resultSet.get(0).get("result").toString();
-	        System.out.println("Parsed JSON Response: " + jsonResponse);
 	        
 	        logger.info("get_approved_subadmins procedure response ={}", jsonResponse);
 
@@ -2636,8 +2635,7 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	@Override
 	public String deleteDistributor(String distributorId) {
 		try {
-			String deleteDistributor = userServiceDAO.deleteDistributor(distributorId);
-			return deleteDistributor;
+			return userServiceDAO.deleteDistributor(distributorId);
 		} catch (Exception e) {
 			logger.error("Exception while fetching data from DB:" + e.getMessage());
 			throw new BusinessException(e.getMessage(), e);
@@ -2698,5 +2696,19 @@ public class OTSUserServiceImpl implements  OTSUserService{
 	    return userDetails;
 	}
 
-
+	@Override
+	public ServiceCountryResponse getCountriesWithActiveProducts() {
+		ServiceCountryResponse serviceCountryResponse = new ServiceCountryResponse();
+		try {
+			List<ServiceCountry> countryList = serviceCountryDAO.getCountriesWithActiveProducts();
+			serviceCountryResponse.setCountryDetails(countryList);
+		}catch (BusinessException e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB :"+e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+		return serviceCountryResponse;
+	}
 }

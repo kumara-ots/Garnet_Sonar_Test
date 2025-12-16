@@ -1324,10 +1324,6 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")) {
-//					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
 				return response = responseWrapper.buildResponse(400,"Please Enter Required Inputs");
 			}
 			String responseValue = otsUserService.addDistributorCompanyDetails(addDistributorCompanyDetailsRequest);
@@ -1359,10 +1355,6 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyContactNo().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyEmailId().equals("")
 					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyTaxNumber().equals("")) {
-//					|| addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration() == null || addDistributorCompanyDetailsRequest.getRequest().getCompanyBusinessRegistration().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof() == null || addDistributorCompanyDetailsRequest.getRequest().getAuthorizedSignatoryProof().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount() == null || addDistributorCompanyDetailsRequest.getRequest().getBankConfirmationOnBankAccount().equals("")
-//					|| addDistributorCompanyDetailsRequest.getRequest().getTaxCard() == null || addDistributorCompanyDetailsRequest.getRequest().getTaxCard().equals("")){
 				return response = responseWrapper.buildResponse(400,"Please Enter Required Inputs");
 			}
 			String responseValue = otsUserService.updateDistributorCompanyDetails(addDistributorCompanyDetailsRequest);
@@ -2602,5 +2594,24 @@ public class OTSUsersV18_1WsImpl implements OTSUsersV18_1Ws{
 	    return response;
 	}
 
+	@Override
+	public Response getCountriesWithActiveProducts() {
+		Response response = null;
+		try {
+			ServiceCountryResponse serviceCountry = otsUserService.getCountriesWithActiveProducts();
+			if (serviceCountry.getCountryDetails().size() == 0) {
+				response = responseWrapper.buildResponse(404, serviceCountry, "No Data Available");
+			} else {
+				response = responseWrapper.buildResponse(200, serviceCountry, "Successful");
+			}
+		} catch (Exception e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			return response = buildResponse(500, "Something Went Wrong");
+		} catch (Throwable e) {
+			logger.error("Exception while fetching data from DB  :" + e.getMessage());
+			return response = buildResponse(500, "Something Went Wrong");
+		}
+		return response;
+	}
 }
 

@@ -454,12 +454,8 @@ public class ServiceDaoImpl extends AbstractIptDao<OtsService, String> implement
             Object responseJson = null;
 			try {
 				responseJson = objectMapper.readValue((String) otsService.getOtsServiceSlot(), Object.class);
-			} catch (JsonParseException e) {
-				// TODO Auto-generated catch block
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			    logger.error("Error while parsing service slot JSON", e);
 			}
             serviceDetails.setOtsServiceSlot(responseJson);
         } else {

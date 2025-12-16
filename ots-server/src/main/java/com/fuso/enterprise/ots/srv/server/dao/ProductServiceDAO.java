@@ -121,5 +121,6 @@ public interface ProductServiceDAO {
 	List<ProductDetails> getSimilarProducts(GetSimilarProductRequest getSimilarProductRequest);
 
 	ProductDetails addVarientProduct(AddVariantProductRequest addVariantProductRequest);
+	
 
 }
